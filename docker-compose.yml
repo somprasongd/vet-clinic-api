@@ -1,0 +1,39 @@
+version: '2.4'
+services:
+  db:
+    image: postgres:12-alpine
+    restart: always
+    ports:
+      - '5433:5432'
+    environment:
+      - TZ=Asia/Bangkok
+      - PGTZ=Asia/Bangkok
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=vcdb
+    volumes:
+      - pg-data-vcdb:/var/lib/postgresql/data
+      - ./sql/V1__Initial_schema.sql:/docker-entrypoint-initdb.d/1-init.sql
+      - ./sql/V1.1__Insert_master_data.sql:/docker-entrypoint-initdb.d/2-seed.sql
+    healthcheck:
+      test: pg_isready -U postgres -h 127.0.0.1
+
+  api:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: ghcr.io/somprasongd/vet-clinic-api:${IMAGE_TAG:-latest}
+    restart: always
+    ports:
+      - '3001:3001'
+    environment:
+      - PAGE_LIMIT=20
+      - VC_API_DB_URI=postgres://postgres:postgres@db:5432/vcdb
+      - VC_API_ENABLE_SEARCH_OLD_HN=true
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pg-data-vcdb:
