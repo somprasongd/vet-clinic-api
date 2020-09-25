@@ -24,21 +24,23 @@ const multerFilter = (req, file, cb) => {
   }
 };
 
-const uploadAvatar = multer({
+const multerUploadAvatar = multer({
   storage: multerStorage,
   fileFilter: multerFilter,
 });
 
-export const uploadAvatarPhoto = uploadAvatar.single('image');
+export const uploadAvatar = multerUploadAvatar.single('image');
 
-export const resizeAvatarPhoto = (req, res, next) => {
+export const resizeAvatar = (req, res, next) => {
   if (!req.file) return next();
 
   const uuid = uuidv1();
 
-  req.file.filename = `media/images/${req.user.id}-${uuid}.jpeg`;
-  req.file.filenameThumbnail = `media/images/${req.user.id}-${uuid}_thumbnail.jpeg`;
-  req.file.filenameThumbnailSmall = `media/images/${req.user.id}-${uuid}_thumbnail_sm.jpeg`;
+  const fileName = `${req.user.id}-${uuid}`;
+
+  req.file.filename = `media/avatar/${fileName}.jpeg`;
+  req.file.filenameThumbnail = `media/avatar/${fileName}_thumbnail.jpeg`;
+  req.file.filenameThumbnailSmall = `media/avatar/${fileName}_thumbnail_sm.jpeg`;
 
   sharp(req.file.buffer)
     // .resize(500)
@@ -47,7 +49,7 @@ export const resizeAvatarPhoto = (req, res, next) => {
     .toFile(req.file.filename);
 
   sharp(req.file.buffer)
-    .resize(170)
+    .resize(120)
     .toFormat('jpeg')
     .jpeg({ quality: 90 })
     .toFile(req.file.filenameThumbnail);
@@ -61,22 +63,24 @@ export const resizeAvatarPhoto = (req, res, next) => {
   next();
 };
 
-const uploadVisit = multer({
+const multerUploadImage = multer({
   storage: multerStorage,
   fileFilter: multerFilter,
 });
 
-export const uploadVisitImage = uploadVisit.single('image');
+export const uploadImage = multerUploadImage.single('image');
 
-export const resizeVisitImage = (req, res, next) => {
+export const resizeImage = (req, res, next) => {
   if (!req.file) return next();
 
   const uuid = uuidv1();
-  const { visitId } = req.params;
-  const { mediatypeId = 1 } = req.body;
+  const { group = 'img', typeId = 1 } = req.body;
 
-  req.file.filename = `media/visit/images/${visitId}-${mediatypeId}-${uuid}.jpeg`;
-  req.file.filenameThumbnail = `media/visit/images/${visitId}-${mediatypeId}-${uuid}_thumbnail.jpeg`;
+  const fileName = `${group}-${typeId}-${uuid}`;
+
+  req.file.filename = `media/image/${fileName}.jpeg`;
+  req.file.filenameThumbnail = `media/image/${fileName}_thumbnail.jpeg`;
+  req.file.filenameThumbnailSmall = `media/image/${fileName}_thumbnail_sm.jpeg`;
 
   sharp(req.file.buffer)
     // .resize(500)
@@ -85,27 +89,35 @@ export const resizeVisitImage = (req, res, next) => {
     .toFile(req.file.filename);
 
   sharp(req.file.buffer)
-    .resize(170)
+    .resize(200)
     .toFormat('jpeg')
     .jpeg({ quality: 90 })
     .toFile(req.file.filenameThumbnail);
 
+  sharp(req.file.buffer)
+    .resize(80)
+    .toFormat('jpeg')
+    .jpeg({ quality: 90 })
+    .toFile(req.file.filenameThumbnailSmall);
+
   next();
 };
 
-const multerVisitDocStorage = multer.diskStorage({
+const multerFileStorage = multer.diskStorage({
   destination: (req, refiles, cb) => {
-    cb(null, 'media/visit/files');
+    cb(null, 'media/file');
   },
   filename: (req, file, cb) => {
-    const { visitId } = req.params;
-    const { mediatypeId = 1 } = req.body;
-    cb(null, `visit-${visitId}-${mediatypeId}-${Date.now()}-${file.originalname.split(' ').join('-')}`);
+    const uuid = uuidv1();
+    const { group = 'file', typeId = 1 } = req.body;
+
+    const fileName = `${group}-${typeId}-${uuid}`;
+    cb(null, `${fileName}-${file.originalname.split(' ').join('-')}`);
   },
 });
 
-const uploadDoc = multer({
-  storage: multerVisitDocStorage,
+const multerUploadFile = multer({
+  storage: multerFileStorage,
 });
 
-export const uploadVisitDoc = uploadDoc.single('file');
+export const uploadFile = multerUploadFile.single('file');

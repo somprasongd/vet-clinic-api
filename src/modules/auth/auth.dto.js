@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import validatePayload from '../../common/helpers/validate-req-data';
+import validationHandler from '../../common/helpers/validation-handler';
 
 export const loginDTO = (req, res, next) => {
   const schema = Joi.object().keys({
@@ -7,7 +7,7 @@ export const loginDTO = (req, res, next) => {
     password: Joi.string().required(),
   });
 
-  const { dto } = validatePayload(req.body, schema);
+  const { dto } = validationHandler(req.body, schema);
 
   req.dto = dto;
   next();

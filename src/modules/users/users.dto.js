@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import validatePayload from '../../common/helpers/validate-req-data';
+import validationHandler from '../../common/helpers/validation-handler';
 
 export const createUserDTO = (req, res, next) => {
   const schema = Joi.object().keys({
@@ -32,7 +32,7 @@ export const createUserDTO = (req, res, next) => {
       .required(),
   });
 
-  const { dto } = validatePayload(req.body, schema);
+  const { dto } = validationHandler(req.body, schema);
 
   req.dto = dto;
   next();
@@ -45,7 +45,7 @@ export const searchUserDTO = (req, res, next) => {
     roleId: Joi.number().min(1),
   });
 
-  const { dto } = validatePayload(req.query, schema);
+  const { dto } = validationHandler(req.query, schema);
 
   req.dto = dto;
   next();
@@ -71,7 +71,7 @@ export const updateUserDTO = (req, res, next) => {
       .required(),
   });
 
-  const { dto } = validatePayload(req.query, schema);
+  const { dto } = validationHandler(req.query, schema);
 
   req.dto = dto;
   next();
@@ -85,7 +85,7 @@ export const updateUserPasswordDTO = (req, res, next) => {
       .required(),
   });
 
-  const { dto } = validatePayload(req.query, schema);
+  const { dto } = validationHandler(req.query, schema);
 
   req.dto = dto;
   next();
@@ -96,21 +96,21 @@ export const updateUserAvatarDTO = (req, res, next) => {
     avatarId: Joi.number().integer(),
   });
 
-  const { dto } = validatePayload(req.query, schema);
+  const { dto } = validationHandler(req.query, schema);
 
   req.dto = dto;
   next();
 };
 
 export const respondUserDTO = user => {
-  const { id, username, name, email, phone, avatarId, isAdmin, isActive, roles } = user;
+  const { id, username, name, email, phone, avatar = null, isAdmin, isActive, roles } = user;
   return {
     id,
     username,
     name,
     email,
     phone,
-    avatarId,
+    avatar,
     isAdmin,
     isActive,
     roles,

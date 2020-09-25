@@ -22,7 +22,7 @@ import BillingRepository from './billing';
 import ReceiptRepository from './receipt';
 import ReceiptPaymentRepository from './receiptpayment';
 import POSRepository from './pos';
-import ImageProfileRepository from './imageprofile';
+import UploadRepository from './upload';
 import VisitImageRepository from './visitimage';
 import VisitMediaRepository from './visitmedia';
 import LineNotifyRepository from './linenotify';
@@ -52,7 +52,7 @@ export default {
   ReceiptRepository,
   ReceiptPaymentRepository,
   POSRepository,
-  ImageProfileRepository,
+  UploadRepository,
   VisitImageRepository,
   VisitMediaRepository,
   LineNotifyRepository,

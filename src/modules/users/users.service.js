@@ -2,13 +2,13 @@ import connection from '../../database';
 
 const { db } = connection;
 
-export const findUserById = id => db.users.findById(id);
+export const findUserById = (id, url) => db.users.findById(id, url);
 
 export const findUserByUsername = username => db.users.findByUsername(username);
 
-export const findAllUser = (name, username, roleId, limit, offset) =>
+export const findAllUser = (name, username, roleId, url, limit, offset) =>
   db.task(async t => {
-    const p1 = t.users.findAll(name, username, roleId, limit, offset);
+    const p1 = t.users.findAll(name, username, roleId, url, limit, offset);
     const p2 = t.users.findAllCount(name, username, roleId);
 
     const [datas, counts] = await Promise.all([p1, p2]);

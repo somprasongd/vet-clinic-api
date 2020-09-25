@@ -1,29 +1,28 @@
 FROM node:12-alpine as base
 LABEL org.opencontainers.image.source https://github.com/somprasongd/vet-clinic-api
+ENV NODE_ENV=production
 # Define working directory and copy source
 WORKDIR /app
-RUN mkdir logs
-
-FROM base as server
-COPY ./.babelrc ./.babelrc
+RUN mkdir logs &&\
+    mkdir -p media/avatar &&\
+    mkdir -p media/file &&\
+    mkdir -p media/image
 COPY ./package* ./
+RUN npm ci && \
+    npm cache clean --force
+
+FROM base as builder
+COPY ./.babelrc ./.babelrc
 # Install dependencies
-RUN npm ci
+RUN npm install --only=dev
 COPY ./src ./src
 # build
 RUN npm run build
 
 FROM base
-ENV NODE_ENV=production
 # Expose ports (for orchestrators and dynamic reverse proxies)
 EXPOSE 3001
-
-# Install deps for production only
-COPY ./package* ./
-RUN npm ci && \
-  npm cache clean --force
 # Copy builded source from the upper builder stage
-COPY --from=server /app/dist ./dist
-
+COPY --from=builder /app/dist ./dist
 # Start the app
 CMD ["node", "dist/index.js"]

@@ -1,10 +1,14 @@
 import 'express-async-errors';
+import express from 'express';
 import path from 'path';
 import { NotFoundExceptions } from '../common/helpers/exceptions';
 import logger from '../common/helpers/logger';
 import routeLoader from '../common/helpers/route-loader';
 
 export default app => {
+  // Serving static files in Express
+  // app.use('/public', express.static('public'));
+  app.use('/media', express.static('media'));
   // load api router
   const PATH = path.join(path.parse(__dirname).dir, 'modules');
   const apiRouter = routeLoader(PATH);

@@ -44,6 +44,7 @@ const createConnection = () => {
     },
     extend(obj, dc) {
       // Extending the database protocol with our custom repositories;
+      obj.upload = new repos.UploadRepository(obj, pgp);
       obj.users = new repos.UsersRepository(obj, pgp);
       obj.base = new repos.BaseRepository(obj, pgp);
       obj.appoints = new repos.AppointsRepository(obj, pgp);
@@ -68,7 +69,7 @@ const createConnection = () => {
       obj.receipt = new repos.ReceiptRepository(obj, pgp);
       obj.receiptpayment = new repos.ReceiptPaymentRepository(obj, pgp);
       obj.pos = new repos.POSRepository(obj, pgp);
-      obj.imageprofile = new repos.ImageProfileRepository(obj, pgp);
+
       obj.visitimage = new repos.VisitImageRepository(obj, pgp);
       obj.visitmedia = new repos.VisitMediaRepository(obj, pgp);
       obj.linenotify = new repos.LineNotifyRepository(obj, pgp);

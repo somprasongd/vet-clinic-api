@@ -21,15 +21,15 @@ export default class {
   }
 
   update(id, obj) {
-    return this.db.oneOrNone(
-      `UPDATE ${this.tableName} set ($2:name)=($2:csv) WHERE ${this.tableName}_id = $1 RETURNING *`,
-      [id, this.columnize(obj)]
-    );
+    return this.db.oneOrNone(`UPDATE ${this.tableName} set ($2:name)=($2:csv) WHERE id = $1 RETURNING *`, [
+      id,
+      this.columnize(obj),
+    ]);
   }
 
   // Tries to delete a pet by id, and returns the number of records deleted;
   remove(id) {
-    return this.db.result(`DELETE FROM ${this.tableName} WHERE ${this.tableName}_id = $1`, id, r => r.rowCount);
+    return this.db.result(`DELETE FROM ${this.tableName} WHERE id = $1`, id, r => r.rowCount);
   }
 
   all() {
@@ -45,6 +45,6 @@ export default class {
   }
 
   findById(id) {
-    return this.db.oneOrNone(`SELECT * FROM ${this.tableName} WHERE ${this.tableName}_id = $1`, +id);
+    return this.db.oneOrNone(`SELECT * FROM ${this.tableName} WHERE id = $1`, +id);
   }
 }
