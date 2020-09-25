@@ -23,4 +23,29 @@ jobs:
           file: ./Dockerfile
           # platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/s390x
           push: true
-          tags: ${{ secrets.CR_USERNAME }}/vet-clinic-api:latest
+          tags: version: '2.4'
+          services:
+            db:
+              image: postgres:13-alpine
+              restart: always
+              ports:
+                - '5433:5432'
+              environment:
+                - TZ=Asia/Bangkok
+                - PGTZ=Asia/Bangkok
+                - POSTGRES_USER=postgres
+                - POSTGRES_PASSWORD=postgres
+                - POSTGRES_DB=vcdb
+              volumes:
+                - pg-data-vcdb:/var/lib/postgresql/data
+                - ./sql/install-ext.sh:/docker-entrypoint-initdb.d/0-install-ext.sh
+                - ./sql/V1__Initial_schema.sql:/docker-entrypoint-initdb.d/1-init.sql
+                - ./sql/V1.1__Insert_master_data.sql:/docker-entrypoint-initdb.d/2-seed.sql
+              healthcheck:
+                test: pg_isready -U postgres -h 127.0.0.1
+          
+            api:
+              build:
+                context: .
+                dockerfile: ./Dockerfile
+              image: ghcr.io/${{ secrets.CR_USERNAME }}/vet-clinic-api:latest
