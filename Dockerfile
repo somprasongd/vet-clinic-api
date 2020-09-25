@@ -1,4 +1,5 @@
 FROM node:12-alpine as base
+LABEL org.opencontainers.image.source https://github.com/somprasongd/vet-clinic-api
 # Define working directory and copy source
 WORKDIR /app
 RUN mkdir logs
