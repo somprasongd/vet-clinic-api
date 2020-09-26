@@ -16,3 +16,18 @@ jobs:
         run: docker build -t ghcr.io/${{ secrets.CR_USERNAME }}/vet-clinic-api:latest .
       - name: Push
         run: docker image push ghcr.io/${{ secrets.CR_USERNAME }}/vet-clinic-api:latest
+  
+  cd:
+    runs-on: ubuntu-latest
+    steps:
+      - name: executing remote ssh commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEV_SERVER_HOST }}
+          username: ${{ secrets.DEV_SERVER_USERNAME }}
+          key: ${{ secrets.DEV_SERVER_KEY }}
+          port: ${{ secrets.DEV_SERVER_PORT }}
+          script: |
+            cd vc-app
+            docker-compose pull
+            docker-compose up
