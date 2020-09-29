@@ -14,7 +14,7 @@ function findAll(tablename, search, limit, offset) {
 }
 
 async function findById(tablename, id) {
-  const result = await db.oneOrNone(`SELECT * FROM ${tablename} WHERE id = $1`, +id);
+  const result = await await db.base.findById(tablename, id);
 
   if (!result)
     throw new NotFoundExceptions(

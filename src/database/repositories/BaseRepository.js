@@ -20,7 +20,7 @@ export default class {
     return this.db.oneOrNone(
       `UPDATE ${tableName} set ${
         Object.keys(obj).length > 1 ? '($2:name)=($2:csv)' : '$2:name=$2:csv'
-      } WHERE id = $1 RETURNING *`,
+      }, update_datetime=current_timestamp WHERE id = $1 RETURNING *`,
       [+id, this.columnize(obj)]
     );
   }

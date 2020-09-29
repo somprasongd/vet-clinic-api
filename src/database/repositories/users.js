@@ -8,7 +8,7 @@ export default class UsersRepository extends Repository {
   findById(id, url) {
     return this.db.oneOrNone(
       `SELECT t_user.*
-        , array_agg(json_build_object( 'id', m_user_role.id, 'name', m_user_role.name ) order by m_user_role.id) as roles
+        , array_agg(json_build_object( 'id', m_user_role.id, 'label', m_user_role.label ) order by m_user_role.id) as roles
         , json_build_object( 'id', t_upload.id,
                              'url', '${url}'||t_upload.filename,
                              'url_thumbnail', '${url}'||t_upload.filename_thumbnail,
