@@ -16,7 +16,7 @@ jobs:
         run: docker build -t ghcr.io/${{ secrets.CR_USERNAME }}/vet-clinic-api:latest .
       - name: Push
         run: docker image push ghcr.io/${{ secrets.CR_USERNAME }}/vet-clinic-api:latest
-  
+
   cd:
     runs-on: ubuntu-latest
     needs: ci
@@ -31,4 +31,4 @@ jobs:
           script: |
             cd vc-app
             docker-compose pull
-            docker-compose up -d api
+            docker-compose up -d vc-api

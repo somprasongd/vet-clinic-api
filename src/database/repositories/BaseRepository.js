@@ -1,4 +1,4 @@
-import { changeToSnakeCase, renameWithKeymap } from './renameObjectKey';
+import { changeToSnakeCase, renameWithKeymap } from '../helpers/renameObjectKey';
 
 export default class {
   constructor(db, pgp) {
@@ -44,5 +44,31 @@ export default class {
 
   findById(tableName, id) {
     return this.db.oneOrNone(`SELECT * FROM ${tableName} WHERE id = $1`, +id);
+  }
+
+  findAll(tableName, search, limit, offset) {
+    const conditions = search && ` AND label ilike '%$<search:value>%'`;
+
+    return this.db.manyOrNone(
+      `SELECT * FROM ${tableName}
+      WHERE active = true ${conditions || ''} order by id offset $<offset> limit ${limit}`,
+      {
+        search,
+        offset,
+        limit,
+      }
+    );
+  }
+
+  findAllCount(tableName, search) {
+    const conditions = search && ` AND label ilike '%$<search:value>%'`;
+
+    return this.db.one(
+      `SELECT count(*) FROM ${tableName} where active = true ${conditions || ''}`,
+      {
+        search,
+      },
+      a => +a.count
+    );
   }
 }

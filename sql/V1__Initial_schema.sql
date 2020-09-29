@@ -3,12 +3,145 @@
 -- c is config data create & update from admit ui
 -- t is transaction data
 
-CREATE TABLE public.m_role (
+-- master data
+CREATE TABLE public.m_appoint_status (
 	id serial NOT NULL,
-	"name" varchar NOT NULL,
-	CONSTRAINT m_role_pk PRIMARY KEY (id)
+	"label" varchar NOT NULL,
+	active bool NOT NULL DEFAULT true,
+	CONSTRAINT m_appoint_status_pk PRIMARY KEY (id)
 );
+CREATE INDEX m_appoint_status_active_idx ON public.m_appoint_status USING btree (active);
 
+CREATE TABLE public.m_appoint_type (
+	id serial NOT NULL,
+	"label" varchar NOT NULL,
+	active bool NOT NULL DEFAULT true,
+	CONSTRAINT m_appoint_type_pk PRIMARY KEY (id)
+);
+CREATE INDEX m_appoint_type_active_idx ON public.m_appoint_type USING btree (active);
+
+CREATE TABLE public.m_billing_type (
+	id serial NOT NULL,
+	"label" varchar NOT NULL,
+	active bool NOT NULL DEFAULT true,
+	CONSTRAINT m_billing_type_pk PRIMARY KEY (id)
+);
+CREATE INDEX m_billing_type_active_idx ON public.m_billing_type USING btree (active);
+
+CREATE TABLE public.m_item_group (
+	id serial NOT NULL,
+	"label" varchar NOT NULL,
+	active bool NOT NULL DEFAULT true,
+	CONSTRAINT m_item_group_pk PRIMARY KEY (id)
+);
+CREATE INDEX m_item_group_active_idx ON public.m_item_group USING btree (active);
+
+CREATE TABLE public.m_item_lab_group (
+	id serial NOT NULL,
+	"label" varchar NOT NULL,
+	active bool NOT NULL DEFAULT true,
+	CONSTRAINT m_item_lab_group_pk PRIMARY KEY (id)
+);
+CREATE INDEX m_item_lab_group_active_idx ON public.m_item_lab_group USING btree (active);
+
+CREATE TABLE public.m_media_type (
+	id serial NOT NULL,
+	"label" varchar NOT NULL,
+	active bool NOT NULL DEFAULT true,
+	CONSTRAINT m_media_type_pk PRIMARY KEY (id)
+);
+CREATE INDEX m_media_type_active_idx ON public.m_media_type USING btree (active);
+
+CREATE TABLE public.m_order_status (
+	id serial NOT NULL,
+	"label" varchar NOT NULL,
+	active bool NOT NULL DEFAULT true,
+	CONSTRAINT m_order_status_pk PRIMARY KEY (id)
+);
+CREATE INDEX m_order_status_active_idx ON public.m_order_status USING btree (active);
+
+CREATE TABLE public.m_payment_type (
+	id serial NOT NULL,
+	"label" varchar NOT NULL,
+	active bool NOT NULL DEFAULT true,
+	CONSTRAINT m_payment_type_pk PRIMARY KEY (id)
+);
+CREATE INDEX m_payment_type_active_idx ON public.m_payment_type USING btree (active);
+
+CREATE TABLE public.m_prefix (
+	id serial NOT NULL,
+	"label" varchar NOT NULL,
+	active bool NOT NULL DEFAULT true,
+	CONSTRAINT m_prefix_pk PRIMARY KEY (id)
+);
+CREATE INDEX m_prefix_active_idx ON public.m_prefix USING btree (active);
+
+CREATE TABLE public.m_pet_gender (
+	id serial NOT NULL,
+	"label" varchar NOT NULL,
+	active bool NOT NULL DEFAULT true,
+	CONSTRAINT m_pet_gender_pk PRIMARY KEY (id)
+);
+CREATE INDEX m_pet_gender_active_idx ON public.m_pet_gender USING btree (active);
+
+CREATE TABLE public.m_pet_type (
+	id serial NOT NULL,
+	"label" varchar NOT NULL,
+	active bool NOT NULL DEFAULT true,
+	CONSTRAINT m_pet_type_pk PRIMARY KEY (id)
+);
+CREATE INDEX m_pet_type_active_idx ON public.m_pet_type USING btree (active);
+
+CREATE TABLE public.m_user_role (
+	id serial NOT NULL,
+	"label" varchar(50) NOT NULL,
+	active bool NOT NULL DEFAULT true,
+	CONSTRAINT m_user_role_pkey PRIMARY KEY (id)
+);
+CREATE INDEX m_user_role_active_idx ON public.m_user_role USING btree (active);
+
+CREATE TABLE public.m_visit_cause (
+	id serial NOT NULL,
+	"label" varchar(50) NOT NULL,
+	active bool NOT NULL DEFAULT true,
+	CONSTRAINT m_visit_cause_pkey PRIMARY KEY (id)
+);
+CREATE INDEX m_visit_cause_active_idx ON public.m_visit_cause USING btree (active);
+
+CREATE TABLE public.m_visit_priority (
+	id serial NOT NULL,
+	"label" varchar(50) NOT NULL,
+	active bool NOT NULL DEFAULT true,
+	CONSTRAINT m_visit_priority_pkey PRIMARY KEY (id)
+);
+CREATE INDEX m_visit_priority_active_idx ON public.m_visit_priority USING btree (active);
+
+CREATE TABLE public.m_visit_status (
+	id serial NOT NULL,
+	"label" varchar(50) NOT NULL,
+	active bool NOT NULL DEFAULT true,
+	CONSTRAINT m_visit_status_pkey PRIMARY KEY (id)
+);
+CREATE INDEX m_visit_status_active_idx ON public.m_visit_status USING btree (active);
+
+CREATE TABLE public.m_visit_treatment (
+	id serial NOT NULL,
+	"label" varchar(50) NOT NULL,
+	active bool NOT NULL DEFAULT true,
+	CONSTRAINT m_visit_treatment_pkey PRIMARY KEY (id)
+);
+CREATE INDEX m_visit_treatment_active_idx ON public.m_visit_treatment USING btree (active);
+
+CREATE TABLE public.m_visit_type (
+	id serial NOT NULL,
+	"label" varchar(50) NOT NULL,
+	active bool NOT NULL DEFAULT true,
+	CONSTRAINT m_visit_type_pkey PRIMARY KEY (id)
+);
+CREATE INDEX m_visit_type_active_idx ON public.m_visit_type USING btree (active);
+
+
+-- transaction data
 create type upload_type as enum('image', 'file');
 
 CREATE TABLE public.t_upload (
@@ -45,18 +178,9 @@ CREATE TABLE public.t_user_roles (
 	role_id int4 NOT NULL,
 	CONSTRAINT t_user_roles_pk PRIMARY KEY (id),
 	CONSTRAINT t_user_roles_fk FOREIGN KEY (user_id) REFERENCES t_user(id) DEFERRABLE INITIALLY DEFERRED,
-	CONSTRAINT t_user_roles_fk_1 FOREIGN KEY (role_id) REFERENCES m_role(id) DEFERRABLE INITIALLY DEFERRED
+	CONSTRAINT t_user_roles_fk_1 FOREIGN KEY (role_id) REFERENCES m_user_role(id) DEFERRABLE INITIALLY DEFERRED
 );
 CREATE INDEX t_user_roles_role_id_idx ON public.t_user_roles USING btree (role_id);
 CREATE INDEX t_user_roles_user_id_idx ON public.t_user_roles USING btree (user_id);
 
-CREATE TABLE public.c_media_type (
-	id serial NOT NULL,
-	"label" varchar(50) NOT NULL,
-	active bool NOT NULL DEFAULT true,
-	update_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	update_by int4 NOT NULL,
-	CONSTRAINT c_media_type_pkey PRIMARY KEY (id),
-	CONSTRAINT c_media_type_fk FOREIGN KEY (update_by) REFERENCES t_user(id)
-);
-CREATE INDEX c_media_type_active_idx ON public.c_media_type USING btree (active);
+

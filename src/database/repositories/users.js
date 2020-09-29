@@ -8,14 +8,14 @@ export default class UsersRepository extends Repository {
   findById(id, url) {
     return this.db.oneOrNone(
       `SELECT t_user.*
-        , array_agg(json_build_object( 'id', m_role.id, 'name', m_role.name ) order by m_role.id) as roles
+        , array_agg(json_build_object( 'id', m_user_role.id, 'name', m_user_role.name ) order by m_user_role.id) as roles
         , json_build_object( 'id', t_upload.id,
                              'url', '${url}'||t_upload.filename,
                              'url_thumbnail', '${url}'||t_upload.filename_thumbnail,
                              'url_thumbnail_sm', '${url}'||t_upload.filename_thumbnail_small ) as avatar
       FROM t_user
         LEFT JOIN t_user_roles on t_user_roles.user_id = t_user.id 
-        LEFT JOIN m_role on m_role.id = t_user_roles.role_id
+        LEFT JOIN m_user_role on m_user_role.id = t_user_roles.role_id
         LEFT JOIN t_upload on t_upload.id = t_user.avatar_id
       WHERE t_user.id = $1
       GROUP BY t_user.id,
@@ -42,7 +42,7 @@ export default class UsersRepository extends Repository {
       conditions += ` AND t_user.username ilike '%$<username:value>%'`;
     }
     if (roleId) {
-      conditions += ` AND m_role.id = $<roleId>`;
+      conditions += ` AND m_user_role.id = $<roleId>`;
     }
 
     return this.db.manyOrNone(
@@ -51,14 +51,14 @@ export default class UsersRepository extends Repository {
         , t_user.username
         , t_user.is_admin
         , t_user.name
-        , array_agg(json_build_object( 'id', m_role.id, 'name', m_role.name )) as roles
+        , array_agg(json_build_object( 'id', m_user_role.id, 'label', m_user_role.label )) as roles
         , json_build_object( 'id', t_upload.id,
                              'url', '${url}'||t_upload.filename,
                              'url_thumbnail', '${url}'||t_upload.filename_thumbnail,
                              'url_thumbnail_sm', '${url}'||t_upload.filename_thumbnail_small ) as avatar
       FROM t_user
         LEFT JOIN t_user_roles on t_user_roles.user_id = t_user.id 
-        LEFT JOIN m_role on m_role.id = t_user_roles.role_id
+        LEFT JOIN m_user_role on m_user_role.id = t_user_roles.role_id
         LEFT JOIN t_upload on t_upload.id = t_user.avatar_id
       WHERE t_user.is_active = true ${conditions || ''}
       GROUP BY
@@ -85,14 +85,14 @@ export default class UsersRepository extends Repository {
       conditions += ` AND t_user.username ilike '%$<username:value>%'`;
     }
     if (roleId) {
-      conditions += ` AND m_role.id = $<roleId>`;
+      conditions += ` AND m_user_role.id = $<roleId>`;
     }
 
     return this.db.one(
       `SELECT count(distinct(t_user.id))
       FROM t_user
         LEFT JOIN t_user_roles on t_user_roles.user_id = t_user.id
-        LEFT JOIN m_role on m_role.id = t_user_roles.role_id
+        LEFT JOIN m_user_role on m_user_role.id = t_user_roles.role_id
       WHERE t_user.is_active = true ${conditions || ''}`,
       {
         name,

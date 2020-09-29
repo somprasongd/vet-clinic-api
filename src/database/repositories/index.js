@@ -1,4 +1,4 @@
-import BaseRepository from '../helpers/BaseRepository';
+import BaseRepository from './BaseRepository';
 import UsersRepository from './users';
 import AppointsRepository from './appoints';
 import CountersRepository from './counters';
