@@ -5,7 +5,7 @@ export default (results, total, limit, offset, page) => {
     limit,
   };
 
-  if (limit !== 0 && page !== undefined) {
+  if (limit !== 'all' && page !== undefined) {
     result.page = page;
     result.pages = Math.ceil(total / limit) || 1;
     return result;

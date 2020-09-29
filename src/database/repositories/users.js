@@ -65,7 +65,7 @@ export default class UsersRepository extends Repository {
         t_user.id,
         t_upload.id
       ORDER BY t_user.username
-      OFFSET $<offset> LIMIT $<limit>`,
+      OFFSET $<offset> LIMIT ${limit}`,
       {
         name,
         username,

@@ -21,17 +21,20 @@ export const validPagination = (req, res, next) => {
 
   const { limit, offset, page } = value;
 
-  req.query.limit = limit;
-  if (req.query.hasOwnProperty('offset')) {
-    req.query.offset = offset;
-    req.query.page = undefined;
-  } else if (req.query.hasOwnProperty('page')) {
-    req.query.page = page;
-    req.query.offset = (page - 1) * req.query.limit;
-  } else {
-    req.query.offset = 0;
-    req.query.page = 1;
+  req.query.limit = limit === 0 ? 'all' : limit;
+  req.query.offset = 0;
+  req.query.page = 1;
+
+  if (limit > 0) {
+    if (req.query.hasOwnProperty('offset')) {
+      req.query.offset = offset;
+      req.query.page = undefined;
+    } else if (req.query.hasOwnProperty('page')) {
+      req.query.page = page;
+      req.query.offset = (page - 1) * req.query.limit;
+    }
   }
+
   next();
 };
 
