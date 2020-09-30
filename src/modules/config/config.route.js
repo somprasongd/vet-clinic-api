@@ -54,6 +54,18 @@ router
   .patch([validJWT, validId, updateConfigDTO], controller.updateBasePE)
   .put([validJWT, validId, updateConfigDTO], controller.updateBasePE);
 
+router
+  .route('/dx')
+  .post([validJWT, createConfigDTO], controller.createBaseDX)
+  .get([validJWT, validPagination], controller.findAllBaseDX);
+
+router
+  .route('/dx/:id')
+  .get([validJWT, validId], controller.findBaseDXById)
+  .delete([validJWT, validId], controller.removeBaseDX)
+  .patch([validJWT, validId, updateConfigDTO], controller.updateBaseDX)
+  .put([validJWT, validId, updateConfigDTO], controller.updateBaseDX);
+
 // router
 //   .route('/items')
 //   .post([validJWT, createConfigDTO], controller.createItem)

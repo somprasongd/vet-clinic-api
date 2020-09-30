@@ -162,6 +162,46 @@ export const updateBasePE = async (req, res) => {
   res.json(updatedObj);
 };
 
+export const createBaseDX = async (req, res) => {
+  const { dto } = req;
+
+  const createdObj = await service.createBaseDX(dto);
+
+  res.json(createdObj);
+};
+
+export const findAllBaseDX = async (req, res) => {
+  const { limit, offset, page, search } = req.query;
+
+  const { datas, counts } = await service.findAllBaseDX(search, limit, offset);
+
+  const results = paginate(datas, counts, limit, offset, page);
+  res.json(results);
+};
+
+export const findBaseDXById = async (req, res) => {
+  const { id } = req.params;
+  const result = await service.findBaseDXById(id);
+
+  res.json(result);
+};
+
+export const removeBaseDX = async (req, res) => {
+  const { id } = req.params;
+  await service.removeBaseDX(id);
+
+  res.status(204).end();
+};
+
+export const updateBaseDX = async (req, res) => {
+  const { id } = req.params;
+  const { dto } = req;
+
+  const updatedObj = await service.updateBaseDX(id, dto);
+
+  res.json(updatedObj);
+};
+
 // export const createItem = async (req, res) => {
 //   const schema = Joi.object().keys({
 //     code: Joi.string().required(),

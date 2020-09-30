@@ -141,7 +141,80 @@ CREATE TABLE public.m_visit_type (
 CREATE INDEX m_visit_type_active_idx ON public.m_visit_type USING btree (active);
 
 -- config tables
+CREATE TABLE public.c_cc (
+	id serial NOT NULL,
+	code varchar(50) NOT NULL,
+	"label" text NOT NULL,
+	active bool NOT NULL DEFAULT true,
+	update_datetime timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	user_update_id int4 NOT NULL,
+	CONSTRAINT c_cc_code_436a11f8_uniq UNIQUE (code),
+	CONSTRAINT c_cc_pkey PRIMARY KEY (id),
+	CONSTRAINT c_cc_user_update_id_ac024b10_fk_auth_user_id FOREIGN KEY (user_update_id) REFERENCES auth_user(id) DEFERRABLE INITIALLY DEFERRED
+);
+CREATE INDEX c_cc_active_7352d9ec ON public.c_cc USING btree (active);
+CREATE INDEX c_cc_code_436a11f8_like ON public.c_cc USING btree (code varchar_pattern_ops);
+CREATE INDEX c_cc_user_update_id_ac024b10 ON public.c_cc USING btree (user_update_id);
 
+CREATE TABLE public.c_ex (
+	id serial NOT NULL,
+	code varchar(50) NOT NULL,
+	"label" text NOT NULL,
+	active bool NOT NULL DEFAULT true,
+	update_datetime timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	user_update_id int4 NOT NULL,
+	CONSTRAINT c_ex_code_436a11f8_uniq UNIQUE (code),
+	CONSTRAINT c_ex_pkey PRIMARY KEY (id),
+	CONSTRAINT c_ex_user_update_id_ac024b10_fk_auth_user_id FOREIGN KEY (user_update_id) REFERENCES auth_user(id) DEFERRABLE INITIALLY DEFERRED
+);
+CREATE INDEX c_ex_active_7352d9ec ON public.c_ex USING btree (active);
+CREATE INDEX c_ex_code_436a11f8_like ON public.c_ex USING btree (code varchar_pattern_ops);
+CREATE INDEX c_ex_user_update_id_ac024b10 ON public.c_ex USING btree (user_update_id);
+
+CREATE TABLE public.c_ht (
+	id serial NOT NULL,
+	code varchar(50) NOT NULL,
+	"label" text NOT NULL,
+	active bool NOT NULL DEFAULT true,
+	update_datetime timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	user_update_id int4 NOT NULL,
+	CONSTRAINT c_ht_code_436a11f8_uniq UNIQUE (code),
+	CONSTRAINT c_ht_pkey PRIMARY KEY (id),
+	CONSTRAINT c_ht_user_update_id_ac024b10_fk_auth_user_id FOREIGN KEY (user_update_id) REFERENCES auth_user(id) DEFERRABLE INITIALLY DEFERRED
+);
+CREATE INDEX c_ht_active_7352d9ec ON public.c_ht USING btree (active);
+CREATE INDEX c_ht_code_436a11f8_like ON public.c_ht USING btree (code varchar_pattern_ops);
+CREATE INDEX c_ht_user_update_id_ac024b10 ON public.c_ht USING btree (user_update_id);
+
+CREATE TABLE public.c_pe (
+	id serial NOT NULL,
+	code varchar(50) NOT NULL,
+	"label" text NOT NULL,
+	active bool NOT NULL DEFAULT true,
+	update_datetime timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	user_update_id int4 NOT NULL,
+	CONSTRAINT c_pe_code_436a11f8_uniq UNIQUE (code),
+	CONSTRAINT c_pe_pkey PRIMARY KEY (id),
+	CONSTRAINT c_pe_user_update_id_ac024b10_fk_auth_user_id FOREIGN KEY (user_update_id) REFERENCES auth_user(id) DEFERRABLE INITIALLY DEFERRED
+);
+CREATE INDEX c_pe_active_7352d9ec ON public.c_pe USING btree (active);
+CREATE INDEX c_pe_code_436a11f8_like ON public.c_pe USING btree (code varchar_pattern_ops);
+CREATE INDEX c_pe_user_update_id_ac024b10 ON public.c_pe USING btree (user_update_id);
+
+CREATE TABLE public.c_dx (
+	id serial NOT NULL,
+	code varchar(50) NOT NULL,
+	"label" text NOT NULL,
+	active bool NOT NULL DEFAULT true,
+	update_datetime timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	user_update_id int4 NOT NULL,
+	CONSTRAINT c_dx_code_436a11f8_uniq UNIQUE (code),
+	CONSTRAINT c_dx_pkey PRIMARY KEY (id),
+	CONSTRAINT c_dx_user_update_id_ac024b10_fk_auth_user_id FOREIGN KEY (user_update_id) REFERENCES auth_user(id) DEFERRABLE INITIALLY DEFERRED
+);
+CREATE INDEX c_dx_active_7352d9ec ON public.c_dx USING btree (active);
+CREATE INDEX c_dx_code_436a11f8_like ON public.c_dx USING btree (code varchar_pattern_ops);
+CREATE INDEX c_dx_user_update_id_ac024b10 ON public.c_dx USING btree (user_update_id);
 
 
 -- transaction data

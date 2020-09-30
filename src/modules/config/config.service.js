@@ -122,3 +122,13 @@ export const findBasePEById = id => findById('c_pe', id);
 export const removeBasePE = id => removeById('c_pe', id);
 
 export const updateBasePE = async (id, dto) => update('c_pe', id, dto);
+
+export const createBaseDX = dto => create('c_dx', dto);
+
+export const findAllBaseDX = (search, limit, offset) => findAll('c_dx', search, limit, offset);
+
+export const findBaseDXById = id => findById('c_dx', id);
+
+export const removeBaseDX = id => removeById('c_dx', id);
+
+export const updateBaseDX = async (id, dto) => update('c_dx', id, dto);
