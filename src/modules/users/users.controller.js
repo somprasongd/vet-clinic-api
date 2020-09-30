@@ -70,7 +70,7 @@ export const remove = async (req, res) => {
 
   // res.status(204).end();
 
-  const user = await service.updateUser(req.params.id, { isActive: false });
+  const user = await service.updateUserActive(req.params.id, false);
   if (!user) throw new NotFoundExceptions('The user with the given ID was not found.');
 
   res.status(204).end();
@@ -105,11 +105,8 @@ export const updatePassword = async (req, res) => {
   const { dto } = req;
 
   const hash = await bcrypt.hash(dto.password);
-  let user = {
-    password: hash,
-  };
 
-  user = await service.updateUser(req.params.id, user);
+  const user = await service.updateUserPassword(req.params.id, hash);
   if (!user) throw new NotFoundExceptions('The user with the given ID was not found.');
 
   res.status(204).end();
@@ -118,11 +115,7 @@ export const updatePassword = async (req, res) => {
 export const updateAvatar = async (req, res) => {
   const { dto } = req;
 
-  let user = {
-    avatarId: dto.avatarId,
-  };
-
-  user = await service.updateUser(req.params.id, user);
+  const user = await service.updateUserAvatar(req.params.id, dto.avatarId);
   if (!user) throw new NotFoundExceptions('The user with the given ID was not found.');
 
   res.status(204).end();

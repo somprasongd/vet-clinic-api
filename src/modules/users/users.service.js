@@ -33,4 +33,10 @@ export const createUser = async (newUser, roles) => {
 
 export const updateUser = (id, user) => db.users.update(id, user);
 
+export const updateUserActive = (id, isActive) => db.users.updateActive(id, isActive);
+
+export const updateUserAvatar = (id, avatarId) => db.users.updateAvatar(id, avatarId);
+
+export const updateUserPassword = (id, password) => db.users.updatePassword(id, password);
+
 export const deleteUser = id => db.users.remove(id);

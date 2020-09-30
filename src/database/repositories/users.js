@@ -102,4 +102,16 @@ export default class UsersRepository extends Repository {
       a => +a.count
     );
   }
+
+  updateActive(id, isActive) {
+    return this.db.oneOrNone(`UPDATE t_user set is_active=$1 WHERE id = $2 RETURNING *`, [isActive, id]);
+  }
+
+  updateAvatar(id, avatarId) {
+    return this.db.oneOrNone(`UPDATE t_user set avatar_id=$1 WHERE id = $2 RETURNING *`, [avatarId, id]);
+  }
+
+  updatePassword(id, password) {
+    return this.db.oneOrNone(`UPDATE t_user set password=$1 WHERE id = $2 RETURNING *`, [password, id]);
+  }
 }

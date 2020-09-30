@@ -71,7 +71,7 @@ export const updateUserDTO = (req, res, next) => {
       .required(),
   });
 
-  const { dto } = validationHandler(req.query, schema);
+  const { dto } = validationHandler(req.body, schema);
 
   req.dto = dto;
   next();
@@ -85,7 +85,7 @@ export const updateUserPasswordDTO = (req, res, next) => {
       .required(),
   });
 
-  const { dto } = validationHandler(req.query, schema);
+  const { dto } = validationHandler(req.body, schema);
 
   req.dto = dto;
   next();
@@ -96,7 +96,7 @@ export const updateUserAvatarDTO = (req, res, next) => {
     avatarId: Joi.number().integer(),
   });
 
-  const { dto } = validationHandler(req.query, schema);
+  const { dto } = validationHandler(req.body, schema);
 
   req.dto = dto;
   next();
