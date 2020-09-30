@@ -140,6 +140,9 @@ CREATE TABLE public.m_visit_type (
 );
 CREATE INDEX m_visit_type_active_idx ON public.m_visit_type USING btree (active);
 
+-- config tables
+
+
 
 -- transaction data
 create type upload_type as enum('image', 'file');
