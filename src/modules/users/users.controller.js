@@ -64,9 +64,14 @@ export const findMe = async (req, res) => {
 };
 
 export const remove = async (req, res) => {
-  const deletedRow = await service.deleteUser(req.params.id);
+  // const deletedRow = await service.deleteUser(req.params.id);
 
-  if (deletedRow === 0) throw new NotFoundExceptions('The user with the given ID was not found.');
+  // if (deletedRow === 0) throw new NotFoundExceptions('The user with the given ID was not found.');
+
+  // res.status(204).end();
+
+  const user = await service.updateUser(req.params.id, { isActive: false });
+  if (!user) throw new NotFoundExceptions('The user with the given ID was not found.');
 
   res.status(204).end();
 };

@@ -17,7 +17,7 @@ router.get('/me', [validJWT], controller.findMe);
 router
   .route('/:id')
   .get([validJWT, onlyAdmin, validId], controller.findById)
-  // .delete([validJWT, onlyAdmin, validId], controller.remove)
+  .delete([validJWT, onlyAdmin, validId], controller.remove)
   // .patch([validJWT, onlyAdmin, validId, updateUserDTO], controller.update)
   .put([validJWT, onlyAdmin, validId, updateUserDTO], controller.update);
 
