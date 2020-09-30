@@ -210,9 +210,9 @@ export const createItemDrug = async (req, res) => {
 };
 
 export const findItemDrugByItemId = async (req, res) => {
-  const { id } = req.params;
+  const { itemId } = req.params;
 
-  const result = await service.findItemDrugByItemId(id);
+  const result = await service.findItemDrugByItemId(itemId);
 
   if (!result) throw new NotFoundExceptions('The item drug with the given item id was not found.');
 
@@ -222,7 +222,7 @@ export const findItemDrugByItemId = async (req, res) => {
 export const updateItemDrug = async (req, res) => {
   const { dto } = req;
 
-  const updatedObj = await service.updateItemDrug(req.params.id, dto);
+  const updatedObj = await service.updateItemDrug(req.params.itemId, dto);
 
   if (!updatedObj) throw new NotFoundExceptions('The item drug with the given item id was not found.');
 
@@ -238,9 +238,9 @@ export const createItemLab = async (req, res) => {
 };
 
 export const findItemLabByItemId = async (req, res) => {
-  const { id } = req.params;
+  const { itemId } = req.params;
 
-  const result = await service.findItemLabByItemId(id);
+  const result = await service.findItemLabByItemId(itemId);
 
   if (!result) throw new NotFoundExceptions('The item drug with the given item id was not found.');
 
@@ -250,7 +250,7 @@ export const findItemLabByItemId = async (req, res) => {
 export const updateItemLab = async (req, res) => {
   const { dto } = req;
 
-  const updatedObj = await service.updateItemLab(req.params.id, dto);
+  const updatedObj = await service.updateItemLab(req.params.itemId, dto);
 
   if (!updatedObj) throw new NotFoundExceptions('The item drug with the given item id was not found.');
 
@@ -258,11 +258,11 @@ export const updateItemLab = async (req, res) => {
 };
 
 export const createItemSet = async (req, res) => {
-  const { itemId, subsetId } = req.params;
+  const { itemId, itemSubsetId } = req.params;
 
   const createdObj = await service.createItemSet({
     itemId: +itemId,
-    itemSubsetId: +subsetId,
+    itemSubsetId: +itemSubsetId,
   });
 
   res.json(createdObj);
@@ -277,8 +277,8 @@ export const listItemSetByItemId = async (req, res) => {
 };
 
 export const removeItemSet = async (req, res) => {
-  const { subsetId } = req.params;
-  await service.removeItemSet(subsetId);
+  const { itemSubsetId } = req.params;
+  await service.removeItemSet(itemSubsetId);
 
   res.status(204).end();
 };

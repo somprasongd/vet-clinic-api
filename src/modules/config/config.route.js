@@ -93,6 +93,6 @@ router
 router.route('/items/:itemId/set').get([validJWT, validParamId('itemId')], controller.listItemSetByItemId);
 
 router
-  .route('/items/:itemId/set/:subsetId')
-  .post([validJWT, validParamId('itemId'), validParamId('subsetId')], controller.createItemSet)
-  .delete([validJWT, validParamId('itemId'), validParamId('subsetId')], controller.removeItemSet);
+  .route('/items/:itemId/set/:itemSubsetId')
+  .post([validJWT, validParamId('itemId'), validParamId('itemSubsetId')], controller.createItemSet)
+  .delete([validJWT, validParamId('itemId'), validParamId('itemSubsetId')], controller.removeItemSet);

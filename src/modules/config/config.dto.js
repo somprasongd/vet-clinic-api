@@ -38,7 +38,7 @@ export const createItemDTO = (req, res, next) => {
       .min(1)
       .required(),
     active: Joi.boolean().default(true),
-    isItemSet: Joi.boolean().default(false),
+    isSet: Joi.boolean().default(false),
     itemGroupId: Joi.number()
       .integer()
       .min(1)
@@ -59,7 +59,7 @@ export const searchItemDTO = (req, res, next) => {
     groupId: Joi.number().min(1),
     groupIds: Joi.array().items(Joi.number().min(1)),
     groupLabel: Joi.string(),
-    isItemSet: Joi.string(),
+    isSet: Joi.string(),
   });
 
   const { dto } = validationHandler(req.query, schema);
@@ -79,7 +79,7 @@ export const updateItemDTO = (req, res, next) => {
       .min(1)
       .required(),
     active: Joi.boolean().default(true),
-    isItemSet: Joi.boolean().default(false),
+    isSet: Joi.boolean().default(false),
     itemGroupId: Joi.number()
       .integer()
       .min(1)
@@ -94,15 +94,15 @@ export const updateItemDTO = (req, res, next) => {
 
 export const createItemDrugDTO = (req, res, next) => {
   const schema = Joi.object().keys({
-    dose: Joi.number(),
     unit: Joi.string().required(),
+    dose: Joi.number(),
     caution: Joi.string().default(''),
     frequency: Joi.string().default(''),
     instruction: Joi.string().default(''),
     remark: Joi.string().default(''),
   });
 
-  const itemId = req.params.id;
+  const { itemId } = req.params;
   const { dto } = validationHandler(req.body, schema);
 
   req.dto = { ...dto, updateBy: req.user.id, itemId };
@@ -136,7 +136,7 @@ export const createItemLabDTO = (req, res, next) => {
     unit: Joi.string(),
   });
 
-  const itemId = req.params.id;
+  const { itemId } = req.params;
   const { dto } = validationHandler(req.body, schema);
 
   req.dto = { ...dto, updateBy: req.user.id, itemId };

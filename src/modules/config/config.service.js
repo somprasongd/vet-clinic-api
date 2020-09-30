@@ -52,12 +52,12 @@ async function removeById(tablename, id) {
     );
 }
 
-async function create(tableName, { code, label, active, userUpdateId }) {
-  await checkCodeExisted(tableName, code);
+async function create(tableName, model) {
+  if (model.code) {
+    await checkCodeExisted(tableName, model.code);
+  }
 
-  const obj = { code, label, active, userUpdateId };
-
-  const createdObj = await db.base.create(tableName, id, obj);
+  const createdObj = await db.base.create(tableName, model);
 
   return createdObj;
 }
@@ -133,7 +133,16 @@ export const findAllItem = (search, limit, offset) =>
 
 export const findItemById = id => findById('c_item', id);
 
-export const removeItem = id => update('c_item', id, { active: false });
+export const removeItem = id =>
+  db.task(async t => {
+    await t.base.removeFrom('c_item_set', { itemId: id });
+    await t.base.removeFrom('c_item_lab', { itemId: id });
+    await t.base.removeFrom('c_item_drug', { itemId: id });
+
+    const deletedRow = await t.base.remove('c_item', id);
+
+    if (deletedRow === 0) throw new NotFoundExceptions(`The item with the given ID was not found.`);
+  });
 
 export const updateItem = async (id, dto) => update('c_item', id, dto);
 
@@ -153,4 +162,4 @@ export const createItemSet = dto => create('c_item_set', dto);
 
 export const listItemSetByItemId = itemId => db.base.find('c_item_set', { itemId });
 
-export const removeItemSet = async id => removeById('c_item_set', id);
+export const removeItemSet = async itemSubsetId => db.base.removeFrom('c_item_set', { itemSubsetId });

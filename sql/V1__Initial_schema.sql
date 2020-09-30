@@ -177,6 +177,7 @@ CREATE TABLE public.c_user_roles (
 	user_id int4 NOT NULL,
 	role_id int4 NOT NULL,
 	CONSTRAINT c_user_roles_pk PRIMARY KEY (id),
+	CONSTRAINT c_user_roles_un UNIQUE (user_id, role_id),
 	CONSTRAINT c_user_roles_fk FOREIGN KEY (user_id) REFERENCES c_user(id) DEFERRABLE INITIALLY DEFERRED,
 	CONSTRAINT c_user_roles_fk_1 FOREIGN KEY (role_id) REFERENCES m_user_role(id) DEFERRABLE INITIALLY DEFERRED
 );
@@ -306,6 +307,7 @@ CREATE TABLE public.c_item_set (
 	item_id int4 NOT NULL,
 	item_subset_id int4 NOT NULL,
 	CONSTRAINT c_item_set_pkey PRIMARY KEY (id),
+	CONSTRAINT c_item_set_un UNIQUE (item_id, item_subset_id),
 	CONSTRAINT c_item_set_item_id_fk_c_item_id FOREIGN KEY (item_id) REFERENCES c_item(id) DEFERRABLE INITIALLY DEFERRED,
 	CONSTRAINT c_item_set_item_subset_id_fk_c_item_id FOREIGN KEY (item_subset_id) REFERENCES c_item(id) DEFERRABLE INITIALLY DEFERRED
 );

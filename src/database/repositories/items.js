@@ -14,7 +14,7 @@ export default class UsersRepository extends Repository {
       , c_item.label
       , c_item.cost
       , c_item.price
-      , c_item.is_item_set
+      , c_item.is_set
       , json_build_object(
           'id', m_item_group.id,
           'label', m_item_group.label
@@ -80,7 +80,7 @@ function createSearchCondition(params) {
     conditions += ` AND m_item_group.label ilike '%$<groupLabel:value>%'`;
   }
   if (isItemSet) {
-    conditions += ` AND c_item.is_item_set = $<isItemSet>`;
+    conditions += ` AND c_item.is_set = $<isItemSet>`;
   }
   return conditions || '';
 }
