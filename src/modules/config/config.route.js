@@ -1,7 +1,17 @@
 import express from 'express';
 import * as controller from './config.controller';
-import { validId, validPagination } from '../../middlewares/validation.middleware';
-import { createConfigDTO, updateConfigDTO } from './config.dto';
+import { validId, validPagination, validParamId } from '../../middlewares/validation.middleware';
+import {
+  createConfigDTO,
+  createItemDrugDTO,
+  createItemDTO,
+  createItemLabDTO,
+  searchItemDTO,
+  updateConfigDTO,
+  updateItemDrugDTO,
+  updateItemDTO,
+  updateItemLabDTO,
+} from './config.dto';
 import { validJWT } from '../../middlewares/auth-validation.middleware';
 
 export const router = express.Router();
@@ -17,18 +27,6 @@ router
   .delete([validJWT, validId], controller.removeBaseCC)
   .patch([validJWT, validId, updateConfigDTO], controller.updateBaseCC)
   .put([validJWT, validId, updateConfigDTO], controller.updateBaseCC);
-
-router
-  .route('/ex')
-  .post([validJWT, createConfigDTO], controller.createBaseEX)
-  .get([validJWT, validPagination], controller.findAllBaseEX);
-
-router
-  .route('/ex/:id')
-  .get([validJWT, validId], controller.findBaseEXById)
-  .delete([validJWT, validId], controller.removeBaseEX)
-  .patch([validJWT, validId, updateConfigDTO], controller.updateBaseEX)
-  .put([validJWT, validId, updateConfigDTO], controller.updateBaseEX);
 
 router
   .route('/ht')
@@ -66,62 +64,35 @@ router
   .patch([validJWT, validId, updateConfigDTO], controller.updateBaseDX)
   .put([validJWT, validId, updateConfigDTO], controller.updateBaseDX);
 
-// router
-//   .route('/items')
-//   .post([validJWT, createConfigDTO], controller.createItem)
-//   .get([validJWT, validPagination], controller.findAllItem);
+router
+  .route('/items')
+  .post([validJWT, createItemDTO], controller.createItem)
+  .get([validJWT, validPagination, searchItemDTO], controller.findAllItem);
 
-// router
-//   .route('/items/:id')
-//   .get([validJWT, validId], controller.findItemById)
-//   .delete([validJWT, validId], controller.removeItem)
-//   .patch([validJWT, validId, updateConfigDTO], controller.updateItem)
-//   .put([validJWT, validId, updateConfigDTO], controller.updateItem);
+router
+  .route('/items/:id')
+  .get([validJWT, validId], controller.findItemById)
+  .delete([validJWT, validId], controller.removeItem)
+  .patch([validJWT, validId, updateItemDTO], controller.updateItem)
+  .put([validJWT, validId, updateItemDTO], controller.updateItem);
 
-// router
-//   .route('/item-drugs')
-//   .post([validJWT, createConfigDTO], controller.createItemDrug)
-//   .get([validJWT, validPagination], controller.findAllItemDrug);
+router
+  .route('/items/:itemId/drugs')
+  .post([validJWT, validParamId('itemId'), createItemDrugDTO], controller.createItemDrug)
+  .get([validJWT, validParamId('itemId')], controller.findItemDrugByItemId)
+  .patch([validJWT, validParamId('itemId'), updateItemDrugDTO], controller.updateItemDrug)
+  .put([validJWT, validParamId('itemId'), updateItemDrugDTO], controller.updateItemDrug);
 
-// router
-//   .route('/item-drugs/:id')
-//   .get([validJWT, validId], controller.findItemDrugById)
-//   .delete([validJWT, validId], controller.removeItemDrug)
-//   .patch([validJWT, validId, updateConfigDTO], controller.updateItemDrug)
-//   .put([validJWT, validId, updateConfigDTO], controller.updateItemDrug);
+router
+  .route('/items/:itemId/labs')
+  .post([validJWT, validParamId('itemId'), createItemLabDTO], controller.createItemLab)
+  .get([validJWT, validParamId('itemId')], controller.findItemLabByItemId)
+  .patch([validJWT, validParamId('itemId'), updateItemLabDTO], controller.updateItemLab)
+  .put([validJWT, validParamId('itemId'), updateItemLabDTO], controller.updateItemLab);
 
-// router
-//   .route('/item-labs')
-//   .post([validJWT, createConfigDTO], controller.createItemLab)
-//   .get([validJWT, validPagination], controller.findAllItemLab);
+router.route('/items/:itemId/set').get([validJWT, validParamId('itemId')], controller.listItemSetByItemId);
 
-// router
-//   .route('/item-labs/:id')
-//   .get([validJWT, validId], controller.findItemLabById)
-//   .delete([validJWT, validId], controller.removeItemLab)
-//   .patch([validJWT, validId, updateConfigDTO], controller.updateItemLab)
-//   .put([validJWT, validId, updateConfigDTO], controller.updateItemLab);
-
-// router
-//   .route('/item-lab-tests')
-//   .post([validJWT, createConfigDTO], controller.createItemLabTest)
-//   .get([validJWT, validPagination], controller.findAllItemLabTest);
-
-// router
-//   .route('/item-lab-tests/:id')
-//   .get([validJWT, validId], controller.findItemLabTestById)
-//   .delete([validJWT, validId], controller.removeItemLabTest)
-//   .patch([validJWT, validId, updateConfigDTO], controller.updateItemLabTest)
-//   .put([validJWT, validId, updateConfigDTO], controller.updateItemLabTest);
-
-// router
-//   .route('/item-sets')
-//   .post([validJWT, createConfigDTO], controller.createItemSet)
-//   .get([validJWT, validPagination], controller.findAllItemSet);
-
-// router
-//   .route('/item-sets/:id')
-//   .get([validJWT, validId], controller.findItemSetById)
-//   .delete([validJWT, validId], controller.removeItemSet)
-//   .patch([validJWT, validId, updateConfigDTO], controller.updateItemSet)
-//   .put([validJWT, validId, updateConfigDTO], controller.updateItemSet);
+router
+  .route('/items/:itemId/set/:subsetId')
+  .post([validJWT, validParamId('itemId'), validParamId('subsetId')], controller.createItemSet)
+  .delete([validJWT, validParamId('itemId'), validParamId('subsetId')], controller.removeItemSet);

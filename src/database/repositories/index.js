@@ -26,6 +26,9 @@ import UploadRepository from './upload';
 import VisitImageRepository from './visitimage';
 import VisitMediaRepository from './visitmedia';
 import LineNotifyRepository from './linenotify';
+import ItemRepository from './items';
+import ItemDrugRepository from './item-drugs';
+import ItemLabRepository from './item-labs';
 
 export default {
   UsersRepository,
@@ -56,4 +59,7 @@ export default {
   VisitImageRepository,
   VisitMediaRepository,
   LineNotifyRepository,
+  ItemRepository,
+  ItemDrugRepository,
+  ItemLabRepository,
 };

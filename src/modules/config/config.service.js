@@ -62,15 +62,12 @@ async function create(tableName, { code, label, active, userUpdateId }) {
   return createdObj;
 }
 
-async function update(tableName, id, { code = undefined, label = undefined, active = undefined, userUpdateId }) {
-  await checkCodeExisted(tableName, code, id);
+async function update(tableName, id, model) {
+  if (model.code) {
+    await checkCodeExisted(tableName, model.code, id);
+  }
 
-  const obj = { userUpdateId };
-  if (code) obj.code = code;
-  if (code) obj.label = label;
-  if (code) obj.active = active;
-
-  const updatedObj = await db.base.update(tableName, id, obj);
+  const updatedObj = await db.base.update(tableName, id, model);
 
   if (!updatedObj)
     throw new NotFoundExceptions(
@@ -92,16 +89,6 @@ export const findBaseCCById = id => findById('c_cc', id);
 export const removeBaseCC = id => removeById('c_cc', id);
 
 export const updateBaseCC = async (id, dto) => update('c_cc', id, dto);
-
-export const createBaseEX = dto => create('c_ex', dto);
-
-export const findAllBaseEX = (search, limit, offset) => findAll('c_ex', search, limit, offset);
-
-export const findBaseEXById = id => findById('c_ex', id);
-
-export const removeBaseEX = id => removeById('c_ex', id);
-
-export const updateBaseEX = async (id, dto) => update('c_ex', id, dto);
 
 export const createBaseHT = dto => create('c_ht', dto);
 
@@ -132,3 +119,38 @@ export const findBaseDXById = id => findById('c_dx', id);
 export const removeBaseDX = id => removeById('c_dx', id);
 
 export const updateBaseDX = async (id, dto) => update('c_dx', id, dto);
+
+export const createItem = dto => create('c_item', dto);
+
+export const findAllItem = (search, limit, offset) =>
+  db.task(async t => {
+    const p1 = t.items.findAll(search, limit, offset);
+    const p2 = t.items.findAllCount(search);
+
+    const [datas, counts] = await Promise.all([p1, p2]);
+    return { datas, counts };
+  });
+
+export const findItemById = id => findById('c_item', id);
+
+export const removeItem = id => update('c_item', id, { active: false });
+
+export const updateItem = async (id, dto) => update('c_item', id, dto);
+
+export const createItemDrug = dto => create('c_item_drug', dto);
+
+export const findItemDrugByItemId = itemId => db.base.find('c_item_drug', { itemId });
+
+export const updateItemDrug = async (itemId, dto) => db.itemDrugs.update(itemId, dto);
+
+export const createItemLab = dto => create('c_item_lab', dto);
+
+export const findItemLabByItemId = itemId => db.base.find('c_item_lab', { itemId });
+
+export const updateItemLab = async (itemId, dto) => db.itemLabs.update(itemId, dto);
+
+export const createItemSet = dto => create('c_item_set', dto);
+
+export const listItemSetByItemId = itemId => db.base.find('c_item_set', { itemId });
+
+export const removeItemSet = async id => removeById('c_item_set', id);

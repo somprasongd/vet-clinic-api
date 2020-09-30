@@ -18,7 +18,7 @@ export const create = async (req, res) => {
     email: dto.email,
     phone: dto.phone,
     isAdmin: dto.isAdmin,
-    isActive: dto.isActive,
+    active: dto.active,
   };
   if (dto.avatarId) {
     user.avatarId = dto.avatarId;
@@ -79,20 +79,22 @@ export const remove = async (req, res) => {
 export const update = async (req, res) => {
   const { dto } = req;
 
-  const hash = await bcrypt.hash(dto.password);
   let user = {
-    password: hash,
     name: dto.name,
     email: dto.email,
     phone: dto.phone,
     isAdmin: dto.isAdmin,
-    isActive: dto.isActive,
+    active: dto.active,
   };
   if (dto.avatarId) {
     user.avatarId = dto.avatarId;
   }
+  if (dto.password !== null) {
+    const hash = await bcrypt.hash(dto.password);
+    user.password = hash;
+  }
 
-  user = await service.updateUser(req.params.id, user);
+  user = await service.updateUser(req.params.id, user, dto.roles);
   if (!user) throw new NotFoundExceptions('The user with the given ID was not found.');
 
   const mediaUrl = `${req.getHost()}/`;

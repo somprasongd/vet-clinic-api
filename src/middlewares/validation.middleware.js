@@ -43,3 +43,9 @@ export const validId = (req, res, next) => {
   if (!reg.test(req.params.id)) return next(new InvalidExceptions('Invalid parameter id.'));
   next();
 };
+
+export const validParamId = paramName => (req, res, next) => {
+  const reg = new RegExp('^[0-9]+$');
+  if (!reg.test(req.params[paramName])) return next(new InvalidExceptions('Invalid parameter id.'));
+  next();
+};

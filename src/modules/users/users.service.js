@@ -20,7 +20,7 @@ export const createUser = async (newUser, roles) => {
     const user = await t.users.create(newUser);
 
     roles.forEach(async roleId => {
-      await t.base.create('t_user_roles', {
+      await t.base.create('c_user_roles', {
         user_id: user.id,
         role_id: roleId,
       });
@@ -31,7 +31,25 @@ export const createUser = async (newUser, roles) => {
   return user;
 };
 
-export const updateUser = (id, user) => db.users.update(id, user);
+export const updateUser = async (id, user, roles) => {
+  const updatedUser = await db.tx(async t => {
+    const result = await t.users.update(id, user);
+
+    if (roles.length > 0) {
+      await t.base.removeFrom('c_user_roles', { userId: id });
+
+      roles.forEach(async roleId => {
+        await t.base.create('c_user_roles', {
+          user_id: id,
+          role_id: roleId,
+        });
+      });
+    }
+
+    return result;
+  });
+  return updatedUser;
+};
 
 export const updateUserActive = (id, isActive) => db.users.updateActive(id, isActive);
 

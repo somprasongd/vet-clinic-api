@@ -14,13 +14,13 @@ export const createUserDTO = (req, res, next) => {
     email: Joi.string()
       .max(50)
       .email(),
-    phone: Joi.string().max(10),
+    phone: Joi.string().regex(/^\d{10}$/),
     password: Joi.string()
       .min(5)
       .max(50)
       .required(),
     isAdmin: Joi.boolean().default(false),
-    isActive: Joi.boolean().default(true),
+    active: Joi.boolean().default(true),
     avatarId: Joi.number().integer(),
     roles: Joi.array()
       .items(
@@ -57,10 +57,14 @@ export const updateUserDTO = (req, res, next) => {
       .min(2)
       .max(100)
       .required(),
+    password: Joi.string()
+      .min(5)
+      .max(50)
+      .allow(null),
     email: Joi.string().email(),
     phone: Joi.string().max(10),
     isAdmin: Joi.boolean().default(false),
-    isActive: Joi.boolean().default(true),
+    active: Joi.boolean().default(true),
     roles: Joi.array()
       .items(
         Joi.number()
@@ -68,7 +72,7 @@ export const updateUserDTO = (req, res, next) => {
           .min(1)
           .required()
       )
-      .required(),
+      .default([]),
   });
 
   const { dto } = validationHandler(req.body, schema);
@@ -103,7 +107,7 @@ export const updateUserAvatarDTO = (req, res, next) => {
 };
 
 export const respondUserDTO = user => {
-  const { id, username, name, email, phone, avatar = null, isAdmin, isActive, roles } = user;
+  const { id, username, name, email, phone, avatar = null, isAdmin, active, roles } = user;
   return {
     id,
     username,
@@ -112,7 +116,7 @@ export const respondUserDTO = user => {
     phone,
     avatar,
     isAdmin,
-    isActive,
+    active,
     roles,
   };
 };

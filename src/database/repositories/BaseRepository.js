@@ -1,4 +1,5 @@
 import { changeToSnakeCase, renameWithKeymap } from '../helpers/renameObjectKey';
+import { removeUndefinedColumn } from '../helpers/repository';
 
 export default class {
   constructor(db, pgp) {
@@ -12,15 +13,19 @@ export default class {
     return changeToSnakeCase(cols);
   }
 
-  create(tableName, obj) {
+  create(tableName, model) {
+    const obj = removeUndefinedColumn(model);
+
     return this.db.one(`INSERT INTO ${tableName} ($<this:name>) VALUES($<this:csv>) RETURNING *`, this.columnize(obj));
   }
 
-  update(tableName, id, obj) {
+  update(tableName, id, model) {
+    const obj = removeUndefinedColumn(model);
+
     return this.db.oneOrNone(
       `UPDATE ${tableName} set ${
         Object.keys(obj).length > 1 ? '($2:name)=($2:csv)' : '$2:name=$2:csv'
-      }, update_datetime=current_timestamp WHERE id = $1 RETURNING *`,
+      }, update_at=current_timestamp WHERE id = $1 RETURNING *`,
       [+id, this.columnize(obj)]
     );
   }
@@ -28,6 +33,14 @@ export default class {
   // Tries to delete a pet by id, and returns the number of records deleted;
   remove(tableName, id) {
     return this.db.result(`DELETE FROM ${tableName} WHERE id = $1`, +id, r => r.rowCount);
+  }
+
+  removeFrom(tableName, obj) {
+    return this.db.result(
+      `DELETE FROM ${tableName} WHERE $<this:name> = $<this:csv>`,
+      this.columnize(obj),
+      r => r.rowCount
+    );
   }
 
   all(tableName) {

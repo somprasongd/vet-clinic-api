@@ -73,6 +73,9 @@ const createConnection = () => {
       obj.visitimage = new repos.VisitImageRepository(obj, pgp);
       obj.visitmedia = new repos.VisitMediaRepository(obj, pgp);
       obj.linenotify = new repos.LineNotifyRepository(obj, pgp);
+      obj.items = new repos.ItemRepository(obj, pgp);
+      obj.itemDrugs = new repos.ItemDrugRepository(obj, pgp);
+      obj.itemLabs = new repos.ItemLabRepository(obj, pgp);
     },
   };
 

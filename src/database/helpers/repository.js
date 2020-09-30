@@ -13,23 +13,37 @@ export default class {
     return changeToSnakeCase(cols);
   }
 
-  create(obj) {
+  create(model) {
+    const obj = removeUndefinedColumn(model);
+
     return this.db.one(
       `INSERT INTO ${this.tableName} ($<this:name>) VALUES($<this:csv>) RETURNING *`,
       this.columnize(obj)
     );
   }
 
-  update(id, obj) {
-    return this.db.oneOrNone(`UPDATE ${this.tableName} set ($2:name)=($2:csv) WHERE id = $1 RETURNING *`, [
-      id,
-      this.columnize(obj),
-    ]);
+  update(id, model) {
+    const obj = removeUndefinedColumn(model);
+
+    return this.db.oneOrNone(
+      `UPDATE ${this.tableName} set ${
+        Object.keys(obj).length > 1 ? '($2:name)=($2:csv)' : '$2:name=$2:csv'
+      }, update_at=current_timestamp WHERE id = $1 RETURNING *`,
+      [+id, this.columnize(obj)]
+    );
   }
 
   // Tries to delete a pet by id, and returns the number of records deleted;
   remove(id) {
     return this.db.result(`DELETE FROM ${this.tableName} WHERE id = $1`, id, r => r.rowCount);
+  }
+
+  removeFrom(tableName, obj) {
+    return this.db.result(
+      `DELETE FROM ${tableName} WHERE $<this:name> = $<this:csv>`,
+      this.columnize(obj),
+      r => r.rowCount
+    );
   }
 
   all() {
@@ -48,3 +62,12 @@ export default class {
     return this.db.oneOrNone(`SELECT * FROM ${this.tableName} WHERE id = $1`, +id);
   }
 }
+
+export const removeUndefinedColumn = model =>
+  Object.keys(model).reduce((acc, cur) => {
+    const newObj = { ...acc };
+    if (model[cur] !== undefined) {
+      newObj[cur] = model[cur];
+    }
+    return newObj;
+  }, {});
