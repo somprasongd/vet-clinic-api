@@ -129,3 +129,7 @@ INSERT INTO c_user ("username","password","name","email","phone","is_admin","act
 
 INSERT INTO c_user_roles ("user_id","role_id") VALUES(1,1), (1,2), (1,3), (1,4), (1,5), (1,6);
 
+INSERT INTO public.c_site
+("name", branch_no, branch_name, phone, address, update_by)
+VALUES('Demo Vet Clinic', '00000', 'สำนักงานใหญ่', '076611229', '1/123 ม.0 ต.วิชิต อ.เมือง จ.ภูเก็ต 83000', 0, 1);
+

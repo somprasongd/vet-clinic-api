@@ -11,10 +11,16 @@ import {
   updateItemDrugDTO,
   updateItemDTO,
   updateItemLabDTO,
+  updateSiteDTO,
 } from './config.dto';
 import { validJWT } from '../../middlewares/auth-validation.middleware';
 
 export const router = express.Router();
+
+router
+  .route('/site')
+  .get([validJWT], controller.getSiteInfo)
+  .put([validJWT, updateSiteDTO], controller.updateSiteInfo);
 
 router
   .route('/cc')

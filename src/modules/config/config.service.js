@@ -80,6 +80,26 @@ async function update(tableName, id, model) {
   return updatedObj;
 }
 
+export const getSite = async url => {
+  const site = await findById('c_site', 1);
+
+  if (site.logoId && site.logoId !== null) {
+    const upload = await findById('t_upload', site.logoId);
+
+    delete site.logoId;
+
+    const logo = {
+      url: `${url}${upload.filename}`,
+      urlThumbnail: `${url}${upload.filenameThumbnail}`,
+      urlThumbnailSm: `${url}${upload.filenameThumbnailSmall}`,
+    };
+    site.logo = logo;
+  }
+  return site;
+};
+
+export const updateSite = async dto => update('c_site', 1, dto);
+
 export const createBaseCC = dto => create('c_cc', dto);
 
 export const findAllBaseCC = (search, limit, offset) => findAll('c_cc', search, limit, offset);

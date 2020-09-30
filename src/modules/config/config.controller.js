@@ -1,6 +1,22 @@
 import * as service from './config.service';
-import { InvalidExceptions, NotFoundExceptions } from '../../common/helpers/exceptions';
+import { NotFoundExceptions } from '../../common/helpers/exceptions';
 import paginate from '../../common/helpers/res-with-paginate';
+
+export const getSiteInfo = async (req, res) => {
+  const mediaUrl = `${req.getHost()}/`;
+
+  const result = await service.getSite(mediaUrl);
+
+  res.json(result);
+};
+
+export const updateSiteInfo = async (req, res) => {
+  const { dto } = req;
+
+  const updatedObj = await service.updateSite(dto);
+
+  res.json(updatedObj);
+};
 
 export const createBaseCC = async (req, res) => {
   const { dto } = req;

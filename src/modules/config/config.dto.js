@@ -1,6 +1,22 @@
 import Joi from 'joi';
 import validationHandler from '../../common/helpers/validation-handler';
 
+export const updateSiteDTO = (req, res, next) => {
+  const schema = Joi.object().keys({
+    name: Joi.string(),
+    branchNo: Joi.string(),
+    branchName: Joi.string(),
+    phone: Joi.string(),
+    address: Joi.string(),
+    logoId: Joi.number().min(1),
+  });
+
+  const { dto } = validationHandler(req.body, schema);
+
+  req.dto = { ...dto, updateBy: req.user.id };
+  next();
+};
+
 export const createConfigDTO = (req, res, next) => {
   const schema = Joi.object().keys({
     code: Joi.string().required(),

@@ -184,6 +184,21 @@ CREATE TABLE public.c_user_roles (
 CREATE INDEX c_user_roles_role_id_idx ON public.c_user_roles USING btree (role_id);
 CREATE INDEX c_user_roles_user_id_idx ON public.c_user_roles USING btree (user_id);
 
+CREATE TABLE public.c_site (
+	id serial NOT NULL,
+	"name" varchar(255) NOT NULL,
+	branch_no varchar(20) NULL,
+	branch_name varchar(255) NULL,
+	phone varchar(10) NULL,
+	address text NULL,
+	logo_id int4 NULL,
+	update_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	update_by int4 NOT NULL,
+	CONSTRAINT c_site_pk PRIMARY KEY (id),
+	CONSTRAINT c_site_fk FOREIGN KEY (logo_id) REFERENCES public.t_upload(id),
+	CONSTRAINT c_site_update_by_fk_c_user_id FOREIGN KEY (update_by) REFERENCES c_user(id)
+);
+
 CREATE TABLE public.c_cc (
 	id serial NOT NULL,
 	code varchar(50) NOT NULL,
