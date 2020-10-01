@@ -2,81 +2,115 @@ import Repository from '../helpers/repository';
 
 export default class PetsRepository extends Repository {
   constructor(db, pgp) {
-    super(db, pgp, 'pets_pet', {
-      birthDate: 'birth_date',
-      microchipNo: 'microchip_no',
-      isVisitedTypeId: 'is_visited_type_id',
-      imageId: 'image_id',
-      ownerId: 'owner_id',
-      sexId: 'sex_id',
-      typeId: 'type_id',
-      userUpdateId: 'user_update_id',
-      updateDatetime: 'update_datetime',
-    });
+    super(db, pgp, 't_pet', {});
   }
 
-  findById(id, mediaUrl) {
+  findById(id) {
     return this.db.oneOrNone(
       `SELECT
-      pets_pet.id
-      , pets_pet.code
-      , pets_pet.name
-      , pets_pet.birth_date
-      , pets_pet.breed
-      , pets_pet.death
-      , pets_pet.earmark
-      , pets_pet.color
-      , pets_pet.note
-      , pets_pet.microchip_no
-      , pets_pet.sterilization
-      , pets_pet.is_visited_type_id
-      , pets_pet.active
-      , case when pets_imageprofile.id is null then null
-          else json_build_object(
-            'id', pets_imageprofile.id,
-            'image', '${mediaUrl}' || pets_imageprofile.image,
-            'thumbnail', '${mediaUrl}' || pets_imageprofile.thumbnail
-          )
-        end as image
+      t_pet.id
+      , t_pet.code
+      , t_pet.name
+      , t_pet.birth_date
+      , t_pet.breed
+      , t_pet.death
+      , t_pet.earmark
+      , t_pet.color
+      , t_pet.note
+      , t_pet.microchip_no
+      , t_pet.sterilization
       , json_build_object(
-            'id', pets_owner.id,
-            'code', pets_owner.code,
-            'fullName', trim(both ' ' from (pets_prefix.label || pets_owner.first_name || ' ' || pets_owner.last_name)),
-            'houseNo', pets_owner.house_no,
-            'tels', pets_owner.tels,
-            'image', case when ownerImg.id is null then null
-                      else json_build_object(
-                        'id', ownerImg.id,
-                        'image', '${mediaUrl}' || ownerImg.image,
-                        'thumbnail', '${mediaUrl}' || ownerImg.thumbnail
-                      ) end
-        ) as owner
+          'id', m_pet_gender.id,
+          'label', m_pet_gender.label
+      ) as gender
       , json_build_object(
-          'id', pets_sex.id,
-          'label', pets_sex.label
-      ) as sex
-      , json_build_object(
-          'id', pets_type.id,
-          'label', pets_type.label
+          'id', m_pet_type.id,
+          'label', m_pet_type.label
       ) as type
-      FROM pets_pet      
-      LEFT JOIN pets_imageprofile on pets_imageprofile.id = pets_pet.image_id      
-      LEFT JOIN pets_sex on pets_sex.id = pets_pet.sex_id
-      LEFT JOIN pets_type on pets_type.id = pets_pet.type_id
-      INNER JOIN pets_owner on pets_owner.id = pets_pet.owner_id
-      LEFT JOIN pets_prefix on pets_prefix.id = pets_owner.prefix_id
-      LEFT JOIN pets_imageprofile ownerImg on ownerImg.id = pets_owner.image_id
-      WHERE pets_pet.id = $1 and pets_pet.active = true`,
+      FROM t_pet     
+      LEFT JOIN m_pet_gender on m_pet_gender.id = t_pet.gender_id
+      LEFT JOIN m_pet_type on m_pet_type.id = t_pet.type_id
+      WHERE t_pet.id = $1 and t_pet.active = true`,
       +id
     );
   }
 
-  update(id, obj) {
-    return this.db.oneOrNone(
-      `UPDATE ${this.tableName} set ${
-        Object.keys(obj).length > 1 ? '($2:name)=($2:csv)' : '$2:name=$2:csv'
-      } WHERE id = $1 and active = true RETURNING *`,
-      [+id, this.columnize(obj)]
-    );
+  // find(wheres, options)
+  find(wheres, { offset = 0, limit = 'all' }) {
+    const { code, name, microchipNo, genderId, typeId } = wheres;
+    return this.db.task(async t => {
+      const p1 = t.manyOrNone(
+        `SELECT
+      t_pet.id
+      , t_pet.code
+      , t_pet.name
+      , t_pet.birth_date
+      , t_pet.breed
+      , t_pet.death
+      , t_pet.earmark
+      , t_pet.color
+      , t_pet.note
+      , t_pet.microchip_no
+      , t_pet.sterilization
+      , json_build_object(
+          'id', m_pet_gender.id,
+          'label', m_pet_gender.label
+      ) as gender
+      , json_build_object(
+          'id', m_pet_type.id,
+          'label', m_pet_type.label
+      ) as type
+      FROM t_pet     
+      LEFT JOIN m_pet_gender on m_pet_gender.id = t_pet.gender_id
+      LEFT JOIN m_pet_type on m_pet_type.id = t_pet.type_id
+      WHERE t_pet.active = true ${createSearchCondition(wheres)}
+      order by m_pet_type.label, t_pet.name
+      offset $<offset> limit ${limit}`,
+        {
+          code,
+          name,
+          microchipNo,
+          genderId,
+          typeId,
+          offset,
+        }
+      );
+      const p2 = t.one(
+        `SELECT count(*)
+      FROM t_pet
+      WHERE t_pet.active = true ${createSearchCondition(wheres)}`,
+        {
+          code,
+          name,
+          microchipNo,
+          genderId,
+          typeId,
+        },
+        a => +a.count
+      );
+      const [datas, counts] = await Promise.all([p1, p2]);
+      return { datas, counts };
+    });
   }
+}
+
+function createSearchCondition(wheres) {
+  const { code, name, microchipNo, genderId, typeId } = wheres;
+  let conditions = '';
+  if (code) {
+    conditions += ` AND code = $<code>`;
+  }
+  if (name) {
+    conditions += `  AND name = $<name>`;
+  }
+  if (microchipNo) {
+    conditions += ` AND microchip_no = $<microchipNo>`;
+  }
+  if (genderId) {
+    conditions += ` AND gender_id = $<genderId>`;
+  }
+  if (typeId) {
+    conditions += ` AND type_id = $<typeId>`;
+  }
+  return conditions || '';
 }

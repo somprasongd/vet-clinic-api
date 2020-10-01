@@ -369,3 +369,36 @@ CREATE INDEX t_member_house_no_like ON public.t_member USING btree (house_no var
 CREATE INDEX t_member_last_name ON public.t_member USING btree (last_name);
 CREATE INDEX t_member_last_name_like ON public.t_member USING btree (last_name varchar_pattern_ops);
 CREATE INDEX t_member_tels ON public.t_member USING btree (tels);
+
+CREATE TABLE public.t_pet (
+	id serial NOT NULL,	
+	owner_id int4 NOT NULL,
+	code varchar(15) NOT NULL,
+	"name" varchar(50) NOT NULL,
+	avatar_id int4 NULL,
+	birth_date date NULL,
+	breed varchar(50) NULL,
+	death bool NOT NULL DEFAULT false,
+	earmark varchar(50) NULL,
+	color varchar(50) NULL,
+	microchip_no varchar(20) NULL,
+	sterilization bool NOT NULL DEFAULT false,
+	gender_id int4 NOT NULL,
+	type_id int4 NOT NULL,
+	note text NULL,
+	active bool NOT NULL DEFAULT true,
+	update_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	update_by int4 NOT NULL,
+	CONSTRAINT t_pet_code_key UNIQUE (code),
+	CONSTRAINT t_pet_pkey PRIMARY KEY (id),
+	CONSTRAINT t_pet_avatar_id_fk_t_upload_id FOREIGN KEY (avatar_id) REFERENCES t_upload(id) DEFERRABLE INITIALLY DEFERRED,
+	CONSTRAINT t_pet_owner_id_fk_t_member_id FOREIGN KEY (owner_id) REFERENCES t_member(id) DEFERRABLE INITIALLY DEFERRED,
+	CONSTRAINT t_pet_gender_id_fk_m_pet_gender_id FOREIGN KEY (gender_id) REFERENCES pets_sex(id) DEFERRABLE INITIALLY DEFERRED,
+	CONSTRAINT t_pet_type_id_fk_m_pet_type_id FOREIGN KEY (type_id) REFERENCES m_pet_type(id) DEFERRABLE INITIALLY DEFERRED,
+	CONSTRAINT t_pet_update_by_fk_c_user_id FOREIGN KEY (update_by) REFERENCES c_user(id) DEFERRABLE INITIALLY DEFERRED
+);
+CREATE INDEX t_pet_active ON public.t_pet USING btree (active);
+CREATE INDEX t_pet_code_like ON public.t_pet USING btree (code varchar_pattern_ops);
+CREATE INDEX t_pet_name ON public.t_pet USING btree (name);
+CREATE INDEX t_pet_name_like ON public.t_pet USING btree (name varchar_pattern_ops);
+CREATE INDEX t_pet_owner_id ON public.t_pet USING btree (owner_id);
