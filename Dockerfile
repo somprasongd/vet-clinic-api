@@ -6,7 +6,9 @@ WORKDIR /app
 RUN mkdir logs &&\
     mkdir -p media/avatar &&\
     mkdir -p media/file &&\
-    mkdir -p media/image
+    mkdir -p media/image &&\
+    mkdir -p media/default
+COPY ./media/default ./media/default
 COPY ./package* ./
 RUN npm ci && \
     npm cache clean --force
