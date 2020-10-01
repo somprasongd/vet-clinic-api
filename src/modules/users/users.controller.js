@@ -26,8 +26,7 @@ export const create = async (req, res) => {
 
   user = await service.createUser(user, dto.roles);
 
-  const mediaUrl = `${req.getHost()}/`;
-  user = await service.findUserById(user.id, mediaUrl);
+  user = await service.findUserById(user.id);
 
   res.json(respondUserDTO(user));
 };
@@ -39,17 +38,14 @@ export const findAll = async (req, res) => {
     dto: { name, username, roleId },
   } = req;
 
-  const mediaUrl = `${req.getHost()}/`;
-
-  const { datas, counts } = await service.findAllUser(name, username, roleId, mediaUrl, limit, offset);
+  const { datas, counts } = await service.findAllUser(name, username, roleId, limit, offset);
 
   const results = paginate(datas, counts, limit, offset, page);
   res.json(results);
 };
 
 export const findById = async (req, res) => {
-  const mediaUrl = `${req.getHost()}/`;
-  const user = await service.findUserById(req.params.id, mediaUrl);
+  const user = await service.findUserById(req.params.id);
 
   if (!user) throw new NotFoundExceptions('The user with the given ID was not found.');
 
@@ -57,8 +53,7 @@ export const findById = async (req, res) => {
 };
 
 export const findMe = async (req, res) => {
-  const mediaUrl = `${req.getHost()}/`;
-  const user = await service.findUserById(req.user.id, mediaUrl);
+  const user = await service.findUserById(req.user.id);
 
   res.json(respondUserDTO(user));
 };
@@ -97,8 +92,7 @@ export const update = async (req, res) => {
   user = await service.updateUser(req.params.id, user, dto.roles);
   if (!user) throw new NotFoundExceptions('The user with the given ID was not found.');
 
-  const mediaUrl = `${req.getHost()}/`;
-  user = await service.findUserById(req.params.id, mediaUrl);
+  user = await service.findUserById(req.params.id);
 
   res.json(respondUserDTO(user));
 };
@@ -114,11 +108,42 @@ export const updatePassword = async (req, res) => {
   res.status(204).end();
 };
 
-export const updateAvatar = async (req, res) => {
-  const { dto } = req;
+export const createUserAvatar = async (req, res) => {
+  const userId = req.params.id || req.user.id;
 
-  const user = await service.updateUserAvatar(req.params.id, dto.avatarId);
+  const { uploadDTO } = req;
+
+  const user = await service.findUserById(userId);
+
   if (!user) throw new NotFoundExceptions('The user with the given ID was not found.');
+
+  await service.updateUserAvatar(user, uploadDTO.id);
+
+  res.json(uploadDTO);
+};
+
+export const getUserAvatar = async (req, res) => {
+  const userId = req.params.id || req.user.id;
+
+  const user = await service.findUserById(userId);
+
+  if (!user) throw new NotFoundExceptions('The user with the given ID was not found.');
+
+  if (user.avatarId === null) throw new NotFoundExceptions('The user with the given ID was not found avatar.');
+
+  const qs = Object.keys(req.query).reduce((acc, cur) => `${acc}&${cur}=${req.query[cur]}`, '?');
+
+  res.redirect(`/api/upload/file/${user.avatarId}${qs}`);
+};
+
+export const deleteUserAvatar = async (req, res) => {
+  const userId = req.params.id || req.user.id;
+
+  const user = await service.findUserById(userId);
+
+  if (!user) throw new NotFoundExceptions('The user with the given ID was not found.');
+
+  await service.updateUserAvatar(user, null);
 
   res.status(204).end();
 };

@@ -78,3 +78,6 @@ dist/
 nodemon.json
 
 .access.key
+media/avatar/*.jpeg
+media/image/*.jpeg
+media/file/*.pdf

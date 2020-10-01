@@ -107,14 +107,13 @@ export const updateUserAvatarDTO = (req, res, next) => {
 };
 
 export const respondUserDTO = user => {
-  const { id, username, name, email, phone, avatar = null, isAdmin, active, roles } = user;
+  const { id, username, name, email, phone, isAdmin, active, roles } = user;
   return {
     id,
     username,
     name,
     email,
     phone,
-    avatar,
     isAdmin,
     active,
     roles,

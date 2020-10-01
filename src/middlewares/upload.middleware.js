@@ -29,7 +29,7 @@ const multerUploadAvatar = multer({
   fileFilter: multerFilter,
 });
 
-export const uploadAvatar = multerUploadAvatar.single('image');
+export const uploadAvatar = multerUploadAvatar.single('avatar');
 
 export const resizeAvatar = (req, res, next) => {
   if (!req.file) return next();
@@ -43,19 +43,19 @@ export const resizeAvatar = (req, res, next) => {
   req.file.filenameThumbnailSmall = `media/avatar/${fileName}_thumbnail_sm.jpeg`;
 
   sharp(req.file.buffer)
-    // .resize(500)
+    .resize(200)
     .toFormat('jpeg')
     .jpeg({ quality: 90 })
     .toFile(req.file.filename);
 
   sharp(req.file.buffer)
-    .resize(120)
+    .resize(100)
     .toFormat('jpeg')
     .jpeg({ quality: 90 })
     .toFile(req.file.filenameThumbnail);
 
   sharp(req.file.buffer)
-    .resize(32)
+    .resize(50)
     .toFormat('jpeg')
     .jpeg({ quality: 90 })
     .toFile(req.file.filenameThumbnailSmall);

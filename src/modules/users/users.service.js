@@ -1,14 +1,15 @@
 import connection from '../../database';
+import { deleteById as deleteAvatar } from '../upload/upload.service';
 
 const { db } = connection;
 
-export const findUserById = (id, url) => db.users.findById(id, url);
+export const findUserById = id => db.users.findById(id);
 
 export const findUserByUsername = username => db.users.findByUsername(username);
 
-export const findAllUser = (name, username, roleId, url, limit, offset) =>
+export const findAllUser = (name, username, roleId, limit, offset) =>
   db.task(async t => {
-    const p1 = t.users.findAll(name, username, roleId, url, limit, offset);
+    const p1 = t.users.findAll(name, username, roleId, limit, offset);
     const p2 = t.users.findAllCount(name, username, roleId);
 
     const [datas, counts] = await Promise.all([p1, p2]);
@@ -53,7 +54,14 @@ export const updateUser = async (id, user, roles) => {
 
 export const updateUserActive = (id, isActive) => db.users.updateActive(id, isActive);
 
-export const updateUserAvatar = (id, avatarId) => db.users.updateAvatar(id, avatarId);
+export const updateUserAvatar = async (user, avatarId) => {
+  const oldAvatarId = user.avatarId;
+
+  await db.users.updateAvatar(user.id, avatarId);
+  if (oldAvatarId) {
+    deleteAvatar(user.avatarId);
+  }
+};
 
 export const updateUserPassword = (id, password) => db.users.updatePassword(id, password);
 

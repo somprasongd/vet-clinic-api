@@ -1,16 +1,7 @@
+import path from 'path';
+import { NotFoundExceptions } from '../../common/helpers/exceptions';
 import { respondUploadDTO } from './upload.dto';
 import * as service from './upload.service';
-
-export const createUpload = async (req, res) => {
-  const { dto } = req;
-
-  const result = await service.create(dto);
-
-  const mediaUrl = `${req.getHost()}/`;
-
-  res.json(respondUploadDTO(result, mediaUrl));
-};
-
 // export const findAll = async (req, res) => {
 //   const { limit, offset, page } = req.query;
 //   const mediaUrl = `${req.getHost()}/`;
@@ -39,17 +30,38 @@ export const createUpload = async (req, res) => {
 //   res.json(results);
 // };
 
-export const findOne = async (req, res) => {
+export const sendUploadRespone = async (req, res) => {
+  const json = req.uploadDTO;
+
+  res.json(json);
+};
+
+export const getUpload = async (req, res) => {
   const result = await service.findById(req.params.id);
 
-  if (!result) return res.status(404).json({ error: { message: 'The imageprofile with the given ID was not found.' } });
+  if (!result) throw new NotFoundExceptions('The upload with the given ID was not found.');
 
   const mediaUrl = `${req.getHost()}/`;
 
-  res.json(respondUploadDTO(result, mediaUrl));
+  req.uploadDTO = respondUploadDTO(result, mediaUrl);
 };
 
-export const remove = async (req, res) => {
+export const getFile = async (req, res) => {
+  const { thumbnail = null } = req.query;
+  const upload = await service.findById(req.params.id);
+
+  if (!upload) throw new NotFoundExceptions('The upload with the given ID was not found.');
+
+  let { filename } = upload;
+  if (thumbnail !== null && upload.uploadType === 'image') {
+    filename = thumbnail === 'sm' ? upload.filenameThumbnailSmall : upload.filenameThumbnail;
+  }
+
+  const file = path.join(path.parse(__dirname).dir, '..', '..', filename);
+  res.sendFile(file);
+};
+
+export const removeUpload = async (req, res) => {
   await service.deleteById(req.params.id);
 
   res.status(204).end();
