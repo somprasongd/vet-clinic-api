@@ -98,7 +98,7 @@ export const updateUserPasswordDTO = (req, res, next) => {
 };
 
 export const respondUserDTO = user => {
-  const { id, username, name, email, phone, isAdmin, active, roles } = user;
+  const { id, username, name, email, phone, isAdmin, roles } = user;
   return {
     id,
     username,
@@ -106,7 +106,6 @@ export const respondUserDTO = user => {
     email,
     phone,
     isAdmin,
-    active,
     roles,
   };
 };
