@@ -6,7 +6,9 @@ export const updateSiteDTO = (req, res, next) => {
     name: Joi.string(),
     branchNo: Joi.string(),
     branchName: Joi.string(),
-    phone: Joi.string(),
+    phone: Joi.string()
+      .min(9)
+      .max(10),
     address: Joi.string(),
     logoId: Joi.number().min(1),
   });
