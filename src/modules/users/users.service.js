@@ -59,7 +59,7 @@ export const updateUserAvatar = async (user, avatarId) => {
 
   await db.users.updateAvatar(user.id, avatarId);
   if (oldAvatarId) {
-    deleteAvatar(user.avatarId);
+    deleteAvatar(oldAvatarId);
   }
 };
 
