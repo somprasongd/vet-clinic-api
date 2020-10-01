@@ -3,7 +3,7 @@ import * as controller from './users.controller';
 import * as uploadMiddleware from '../upload/upload.middleware';
 import { onlyAdmin } from '../../middlewares/auth-policy.middleware';
 import { validId, validPagination } from '../../middlewares/validation.middleware';
-import { createUserDTO, searchUserDTO, updateUserAvatarDTO, updateUserDTO, updateUserPasswordDTO } from './users.dto';
+import { createUserDTO, searchUserDTO, updateUserDTO, updateUserPasswordDTO } from './users.dto';
 import { validJWT } from '../../middlewares/auth-validation.middleware';
 import { resizeAvatar, uploadAvatar } from '../../middlewares/upload.middleware';
 import { createUploadImageDTO } from '../upload/upload.dto';

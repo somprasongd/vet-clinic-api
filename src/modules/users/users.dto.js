@@ -95,17 +95,6 @@ export const updateUserPasswordDTO = (req, res, next) => {
   next();
 };
 
-export const updateUserAvatarDTO = (req, res, next) => {
-  const schema = Joi.object().keys({
-    avatarId: Joi.number().integer(),
-  });
-
-  const { dto } = validationHandler(req.body, schema);
-
-  req.dto = dto;
-  next();
-};
-
 export const respondUserDTO = user => {
   const { id, username, name, email, phone, isAdmin, active, roles } = user;
   return {
