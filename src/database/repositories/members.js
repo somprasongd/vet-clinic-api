@@ -31,22 +31,9 @@ export default class MembersRepository extends Repository {
   }
 
   // find(wheres, options)
-  find({ code, firstName, lastName, houseNo }, { offset = 0, limit = 'all' }) {
+  find(wheres, { offset = 0, limit = 'all' }) {
+    const { code, firstName, lastName, houseNo } = wheres;
     return this.db.task(async t => {
-      let conditions = '';
-      if (code) {
-        conditions += ` AND code = $<code>`;
-      }
-      if (firstName) {
-        conditions += ` AND first_name ilike '%$<firstName:value>%'`;
-      }
-      if (lastName) {
-        conditions += ` AND last_name ilike '%$<lastName:value>%'`;
-      }
-      if (houseNo) {
-        conditions += ` AND house_no ilike '%$<houseNo:value>%'`;
-      }
-
       const p1 = t.manyOrNone(
         `SELECT
         t_member.id
@@ -66,7 +53,7 @@ export default class MembersRepository extends Repository {
           ) as prefix
         FROM t_member
         LEFT JOIN pets_prefix on pets_prefix.id = t_member.prefix_id
-        WHERE t_member.active = true ${conditions || ''}
+        WHERE t_member.active = true ${createSearchCondition(wheres)}
         order by t_member.first_name, t_member.last_name
         offset $<offset> limit ${limit}`,
         {
@@ -80,7 +67,7 @@ export default class MembersRepository extends Repository {
       const p2 = t.one(
         `SELECT count(*)
         FROM t_member
-        WHERE t_member.active = true ${conditions || ''}`,
+        WHERE t_member.active = true ${createSearchCondition(wheres)}`,
         {
           code,
           firstName,
@@ -93,4 +80,22 @@ export default class MembersRepository extends Repository {
       return { datas, counts };
     });
   }
+}
+
+function createSearchCondition(wheres) {
+  const { code, firstName, lastName, houseNo } = wheres;
+  let conditions = '';
+  if (code) {
+    conditions += ` AND code = $<code>`;
+  }
+  if (firstName) {
+    conditions += ` AND first_name ilike '%$<firstName:value>%'`;
+  }
+  if (lastName) {
+    conditions += ` AND last_name ilike '%$<lastName:value>%'`;
+  }
+  if (houseNo) {
+    conditions += ` AND house_no ilike '%$<houseNo:value>%'`;
+  }
+  return conditions || '';
 }

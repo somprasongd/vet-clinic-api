@@ -142,14 +142,7 @@ export const updateBaseDX = async (id, dto) => update('c_dx', id, dto);
 
 export const createItem = dto => create('c_item', dto);
 
-export const findAllItem = (search, limit, offset) =>
-  db.task(async t => {
-    const p1 = t.items.findAll(search, limit, offset);
-    const p2 = t.items.findAllCount(search);
-
-    const [datas, counts] = await Promise.all([p1, p2]);
-    return { datas, counts };
-  });
+export const findAllItem = (conditions, { limit, offset }) => db.items.find(conditions, { limit, offset });
 
 export const findItemById = id => findById('c_item', id);
 

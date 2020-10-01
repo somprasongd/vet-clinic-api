@@ -71,9 +71,8 @@ export const createItemDTO = (req, res, next) => {
 
 export const searchItemDTO = (req, res, next) => {
   const schema = Joi.object().keys({
-    itemId: Joi.number().min(1),
-    itemCode: Joi.string(),
-    itemLabel: Joi.string(),
+    code: Joi.string(),
+    label: Joi.string(),
     groupId: Joi.number().min(1),
     groupIds: Joi.array().items(Joi.number().min(1)),
     groupLabel: Joi.string(),

@@ -27,9 +27,12 @@ export default class UsersRepository extends Repository {
     );
   }
 
-  findAll(name, username, roleId, limit, offset) {
-    return this.db.manyOrNone(
-      `SELECT 
+  // find(wheres, options)
+  find(wheres, { offset = 0, limit = 'all' }) {
+    const { name, username, roleId } = wheres;
+    return this.db.task(async t => {
+      const p1 = t.manyOrNone(
+        `SELECT 
         c_user.id
         , c_user.username
         , c_user.is_admin
@@ -38,34 +41,34 @@ export default class UsersRepository extends Repository {
       FROM c_user
         LEFT JOIN c_user_roles on c_user_roles.user_id = c_user.id 
         LEFT JOIN m_user_role on m_user_role.id = c_user_roles.role_id
-      WHERE c_user.active = true ${createSearchCondition({ name, username, roleId })}
+      WHERE c_user.active = true ${createSearchCondition(wheres)}
       GROUP BY
         c_user.id
       ORDER BY c_user.username
       OFFSET $<offset> LIMIT ${limit}`,
-      {
-        name,
-        username,
-        roleId,
-        offset,
-      }
-    );
-  }
-
-  findAllCount(name, username, roleId) {
-    return this.db.one(
-      `SELECT count(distinct(c_user.id))
+        {
+          name,
+          username,
+          roleId,
+          offset,
+        }
+      );
+      const p2 = t.one(
+        `SELECT count(distinct(c_user.id))
       FROM c_user
         LEFT JOIN c_user_roles on c_user_roles.user_id = c_user.id
         LEFT JOIN m_user_role on m_user_role.id = c_user_roles.role_id
-      WHERE c_user.active = true ${createSearchCondition({ name, username, roleId })}`,
-      {
-        name,
-        username,
-        roleId,
-      },
-      a => +a.count
-    );
+      WHERE c_user.active = true ${createSearchCondition(wheres)}`,
+        {
+          name,
+          username,
+          roleId,
+        },
+        a => +a.count
+      );
+      const [datas, counts] = await Promise.all([p1, p2]);
+      return { datas, counts };
+    });
   }
 
   updateActive(id, isActive) {
@@ -81,8 +84,8 @@ export default class UsersRepository extends Repository {
   }
 }
 
-function createSearchCondition(params) {
-  const { name, username, roleId } = params;
+function createSearchCondition(wheres) {
+  const { name, username, roleId } = wheres;
   let conditions = '';
   if (name) {
     conditions += ` AND c_user.name ilike '%$<name:value>%'`;

@@ -5,10 +5,12 @@ export default class UsersRepository extends Repository {
     super(db, pgp, 'c_item', {});
   }
 
-  findAll(params, limit, offset) {
-    const { itemId, itemCode, itemLabel, groupId, groupIds, groupLabel, isItemSet } = params;
-    return this.db.manyOrNone(
-      `SELECT
+  // find(wheres, options)
+  find(wheres, { offset = 0, limit = 'all' }) {
+    const { code, label, groupId, groupIds, groupLabel, isSet } = wheres;
+    return this.db.task(async t => {
+      const p1 = t.manyOrNone(
+        `SELECT
       c_item.id
       , c_item.code
       , c_item.label
@@ -21,54 +23,48 @@ export default class UsersRepository extends Repository {
       ) as item_group
       FROM c_item
       INNER JOIN m_item_group on c_item.item_group_id = m_item_group.id
-      WHERE c_item.active = true ${createSearchCondition(params)}
+      WHERE c_item.active = true ${createSearchCondition(wheres)}
       order by m_item_group.label, c_item.code
       offset $<offset> limit ${limit}`,
-      {
-        itemId,
-        itemCode,
-        itemLabel,
-        groupId,
-        groupIds,
-        groupLabel,
-        isItemSet,
-        offset,
-      }
-    );
-  }
-
-  findAllCount(params) {
-    const { itemId, itemCode, itemLabel, groupId, groupIds, groupLabel, isItemSet } = params;
-    return this.db.one(
-      `SELECT count(*)
+        {
+          code,
+          label,
+          groupId,
+          groupIds,
+          groupLabel,
+          isSet,
+          offset,
+        }
+      );
+      const p2 = t.one(
+        `SELECT count(*)
       FROM c_item
       INNER JOIN m_item_group on c_item.item_group_id = m_item_group.id
-      WHERE c_item.active = true ${createSearchCondition(params)}`,
-      {
-        itemId,
-        itemCode,
-        itemLabel,
-        groupId,
-        groupIds,
-        groupLabel,
-        isItemSet,
-      },
-      a => +a.count
-    );
+      WHERE c_item.active = true ${createSearchCondition(wheres)}`,
+        {
+          code,
+          label,
+          groupId,
+          groupIds,
+          groupLabel,
+          isSet,
+        },
+        a => +a.count
+      );
+      const [datas, counts] = await Promise.all([p1, p2]);
+      return { datas, counts };
+    });
   }
 }
 
 function createSearchCondition(params) {
-  const { itemId, itemCode, itemLabel, groupId, groupIds, groupLabel, isItemSet } = params;
+  const { code, label, groupId, groupIds, groupLabel, isSet } = params;
   let conditions = '';
-  if (itemId) {
-    conditions += ` AND c_item.id = $<itemId>`;
+  if (code) {
+    conditions += ` AND c_item.code = $<code>`;
   }
-  if (itemCode) {
-    conditions += ` AND c_item.code = $<itemCode>`;
-  }
-  if (itemLabel) {
-    conditions += ` AND c_item.label ilike '%$<itemLabel:value>%'`;
+  if (label) {
+    conditions += ` AND c_item.label ilike '%$<label:value>%'`;
   }
   if (groupId) {
     conditions += ` AND m_item_group.id = $<groupId>`;
@@ -79,8 +75,8 @@ function createSearchCondition(params) {
   if (groupLabel) {
     conditions += ` AND m_item_group.label ilike '%$<groupLabel:value>%'`;
   }
-  if (isItemSet) {
-    conditions += ` AND c_item.is_set = $<isItemSet>`;
+  if (isSet) {
+    conditions += ` AND c_item.is_set = $<isSet>`;
   }
   return conditions || '';
 }

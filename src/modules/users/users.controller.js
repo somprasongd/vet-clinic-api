@@ -35,11 +35,9 @@ export const create = async (req, res) => {
 export const findAll = async (req, res) => {
   const { limit, offset, page } = req.query;
 
-  const {
-    dto: { name, username, roleId },
-  } = req;
+  const { dto } = req;
 
-  const { datas, counts } = await service.findAllUser(name, username, roleId, limit, offset);
+  const { datas, counts } = await service.findAllUser(dto, { limit, offset });
 
   const results = paginate(datas, counts, limit, offset, page);
   res.json(results);

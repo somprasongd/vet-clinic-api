@@ -190,7 +190,7 @@ export const findAllItem = async (req, res) => {
   const { limit, offset, page } = req.query;
   const { dto } = req;
 
-  const { datas, counts } = await service.findAllItem(dto, limit, offset);
+  const { datas, counts } = await service.findAllItem(dto, { limit, offset });
 
   const results = paginate(datas, counts, limit, offset, page);
   res.json(results);
