@@ -32,6 +32,7 @@ export const searchPetDTO = (req, res, next) => {
     microchipNo: Joi.string(),
     genderId: Joi.number().min(1),
     typeId: Joi.number().min(1),
+    ownerId: Joi.number().min(1),
   });
 
   const { dto } = validationHandler(req.query, schema);

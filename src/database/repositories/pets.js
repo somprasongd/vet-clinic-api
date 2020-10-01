@@ -37,7 +37,7 @@ export default class PetsRepository extends Repository {
 
   // find(wheres, options)
   find(wheres, { offset = 0, limit = 'all' }) {
-    const { code, name, microchipNo, genderId, typeId } = wheres;
+    const { code, name, microchipNo, genderId, typeId, ownerId } = wheres;
     return this.db.task(async t => {
       const p1 = t.manyOrNone(
         `SELECT
@@ -73,6 +73,7 @@ export default class PetsRepository extends Repository {
           genderId,
           typeId,
           offset,
+          ownerId,
         }
       );
       const p2 = t.one(
@@ -85,6 +86,7 @@ export default class PetsRepository extends Repository {
           microchipNo,
           genderId,
           typeId,
+          ownerId,
         },
         a => +a.count
       );
@@ -95,7 +97,7 @@ export default class PetsRepository extends Repository {
 }
 
 function createSearchCondition(wheres) {
-  const { code, name, microchipNo, genderId, typeId } = wheres;
+  const { code, name, microchipNo, genderId, typeId, ownerId } = wheres;
   let conditions = '';
   if (code) {
     conditions += ` AND code = $<code>`;
@@ -111,6 +113,9 @@ function createSearchCondition(wheres) {
   }
   if (typeId) {
     conditions += ` AND type_id = $<typeId>`;
+  }
+  if (ownerId) {
+    conditions += ` AND owner_id = $<ownerId>`;
   }
   return conditions || '';
 }
