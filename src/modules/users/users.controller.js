@@ -3,6 +3,7 @@ import * as service from './users.service';
 import { InvalidExceptions, NotFoundExceptions } from '../../common/helpers/exceptions';
 import { respondUserDTO } from './users.dto';
 import paginate from '../../common/helpers/res-with-paginate';
+import config from '../../common/config';
 
 export const create = async (req, res) => {
   const { dto } = req;
@@ -129,7 +130,9 @@ export const getUserAvatar = async (req, res) => {
 
   if (!user) throw new NotFoundExceptions('The user with the given ID was not found.');
 
-  if (user.avatarId === null) throw new NotFoundExceptions('The user with the given ID was not found avatar.');
+  if (user.avatarId === null) {
+    return res.sendFile(config.DEFAULT_AVATAR);
+  }
 
   const qs = Object.keys(req.query).reduce((acc, cur) => `${acc}&${cur}=${req.query[cur]}`, '?');
 
