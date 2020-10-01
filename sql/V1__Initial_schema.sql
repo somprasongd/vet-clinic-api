@@ -328,5 +328,44 @@ CREATE TABLE public.c_item_set (
 );
 CREATE INDEX c_item_set_item_id ON public.c_item_set USING btree (item_id);
 
+CREATE TABLE public.c_counter (
+	id serial NOT NULL,
+	prefix varchar(2) NOT NULL,
+	"date" date NOT NULL DEFAULT CURRENT_DATE,
+	seq int4 NOT NULL,
+	CONSTRAINT c_counter_pkey PRIMARY KEY (id)
+);
+
 
 -- transaction data
+CREATE TABLE public.t_member (
+	id serial NOT NULL,
+	code varchar(15) NOT NULL,
+	avatar_id int4 NULL,
+	prefix_id int4 NOT NULL,
+	first_name varchar(50) NOT NULL,
+	last_name varchar(50) NOT NULL,
+	house_no varchar(100) NULL,
+	address text NULL,
+	tels _varchar NULL,
+	email varchar(254) NULL,
+	old_hn varchar(20) NULL,
+	remark text NULL,
+	active bool NOT NULL DEFAULT true,
+	update_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	update_by int4 NOT NULL,
+	CONSTRAINT t_member_code_key UNIQUE (code),
+	CONSTRAINT t_member_pkey PRIMARY KEY (id),
+	CONSTRAINT t_member_avatar_id_fk_t_upload_id FOREIGN KEY (avatar_id) REFERENCES t_upload(id),
+	CONSTRAINT t_member_prefix_id_fk_m_prefix_id FOREIGN KEY (prefix_id) REFERENCES m_prefix(id),
+	CONSTRAINT t_member_update_by_fk_c_user_id FOREIGN KEY (update_by) REFERENCES c_user(id) 
+);
+CREATE INDEX t_member_active ON public.t_member USING btree (active);
+CREATE INDEX t_member_code_like ON public.t_member USING btree (code varchar_pattern_ops);
+CREATE INDEX t_member_first_name ON public.t_member USING btree (first_name);
+CREATE INDEX t_member_first_name_like ON public.t_member USING btree (first_name varchar_pattern_ops);
+CREATE INDEX t_member_house_no ON public.t_member USING btree (house_no);
+CREATE INDEX t_member_house_no_like ON public.t_member USING btree (house_no varchar_pattern_ops);
+CREATE INDEX t_member_last_name ON public.t_member USING btree (last_name);
+CREATE INDEX t_member_last_name_like ON public.t_member USING btree (last_name varchar_pattern_ops);
+CREATE INDEX t_member_tels ON public.t_member USING btree (tels);

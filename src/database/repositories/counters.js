@@ -3,12 +3,12 @@ import Repository from '../helpers/repository';
 
 export default class CountersRepository extends Repository {
   constructor(db, pgp) {
-    super(db, pgp, 'pets_counter', {});
+    super(db, pgp, 'c_counter', {});
   }
 
   getCode(prefix) {
     return this.db.task(async t => {
-      let counter = await t.oneOrNone(`SELECT * FROM pets_counter WHERE prefix = $1`, prefix);
+      let counter = await t.oneOrNone(`SELECT * FROM c_counter WHERE prefix = $1`, prefix);
       if (!counter) {
         counter = await this.create({ prefix, seq: 2 }); // next no is 2
         return `${prefix}${moment(counter.date).format('YYMMDD')}-0001`;
@@ -25,5 +25,14 @@ export default class CountersRepository extends Repository {
       });
       return `${prefix}${moment(counter.date).format('YYMMDD')}-${`000${counter.seq - 1}`.slice(-4)}`;
     });
+  }
+
+  update(id, obj) {
+    return this.db.oneOrNone(
+      `UPDATE ${this.tableName} set ${
+        Object.keys(obj).length > 1 ? '($2:name)=($2:csv)' : '$2:name=$2:csv'
+      } WHERE id = $1 RETURNING *`,
+      [+id, this.columnize(obj)]
+    );
   }
 }

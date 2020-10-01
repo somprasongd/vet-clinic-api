@@ -1,0 +1,1 @@
+insert INTO c_counter (prefix ,"date" ,seq)  (select prefix ,"date" ,seq from pets_counter);
