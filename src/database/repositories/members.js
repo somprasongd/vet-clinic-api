@@ -19,6 +19,7 @@ export default class MembersRepository extends Repository {
       , t_member.email
       , t_member.old_hn
       , t_member.remark
+      , t_member.avatar_id
       , json_build_object(
             'id', pets_prefix.id,
             'label', pets_prefix.label

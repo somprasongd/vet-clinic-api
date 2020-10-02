@@ -20,7 +20,7 @@ export const updateMember = async (id, obj) => db.members.update(id, obj);
 export const updateMemberAvatar = async (member, avatarId) => {
   const oldAvatarId = member.avatarId;
 
-  await db.users.members(member.id, { avatarId });
+  await db.members.update(member.id, { avatarId });
   if (oldAvatarId) {
     deleteAvatar(oldAvatarId);
   }

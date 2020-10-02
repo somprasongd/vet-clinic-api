@@ -78,8 +78,9 @@ export const getMemberAvatar = async (req, res) => {
   }
 
   const qs = Object.keys(req.query).reduce((acc, cur) => `${acc}&${cur}=${req.query[cur]}`, '?');
-
-  res.redirect(`/api/upload/file/${member.avatarId}${qs}`);
+  console.log(`/api/upload/file/${member.avatarId}${qs}`);
+  req.url = `/api/upload/file/${member.avatarId}${qs}`;
+  req.app.handle(req, res);
 };
 
 export const deleteMemberAvatar = async (req, res) => {
@@ -92,4 +93,15 @@ export const deleteMemberAvatar = async (req, res) => {
   await service.updateMemberAvatar(member, null);
 
   res.status(204).end();
+};
+
+export const listPets = async (req, res) => {
+  const memberId = req.params.id || req.user.id;
+
+  const member = await service.findMemberById(memberId);
+
+  if (!member) throw new NotFoundExceptions('The member with the given ID was not found.');
+
+  req.url = `/api/pets?ownerId=${member.id}&limit=0`;
+  req.app.handle(req, res);
 };

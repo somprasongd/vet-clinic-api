@@ -13,5 +13,5 @@ export default {
   // LINE_NOTIFY_CLIENT_ID: process.env.LINE_NOTIFY_CLIENT_ID,
   // LINE_NOTIFY_CLIENT_SECRET: process.env.LINE_NOTIFY_CLIENT_SECRET,
   DEFAULT_AVATAR: path.join(DEFAULT_AVATAR_PATH, 'avatar.svg'),
-  DEFAULT_AVATAR_PET: path.join(DEFAULT_AVATAR_PATH, 'avatar.svg'),
+  DEFAULT_AVATAR_PET: path.join(DEFAULT_AVATAR_PATH, 'avatar_pet.svg'),
 };

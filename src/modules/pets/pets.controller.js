@@ -74,12 +74,13 @@ export const getPetAvatar = async (req, res) => {
   if (!pet) throw new NotFoundExceptions('The pet with the given ID was not found.');
 
   if (pet.avatarId === null) {
-    return res.sendFile(config.DEFAULT_AVATAR);
+    return res.sendFile(config.DEFAULT_AVATAR_PET);
   }
 
   const qs = Object.keys(req.query).reduce((acc, cur) => `${acc}&${cur}=${req.query[cur]}`, '?');
 
-  res.redirect(`/api/upload/file/${pet.avatarId}${qs}`);
+  req.url = `/api/upload/file/${pet.avatarId}${qs}`;
+  req.app.handle(req, res);
 };
 
 export const deletePetAvatar = async (req, res) => {
@@ -101,5 +102,6 @@ export const getPetOwner = async (req, res) => {
 
   if (!pet) throw new NotFoundExceptions('The pet with the given ID was not found.');
 
-  res.redirect(`/api/pets/${pet.ownerId}`);
+  req.url = `/api/members/${pet.ownerId}`;
+  req.app.handle(req, res);
 };

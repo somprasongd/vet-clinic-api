@@ -11,16 +11,16 @@ export const createPet = newPet =>
   db.tx(async t => {
     const code = await t.counters.getCode('P');
     newPet.code = code;
-    const member = await t.pets.create(newPet);
-    return member;
+    const pet = await t.pets.create(newPet);
+    return pet;
   });
 
 export const updatePet = async (id, obj) => db.pets.update(id, obj);
 
-export const updatePetAvatar = async (member, avatarId) => {
-  const oldAvatarId = member.avatarId;
+export const updatePetAvatar = async (pet, avatarId) => {
+  const oldAvatarId = pet.avatarId;
 
-  await db.users.pets(member.id, { avatarId });
+  await db.pets.update(pet.id, { avatarId });
   if (oldAvatarId) {
     deleteAvatar(oldAvatarId);
   }

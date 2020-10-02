@@ -134,7 +134,8 @@ export const getUserAvatar = async (req, res) => {
 
   const qs = Object.keys(req.query).reduce((acc, cur) => `${acc}&${cur}=${req.query[cur]}`, '?');
 
-  res.redirect(`/api/upload/file/${user.avatarId}${qs}`);
+  req.url = `/api/upload/file/${user.avatarId}${qs}`;
+  req.app.handle(req, res);
 };
 
 export const deleteUserAvatar = async (req, res) => {

@@ -28,3 +28,5 @@ router
   )
   .get([validId], controller.getMemberAvatar)
   .delete([validJWT, validId], controller.deleteMemberAvatar);
+
+router.route('/:id/pets').get([validId], controller.listPets);

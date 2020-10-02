@@ -9,6 +9,7 @@ export default class PetsRepository extends Repository {
     return this.db.oneOrNone(
       `SELECT
       t_pet.id
+      , t_pet.owner_id
       , t_pet.code
       , t_pet.name
       , t_pet.birth_date
@@ -26,7 +27,8 @@ export default class PetsRepository extends Repository {
       , json_build_object(
           'id', m_pet_type.id,
           'label', m_pet_type.label
-      ) as type
+      ) as type      
+      , t_pet.avatar_id
       FROM t_pet     
       LEFT JOIN m_pet_gender on m_pet_gender.id = t_pet.gender_id
       LEFT JOIN m_pet_type on m_pet_type.id = t_pet.type_id
@@ -42,6 +44,7 @@ export default class PetsRepository extends Repository {
       const p1 = t.manyOrNone(
         `SELECT
       t_pet.id
+      , t_pet.owner_id
       , t_pet.code
       , t_pet.name
       , t_pet.birth_date
