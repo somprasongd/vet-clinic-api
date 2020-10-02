@@ -87,18 +87,16 @@ export default class MembersRepository extends Repository {
 
   // find(wheres, options)
   findWithPet(wheres, { offset = 0, limit = 'all' }) {
-    const { firstName, lastName, houseNo, petName, tel, oldHn } = wheres;
+    const { firstName, lastName, houseNo, petName, tel, code } = wheres;
     const { conditions, orderby } = createSearchWithPetCondition(wheres);
     return this.db.task(async t => {
       const p1 = t.manyOrNone(
         `SELECT
         t_member.id
-        , t_member.code
-        , trim(both ' ' from (m_prefix.label || t_member.first_name || ' ' || t_member.last_name ${
-          ENABLE_SEARCH_OLD_HN
-            ? `|| case when t_member.old_hn is null then '' else ' (Old HN: ' ||  t_member.old_hn || ')' end`
-            : ''
-        })) as full_name
+        , t_member.code ${
+          ENABLE_SEARCH_OLD_HN ? `|| case when t_member.old_hn is null then '' else ' | ' ||  t_member.old_hn  end` : ''
+        } as code
+        , trim(both ' ' from (m_prefix.label || t_member.first_name || ' ' || t_member.last_name)) as full_name
         , trim(both ' ' from (t_member.house_no || ' ' || t_member.address)) as full_address
         , t_member.tels
         , case when count(t_pet.id) = 0 
@@ -133,7 +131,7 @@ export default class MembersRepository extends Repository {
           houseNo,
           petName,
           tel,
-          oldHn,
+          code,
           offset,
         }
       );
@@ -148,7 +146,7 @@ export default class MembersRepository extends Repository {
           houseNo,
           petName,
           tel,
-          oldHn,
+          code,
         },
         a => +a.count
       );
@@ -177,11 +175,20 @@ function createSearchCondition(wheres) {
 }
 
 function createSearchWithPetCondition(wheres) {
-  const { firstName, lastName, houseNo, petName, tel, oldHn } = wheres;
+  const { firstName, lastName, houseNo, petName, tel, code } = wheres;
   let conditions = '';
   let orderby = 't_member.house_no, t_member.first_name, t_member.last_name';
   if (houseNo) {
     conditions += ` AND t_member.house_no ilike '$<houseNo:value>%'`;
+  }
+  if (code) {
+    conditions += ` AND (t_member.code ilike '$<code:value>%' ${
+      ENABLE_SEARCH_OLD_HN ? `or t_member.old_hn ilike '$<code:value>%'` : ''
+    })`;
+  }
+  if (tel) {
+    conditions += ` AND $<tel> = ANY(t_member.tels)`;
+    orderby = 't_member.tels, t_member.house_no, t_member.first_name, t_member.last_name';
   }
   if (firstName) {
     conditions += ` AND t_member.first_name ilike '%$<firstName:value>%'`;
@@ -194,13 +201,6 @@ function createSearchWithPetCondition(wheres) {
   if (petName) {
     conditions += ` AND t_pet.name ilike '%$<petName:value>%'`;
     orderby = 't_member.house_no, t_member.first_name, t_member.last_name';
-  }
-  if (tel) {
-    conditions += ` AND $<tel> = ANY(t_member.tels)`;
-    orderby = 't_member.tels, t_member.house_no, t_member.first_name, t_member.last_name';
-  }
-  if (oldHn) {
-    conditions += ` AND t_member.old_hn ilike '$<oldHn:value>%'`;
   }
 
   return { conditions: conditions || '', orderby };

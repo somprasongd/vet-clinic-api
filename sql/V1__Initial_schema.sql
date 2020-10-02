@@ -362,6 +362,7 @@ CREATE TABLE public.t_member (
 );
 CREATE INDEX t_member_active ON public.t_member USING btree (active);
 CREATE INDEX t_member_code_like ON public.t_member USING btree (code varchar_pattern_ops);
+CREATE INDEX t_member_old_hn_like ON public.t_member USING btree (old_hn varchar_pattern_ops);
 CREATE INDEX t_member_first_name ON public.t_member USING btree (first_name);
 CREATE INDEX t_member_first_name_like ON public.t_member USING btree (first_name varchar_pattern_ops);
 CREATE INDEX t_member_house_no ON public.t_member USING btree (house_no);
