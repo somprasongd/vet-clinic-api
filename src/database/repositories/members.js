@@ -95,7 +95,9 @@ export default class MembersRepository extends Repository {
         t_member.id
         , t_member.code
         , trim(both ' ' from (m_prefix.label || t_member.first_name || ' ' || t_member.last_name ${
-          ENABLE_SEARCH_OLD_HN ? `|| ' (Old HN: ' || t_member.old_hn || ')'` : ''
+          ENABLE_SEARCH_OLD_HN
+            ? `|| case when t_member.old_hn is null then '' else ' (Old HN: ' ||  t_member.old_hn || ')' end`
+            : ''
         })) as full_name
         , trim(both ' ' from (t_member.house_no || ' ' || t_member.address)) as full_address
         , t_member.tels
