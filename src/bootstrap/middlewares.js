@@ -1,9 +1,16 @@
 import cors from 'cors';
 import express from 'express';
+import morgan from 'morgan';
 import helmet from 'helmet';
+import { v4 as uuidV4 } from 'uuid';
 import config from '../common/config';
 
+morgan.token('id', req => req.id);
+
 export default app => {
+  app.use(assignId);
+  app.use(morgan(':date[iso] :id :method :url :response-time'));
+
   const { CORS_OPTIONS } = config;
   // use middlewares
   app.use(cors(CORS_OPTIONS));
@@ -16,8 +23,8 @@ export default app => {
   // Express behind proxies
   app.set('trust proxy', 'loopback');
 
-  // ปิดการ caching ของระบบกับ browser กับ server เพื่อป้องกันในกรณี 304 if none match
-  app.disable('etag');
+  // // ปิดการ caching ของระบบกับ browser กับ server เพื่อป้องกันในกรณี 304 if none match
+  // app.disable('etag');
 
   app.use((req, res, next) => {
     const hostUrl = `${req.protocol}://${req.get('host')}`;
@@ -32,3 +39,8 @@ export default app => {
     next();
   });
 };
+
+function assignId(req, res, next) {
+  req.id = uuidV4();
+  next();
+}
