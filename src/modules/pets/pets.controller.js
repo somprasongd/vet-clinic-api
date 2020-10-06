@@ -53,7 +53,7 @@ export const updatePet = async (req, res) => {
 };
 
 export const createPetAvatar = async (req, res) => {
-  const petId = req.params.id || req.user.id;
+  const petId = req.params.id;
 
   const { uploadDTO } = req;
 
@@ -67,13 +67,11 @@ export const createPetAvatar = async (req, res) => {
 };
 
 export const getPetAvatar = async (req, res) => {
-  const petId = req.params.id || req.user.id;
+  const petId = req.params.id;
 
   const pet = await service.findPetById(petId);
 
-  if (!pet) throw new NotFoundExceptions('The pet with the given ID was not found.');
-
-  if (pet.avatarId === null) {
+  if (!pet || pet.avatarId === null) {
     return res.sendFile(config.DEFAULT_AVATAR_PET);
   }
 
@@ -84,7 +82,7 @@ export const getPetAvatar = async (req, res) => {
 };
 
 export const deletePetAvatar = async (req, res) => {
-  const petId = req.params.id || req.user.id;
+  const petId = req.params.id;
 
   const pet = await service.findPetById(petId);
 
@@ -96,7 +94,7 @@ export const deletePetAvatar = async (req, res) => {
 };
 
 export const getPetOwner = async (req, res) => {
-  const petId = req.params.id || req.user.id;
+  const petId = req.params.id;
 
   const pet = await service.findPetById(petId);
 

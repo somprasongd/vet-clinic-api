@@ -53,7 +53,7 @@ export const updateMember = async (req, res) => {
 };
 
 export const createMemberAvatar = async (req, res) => {
-  const memberId = req.params.id || req.user.id;
+  const memberId = req.params.id;
 
   const { uploadDTO } = req;
 
@@ -67,13 +67,11 @@ export const createMemberAvatar = async (req, res) => {
 };
 
 export const getMemberAvatar = async (req, res) => {
-  const memberId = req.params.id || req.user.id;
+  const memberId = req.params.id;
 
   const member = await service.findMemberById(memberId);
 
-  if (!member) throw new NotFoundExceptions('The member with the given ID was not found.');
-
-  if (member.avatarId === null) {
+  if (!member || member.avatarId === null) {
     return res.sendFile(config.DEFAULT_AVATAR);
   }
 
@@ -84,7 +82,7 @@ export const getMemberAvatar = async (req, res) => {
 };
 
 export const deleteMemberAvatar = async (req, res) => {
-  const memberId = req.params.id || req.user.id;
+  const memberId = req.params.id;
 
   const member = await service.findMemberById(memberId);
 
@@ -96,7 +94,7 @@ export const deleteMemberAvatar = async (req, res) => {
 };
 
 export const listPets = async (req, res) => {
-  const memberId = req.params.id || req.user.id;
+  const memberId = req.params.id;
 
   const member = await service.findMemberById(memberId);
 

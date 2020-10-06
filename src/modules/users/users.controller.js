@@ -126,9 +126,7 @@ export const getUserAvatar = async (req, res) => {
 
   const user = await service.findUserById(userId);
 
-  if (!user) throw new NotFoundExceptions('The user with the given ID was not found.');
-
-  if (user.avatarId === null) {
+  if (!user || user.avatarId === null) {
     return res.sendFile(config.DEFAULT_AVATAR);
   }
 
