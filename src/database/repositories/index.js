@@ -5,12 +5,6 @@ import CountersRepository from './counters';
 import MembersRepository from './members';
 import PetsRepository from './pets';
 import VisitsRepository from './visits';
-import VisitCCsRepository from './visitccs';
-import VisitEXesRepository from './visitexes';
-import VisitHTsRepository from './visithts';
-import VisitPEsRepository from './visitpes';
-import VisitQueuesRepository from './visitqueues';
-import VisitVSesRepository from './visitvses';
 import LabResultsRepository from './labresults';
 import LabTestResultsRepository from './labtestresults';
 import OrdersRepository from './orders';
@@ -38,12 +32,6 @@ export default {
   MembersRepository,
   PetsRepository,
   VisitsRepository,
-  VisitCCsRepository,
-  VisitEXesRepository,
-  VisitHTsRepository,
-  VisitPEsRepository,
-  VisitQueuesRepository,
-  VisitVSesRepository,
   LabResultsRepository,
   LabTestResultsRepository,
   OrdersRepository,

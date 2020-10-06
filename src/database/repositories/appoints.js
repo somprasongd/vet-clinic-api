@@ -2,41 +2,112 @@ import Repository from '../helpers/repository';
 
 export default class PetsRepository extends Repository {
   constructor(db, pgp) {
-    super(db, pgp, 'pets_appoint', {
-      appointDate: 'appoint_date',
-      appointStartTime: 'appoint_start_time',
-      appointEndTime: 'appoint_end_time',
-      appointStatusId: 'appoint_status_id',
-      appointTypeId: 'appoint_type_id',
-      petId: 'pet_id',
-      userUpdateId: 'user_update_id',
-      updateDatetime: 'update_datetime',
-      visitId: 'visit_id',
-    });
+    super(db, pgp, 't_appoint', {});
   }
 
   findById(id) {
     return this.db.oneOrNone(
       `SELECT
-      pets_appoint.id
-      , pets_appoint.appoint_date
-      , pets_appoint.remark
-      , pets_appoint.active
-      , pets_appoint.pet_id
-      , pets_appoint.visit_id
+      t_appoint.id
+      , t_appoint.appoint_date
+      , t_appoint.cause
+      , t_appoint.remark
+      , t_appoint.pet_id
       , json_build_object(
-          'id', pets_appointstatus.id,
-          'label', pets_appointstatus.label
-      ) as appoint_status
-      , json_build_object(
-        'id', pets_appointtype.id,
-        'label', pets_appointtype.label
-    ) as appoint_type
-      FROM pets_appoint
-      INNER JOIN pets_appointstatus on pets_appointstatus.id = pets_appoint.appoint_status_id
-      INNER JOIN pets_appointtype on pets_appointtype.id = pets_appoint.appoint_type_id
-      WHERE pets_appoint.id = $1 and pets_appoint.active = true`,
+        'id', t_pet.id,
+        'code', t_pet.code,
+        'name', t_pet.name,
+        'type', m_pet_type.label,
+        'owner',  json_build_object(
+                    'id', t_member.id,
+                    'code', t_member.code,
+                    'name', trim(both ' ' from (m_prefix.label || t_member.first_name || ' ' || t_member.last_name))
+                  )
+      ) as pet
+      FROM t_appoint
+      INNER JOIN t_pet on t_pet.id = t_appoint.pet_id
+      LEFT JOIN m_pet_type on m_pet_type.id = t_pet.type_id
+      INNER JOIN t_member on t_member.id = t_pet.owner_id
+      LEFT JOIN m_prefix on m_prefix.id = t_member.prefix_id
+      WHERE t_appoint.id = $1 and t_appoint.active = true`,
       +id
     );
   }
+
+  // find(wheres, options)
+  find(wheres, { offset = 0, limit = 'all' }) {
+    const { date, dateRange0, dateRange1, petId } = wheres;
+    return this.db.task(async t => {
+      const p1 = t.manyOrNone(
+        `SELECT
+        t_appoint.id
+        , t_appoint.appoint_date
+        , t_appoint.cause
+        , t_appoint.remark
+        , t_appoint.pet_id
+        , json_build_object(
+          'id', t_pet.id,
+          'code', t_pet.code,
+          'name', t_pet.name,
+          'type', m_pet_type.label,
+          'owner',  json_build_object(
+                      'id', t_member.id,
+                      'code', t_member.code,
+                      'name', trim(both ' ' from (m_prefix.label || t_member.first_name || ' ' || t_member.last_name))
+                    )
+        ) as pet
+        FROM t_appoint
+        INNER JOIN t_pet on t_pet.id = t_appoint.pet_id
+        LEFT JOIN m_pet_type on m_pet_type.id = t_pet.type_id
+        INNER JOIN t_member on t_member.id = t_pet.owner_id
+        LEFT JOIN m_prefix on m_prefix.id = t_member.prefix_id
+        WHERE t_appoint.active=true  ${createSearchCondition(wheres)}
+        order by t_appoint.appoint_date
+        offset $<offset> limit ${limit}`,
+        {
+          date,
+          dateRange0,
+          dateRange1,
+          petId,
+          offset,
+        }
+      );
+      const p2 = t.one(
+        `SELECT count(*)
+        FROM t_appoint
+        WHERE t_appoint.active=true ${createSearchCondition(wheres)}`,
+        {
+          date,
+          dateRange0,
+          dateRange1,
+          petId,
+        },
+        a => +a.count
+      );
+      const [datas, counts] = await Promise.all([p1, p2]);
+      return { datas, counts };
+    });
+  }
+}
+
+function createSearchCondition(wheres) {
+  const { date, dateRange0, dateRange1, petId } = wheres;
+  let conditions = '';
+  if (date) {
+    conditions += ` AND appoint_date = $<date>`;
+  }
+  if (dateRange0 || dateRange1) {
+    if (dateRange0 && !dateRange1) {
+      conditions += ` AND appoint_date >= $<dateRange0>`;
+    } else if (dateRange1 && !dateRange0) {
+      conditions += ` AND appoint_date <= $<dateRange1>`;
+    } else {
+      conditions += ` AND appoint_date >= $<dateRange0> AND appoint_date <= $<dateRange1>`;
+    }
+  }
+  if (petId) {
+    conditions += ` AND t_appoint.petId = $<petId>`;
+  }
+
+  return conditions || '';
 }

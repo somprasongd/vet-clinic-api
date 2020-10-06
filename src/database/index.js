@@ -52,12 +52,6 @@ const createConnection = () => {
       obj.members = new repos.MembersRepository(obj, pgp);
       obj.pets = new repos.PetsRepository(obj, pgp);
       obj.visits = new repos.VisitsRepository(obj, pgp);
-      obj.visitccs = new repos.VisitCCsRepository(obj, pgp);
-      obj.visitexes = new repos.VisitEXesRepository(obj, pgp);
-      obj.visithts = new repos.VisitHTsRepository(obj, pgp);
-      obj.visitpes = new repos.VisitPEsRepository(obj, pgp);
-      obj.visitqueues = new repos.VisitQueuesRepository(obj, pgp);
-      obj.visitvses = new repos.VisitVSesRepository(obj, pgp);
       obj.labresults = new repos.LabResultsRepository(obj, pgp);
       obj.labtestresults = new repos.LabTestResultsRepository(obj, pgp);
       obj.orders = new repos.OrdersRepository(obj, pgp);

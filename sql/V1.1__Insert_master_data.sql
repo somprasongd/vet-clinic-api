@@ -108,16 +108,18 @@ INSERT INTO public."m_visit_status"
 ("label")
 VALUES('รอตรวจ'),
 ('ตรวจรักษา'),
-('ส่งตรวจ'),
-('รับยา'),
-('การเงิน'),
-('จบการรักษา'),
-('ยกเลิก');
+('รอผลตรวจ'),
+('รายงานผล'),
+('รอรับยา'),
+('รอชำระเงิน'),
+('จบการรับบริการ'),
+('ยกเลิก'),
+('ฝากเลี้ยง');
 
-INSERT INTO public."m_visit_treatment"
-("label")
-VALUES('ตรวจทั่วไป'),
-('ตรวจเฉพาะทาง');
+-- INSERT INTO public."m_visit_treatment"
+-- ("label")
+-- VALUES('ตรวจทั่วไป'),
+-- ('ตรวจเฉพาะทาง');
 
 INSERT INTO public."m_visit_type"
 ("label")

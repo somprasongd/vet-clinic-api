@@ -50,12 +50,19 @@ export default class {
     return this.db.any(`SELECT * FROM ${this.tableName}`);
   }
 
-  count() {
-    return this.db.one(`SELECT count(*) FROM ${this.tableName}`, [], a => +a.count);
+  count(obj = []) {
+    return this.db.one(
+      `SELECT count(*) FROM ${this.tableName}WHERE 1=1 and $<this:name> = $<this:csv>`,
+      this.columnize(obj),
+      a => +a.count
+    );
   }
 
-  find(obj) {
-    return this.db.OrNone(`SELECT * FROM ${this.tableName} WHERE $<this:name> = $<this:csv>`, this.columnize(obj));
+  find(obj = []) {
+    return this.db.OrNone(
+      `SELECT * FROM ${this.tableName} WHERE 1=1 and $<this:name> = $<this:csv>`,
+      this.columnize(obj)
+    );
   }
 
   findById(id) {

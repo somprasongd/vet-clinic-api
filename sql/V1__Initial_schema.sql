@@ -124,13 +124,13 @@ CREATE TABLE public.m_visit_status (
 );
 CREATE INDEX m_visit_status_active_idx ON public.m_visit_status USING btree (active);
 
-CREATE TABLE public.m_visit_treatment (
-	id serial NOT NULL,
-	"label" varchar(50) NOT NULL,
-	active bool NOT NULL DEFAULT true,
-	CONSTRAINT m_visit_treatment_pkey PRIMARY KEY (id)
-);
-CREATE INDEX m_visit_treatment_active_idx ON public.m_visit_treatment USING btree (active);
+-- CREATE TABLE public.m_visit_treatment (
+-- 	id serial NOT NULL,
+-- 	"label" varchar(50) NOT NULL,
+-- 	active bool NOT NULL DEFAULT true,
+-- 	CONSTRAINT m_visit_treatment_pkey PRIMARY KEY (id)
+-- );
+-- CREATE INDEX m_visit_treatment_active_idx ON public.m_visit_treatment USING btree (active);
 
 CREATE TABLE public.m_visit_type (
 	id serial NOT NULL,
@@ -167,7 +167,7 @@ CREATE TABLE public.c_user (
 	update_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	active bool NOT NULL DEFAULT true,
 	CONSTRAINT c_user_pk PRIMARY KEY (id),
-	CONSTRAINT c_user_fk FOREIGN KEY (avatar_id) REFERENCES t_upload(id) DEFERRABLE INITIALLY DEFERRED
+	CONSTRAINT c_user_fk FOREIGN KEY (avatar_id) REFERENCES t_upload(id)
 );
 CREATE INDEX c_user_active_idx ON public.c_user USING btree (active);
 CREATE INDEX c_user_username_idx ON public.c_user USING btree (username);
@@ -178,8 +178,8 @@ CREATE TABLE public.c_user_roles (
 	role_id int4 NOT NULL,
 	CONSTRAINT c_user_roles_pk PRIMARY KEY (id),
 	CONSTRAINT c_user_roles_un UNIQUE (user_id, role_id),
-	CONSTRAINT c_user_roles_fk FOREIGN KEY (user_id) REFERENCES c_user(id) DEFERRABLE INITIALLY DEFERRED,
-	CONSTRAINT c_user_roles_fk_1 FOREIGN KEY (role_id) REFERENCES m_user_role(id) DEFERRABLE INITIALLY DEFERRED
+	CONSTRAINT c_user_roles_fk FOREIGN KEY (user_id) REFERENCES c_user(id),
+	CONSTRAINT c_user_roles_fk_1 FOREIGN KEY (role_id) REFERENCES m_user_role(id)
 );
 CREATE INDEX c_user_roles_role_id_idx ON public.c_user_roles USING btree (role_id);
 CREATE INDEX c_user_roles_user_id_idx ON public.c_user_roles USING btree (user_id);
@@ -208,7 +208,7 @@ CREATE TABLE public.c_cc (
 	update_by int4 NOT NULL,
 	CONSTRAINT c_cc_code_436a11f8_uniq UNIQUE (code),
 	CONSTRAINT c_cc_pkey PRIMARY KEY (id),
-	CONSTRAINT c_cc_update_by_ac024b10_fk_c_user_id FOREIGN KEY (update_by) REFERENCES c_user(id) DEFERRABLE INITIALLY DEFERRED
+	CONSTRAINT c_cc_update_by_ac024b10_fk_c_user_id FOREIGN KEY (update_by) REFERENCES c_user(id)
 );
 CREATE INDEX c_cc_active_7352d9ec ON public.c_cc USING btree (active);
 CREATE INDEX c_cc_code_436a11f8_like ON public.c_cc USING btree (code varchar_pattern_ops);
@@ -223,7 +223,7 @@ CREATE TABLE public.c_ht (
 	update_by int4 NOT NULL,
 	CONSTRAINT c_ht_code_436a11f8_uniq UNIQUE (code),
 	CONSTRAINT c_ht_pkey PRIMARY KEY (id),
-	CONSTRAINT c_ht_update_by_ac024b10_fk_c_user_id FOREIGN KEY (update_by) REFERENCES c_user(id) DEFERRABLE INITIALLY DEFERRED
+	CONSTRAINT c_ht_update_by_ac024b10_fk_c_user_id FOREIGN KEY (update_by) REFERENCES c_user(id)
 );
 CREATE INDEX c_ht_active_7352d9ec ON public.c_ht USING btree (active);
 CREATE INDEX c_ht_code_436a11f8_like ON public.c_ht USING btree (code varchar_pattern_ops);
@@ -238,7 +238,7 @@ CREATE TABLE public.c_pe (
 	update_by int4 NOT NULL,
 	CONSTRAINT c_pe_code_436a11f8_uniq UNIQUE (code),
 	CONSTRAINT c_pe_pkey PRIMARY KEY (id),
-	CONSTRAINT c_pe_update_by_ac024b10_fk_c_user_id FOREIGN KEY (update_by) REFERENCES c_user(id) DEFERRABLE INITIALLY DEFERRED
+	CONSTRAINT c_pe_update_by_ac024b10_fk_c_user_id FOREIGN KEY (update_by) REFERENCES c_user(id)
 );
 CREATE INDEX c_pe_active_7352d9ec ON public.c_pe USING btree (active);
 CREATE INDEX c_pe_code_436a11f8_like ON public.c_pe USING btree (code varchar_pattern_ops);
@@ -253,7 +253,7 @@ CREATE TABLE public.c_dx (
 	update_by int4 NOT NULL,
 	CONSTRAINT c_dx_code_436a11f8_uniq UNIQUE (code),
 	CONSTRAINT c_dx_pkey PRIMARY KEY (id),
-	CONSTRAINT c_dx_update_by_ac024b10_fk_c_user_id FOREIGN KEY (update_by) REFERENCES c_user(id) DEFERRABLE INITIALLY DEFERRED
+	CONSTRAINT c_dx_update_by_ac024b10_fk_c_user_id FOREIGN KEY (update_by) REFERENCES c_user(id)
 );
 CREATE INDEX c_dx_active_7352d9ec ON public.c_dx USING btree (active);
 CREATE INDEX c_dx_code_436a11f8_like ON public.c_dx USING btree (code varchar_pattern_ops);
@@ -272,8 +272,8 @@ CREATE TABLE public.c_item (
 	price float8 NULL,
 	CONSTRAINT c_item_code_uniq UNIQUE (code),
 	CONSTRAINT c_item_pkey PRIMARY KEY (id),
-	CONSTRAINT c_item_item_group_id_fk_m_item_group_id FOREIGN KEY (item_group_id) REFERENCES m_item_group(id) DEFERRABLE INITIALLY DEFERRED,
-	CONSTRAINT c_item_update_by_fk_c_user_id FOREIGN KEY (update_by) REFERENCES c_user(id) DEFERRABLE INITIALLY DEFERRED
+	CONSTRAINT c_item_item_group_id_fk_m_item_group_id FOREIGN KEY (item_group_id) REFERENCES m_item_group(id),
+	CONSTRAINT c_item_update_by_fk_c_user_id FOREIGN KEY (update_by) REFERENCES c_user(id)
 );
 CREATE INDEX c_item_active ON public.c_item USING btree (active);
 CREATE INDEX c_item_code_like ON public.c_item USING btree (code varchar_pattern_ops);
@@ -294,8 +294,8 @@ CREATE TABLE public.c_item_drug (
 	update_by int4 NOT NULL,
 	CONSTRAINT c_item_drug_item_id_key UNIQUE (item_id),
 	CONSTRAINT c_item_drug_pkey PRIMARY KEY (id),
-	CONSTRAINT c_item_drug_item_id_fk_c_item_id FOREIGN KEY (item_id) REFERENCES c_item(id) DEFERRABLE INITIALLY DEFERRED,
-	CONSTRAINT c_item_drug_update_by_fk_c_user_id FOREIGN KEY (update_by) REFERENCES c_user(id) DEFERRABLE INITIALLY DEFERRED
+	CONSTRAINT c_item_drug_item_id_fk_c_item_id FOREIGN KEY (item_id) REFERENCES c_item(id),
+	CONSTRAINT c_item_drug_update_by_fk_c_user_id FOREIGN KEY (update_by) REFERENCES c_user(id)
 );
 CREATE INDEX c_item_drug_item_id ON public.c_item_drug USING btree (item_id);
 
@@ -312,8 +312,8 @@ CREATE TABLE public.c_item_lab (
 	update_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	update_by int4 NOT NULL,
 	CONSTRAINT c_item_lab_pkey PRIMARY KEY (id),
-	CONSTRAINT c_item_lab_item_id_fk_c_item_id FOREIGN KEY (item_id) REFERENCES c_item(id) DEFERRABLE INITIALLY DEFERRED,
-	CONSTRAINT c_item_lab_update_by_fk_c_user_id FOREIGN KEY (update_by) REFERENCES c_user(id) DEFERRABLE INITIALLY DEFERRED
+	CONSTRAINT c_item_lab_item_id_fk_c_item_id FOREIGN KEY (item_id) REFERENCES c_item(id),
+	CONSTRAINT c_item_lab_update_by_fk_c_user_id FOREIGN KEY (update_by) REFERENCES c_user(id)
 );
 CREATE INDEX c_item_lab_item_id ON public.c_item_lab USING btree (item_id);
 
@@ -323,8 +323,8 @@ CREATE TABLE public.c_item_set (
 	item_subset_id int4 NOT NULL,
 	CONSTRAINT c_item_set_pkey PRIMARY KEY (id),
 	CONSTRAINT c_item_set_un UNIQUE (item_id, item_subset_id),
-	CONSTRAINT c_item_set_item_id_fk_c_item_id FOREIGN KEY (item_id) REFERENCES c_item(id) DEFERRABLE INITIALLY DEFERRED,
-	CONSTRAINT c_item_set_item_subset_id_fk_c_item_id FOREIGN KEY (item_subset_id) REFERENCES c_item(id) DEFERRABLE INITIALLY DEFERRED
+	CONSTRAINT c_item_set_item_id_fk_c_item_id FOREIGN KEY (item_id) REFERENCES c_item(id),
+	CONSTRAINT c_item_set_item_subset_id_fk_c_item_id FOREIGN KEY (item_subset_id) REFERENCES c_item(id)
 );
 CREATE INDEX c_item_set_item_id ON public.c_item_set USING btree (item_id);
 
@@ -392,14 +392,98 @@ CREATE TABLE public.t_pet (
 	update_by int4 NOT NULL,
 	CONSTRAINT t_pet_code_key UNIQUE (code),
 	CONSTRAINT t_pet_pkey PRIMARY KEY (id),
-	CONSTRAINT t_pet_avatar_id_fk_t_upload_id FOREIGN KEY (avatar_id) REFERENCES t_upload(id) DEFERRABLE INITIALLY DEFERRED,
-	CONSTRAINT t_pet_owner_id_fk_t_member_id FOREIGN KEY (owner_id) REFERENCES t_member(id) DEFERRABLE INITIALLY DEFERRED,
-	CONSTRAINT t_pet_gender_id_fk_m_pet_gender_id FOREIGN KEY (gender_id) REFERENCES pets_sex(id) DEFERRABLE INITIALLY DEFERRED,
-	CONSTRAINT t_pet_type_id_fk_m_pet_type_id FOREIGN KEY (type_id) REFERENCES m_pet_type(id) DEFERRABLE INITIALLY DEFERRED,
-	CONSTRAINT t_pet_update_by_fk_c_user_id FOREIGN KEY (update_by) REFERENCES c_user(id) DEFERRABLE INITIALLY DEFERRED
+	CONSTRAINT t_pet_avatar_id_fk_t_upload_id FOREIGN KEY (avatar_id) REFERENCES t_upload(id),
+	CONSTRAINT t_pet_owner_id_fk_t_member_id FOREIGN KEY (owner_id) REFERENCES t_member(id),
+	CONSTRAINT t_pet_gender_id_fk_m_pet_gender_id FOREIGN KEY (gender_id) REFERENCES pets_sex(id),
+	CONSTRAINT t_pet_type_id_fk_m_pet_type_id FOREIGN KEY (type_id) REFERENCES m_pet_type(id),
+	CONSTRAINT t_pet_update_by_fk_c_user_id FOREIGN KEY (update_by) REFERENCES c_user(id)
 );
 CREATE INDEX t_pet_active ON public.t_pet USING btree (active);
 CREATE INDEX t_pet_code_like ON public.t_pet USING btree (code varchar_pattern_ops);
 CREATE INDEX t_pet_name ON public.t_pet USING btree (name);
 CREATE INDEX t_pet_name_like ON public.t_pet USING btree (name varchar_pattern_ops);
 CREATE INDEX t_pet_owner_id ON public.t_pet USING btree (owner_id);
+
+CREATE TABLE public.t_visit (
+	id serial NOT NULL,
+	vn varchar(15) NOT NULL,
+	pet_id int4 NOT NULL,
+	visit_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	visit_by int4 NOT NULL,	
+	visit_type_id int4 NOT NULL DEFAULT 1, -- OPD
+	visit_status_id int4 NOT NULL DEFAULT 1, -- รอตรวจ
+	visit_priority_id int4 NOT NULL DEFAULT 1, -- Normal
+	visit_cause text NULL,
+	note text NULL,
+	cc text NULL,
+	dx text NULL,
+	ht text NULL,
+	pe text NULL,
+	doctor_id int4 NULL DEFAULT NULL,	
+	doctor_discharge_at timestamptz NULL,
+	discharge_at timestamptz NULL,
+	discharge_by int4 NULL,
+	update_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	update_by int4 NOT NULL,
+	CONSTRAINT t_visit_pkey PRIMARY KEY (id),
+	CONSTRAINT t_visit_vn_key UNIQUE (vn),
+	CONSTRAINT t_visit_pet_id_fk_t_pet_id FOREIGN KEY (pet_id) REFERENCES t_pet(id),
+	CONSTRAINT t_visit_update_by_fk_c_user_id FOREIGN KEY (update_by) REFERENCES c_user(id),
+	CONSTRAINT t_visit_discharge_by_fk_c_user_id FOREIGN KEY (discharge_by) REFERENCES c_user(id),
+	CONSTRAINT t_visit_visit_priority_id_fk_visit_priority_id FOREIGN KEY (visit_priority_id) REFERENCES m_visit_priority(id),
+	CONSTRAINT t_visit_visit_status_id_fk_visit_status_id FOREIGN KEY (visit_status_id) REFERENCES m_visit_status(id),
+	CONSTRAINT t_visit_visit_type_id_fk_visit_type_id FOREIGN KEY (visit_type_id) REFERENCES m_visit_type(id)
+);
+CREATE INDEX t_visit_pet_id ON public.t_visit USING btree (pet_id);
+CREATE INDEX t_visit_doctor_id ON public.t_visit USING btree (doctor_id);
+CREATE INDEX t_visit_visit_at ON public.t_visit USING btree (visit_at);
+CREATE INDEX t_visit_visit_priority_id ON public.t_visit USING btree (visit_priority_id);
+CREATE INDEX t_visit_visit_status_id ON public.t_visit USING btree (visit_status_id);
+CREATE INDEX t_visit_visit_type_id ON public.t_visit USING btree (visit_type_id);
+CREATE INDEX t_visit_vn_like ON public.t_visit USING btree (vn varchar_pattern_ops);
+
+CREATE TABLE public.t_visit_vitalsign (
+	id serial NOT NULL,
+	visit_id int4 NOT NULL,
+	vital_sign_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	weight float8 NULL,
+	temp float8 NULL,
+	rr float8 NULL, -- respiratory_rate
+	sys int4 NULL, -- systolic_blood_pressure
+	dia int4 NULL, -- diastolic_blood_pressure
+	pulse int4 NULL,
+	pain_score float8 NULL,
+	bcs float8 NULL,
+	active bool NOT NULL DEFAULT true,
+	update_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	update_by int4 NOT NULL,	
+	CONSTRAINT t_visit_vitalsign_pkey PRIMARY KEY (id),
+	CONSTRAINT t_visit_vitalsign_update_by_fk_c_user_id FOREIGN KEY (update_by) REFERENCES c_user(id),
+	CONSTRAINT t_visit_vitalsign_visit_id_fk_t_visit_id FOREIGN KEY (visit_id) REFERENCES t_visit(id)
+);
+CREATE INDEX t_visit_vitalsign_active ON public.t_visit_vitalsign USING btree (active);
+CREATE INDEX t_visit_vitalsign_visit_id ON public.t_visit_vitalsign USING btree (visit_id);
+CREATE INDEX t_visit_vitalsign_vital_sign_at ON public.t_visit_vitalsign USING btree (vital_sign_at);
+
+CREATE TABLE public.t_appoint (
+	id serial NOT NULL,
+	pet_id int4 NOT NULL,
+	appoint_date date NOT NULL,
+	appoint_time time NULL,
+	cause text NULL,
+	remark text NULL,
+	from_visit_id int4 NULL,	
+	come_visit_id int4 NULL,
+	active bool NOT NULL DEFAULT true,	
+	upadte_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	upadte_by int4 NOT NULL,
+	CONSTRAINT t_appoint_pkey PRIMARY KEY (id),
+	CONSTRAINT t_appoint_pet_id_fk_t_pet_id FOREIGN KEY (pet_id) REFERENCES t_pet(id),
+	CONSTRAINT t_appoint_upadte_by_fk_c_user_id FOREIGN KEY (upadte_by) REFERENCES c_user(id),
+	CONSTRAINT t_appoint_from_visit_id_fk_t_visit_id FOREIGN KEY (from_visit_id) REFERENCES t_visit(id),
+	CONSTRAINT t_appoint_come_visit_fk_t_visit_id FOREIGN KEY (come_visit_id) REFERENCES t_visit(id)
+);
+CREATE INDEX t_appoint_active ON public.t_appoint USING btree (active);
+CREATE INDEX t_appoint_appoint_date ON public.t_appoint USING btree (appoint_date);
+CREATE INDEX t_appoint_pet_id ON public.t_appoint USING btree (pet_id);
+
