@@ -9,10 +9,10 @@ export default class PetsRepository extends Repository {
     return this.db.oneOrNone(
       `SELECT
       t_appoint.id
-      , t_appoint.appoint_date
+      , t_appoint.appoint_date      
+      , t_appoint.appoint_time
       , t_appoint.cause
       , t_appoint.remark
-      , t_appoint.pet_id
       , json_build_object(
         'id', t_pet.id,
         'code', t_pet.code,
@@ -42,9 +42,9 @@ export default class PetsRepository extends Repository {
         `SELECT
         t_appoint.id
         , t_appoint.appoint_date
+        , t_appoint.appoint_time
         , t_appoint.cause
         , t_appoint.remark
-        , t_appoint.pet_id
         , json_build_object(
           'id', t_pet.id,
           'code', t_pet.code,

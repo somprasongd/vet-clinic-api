@@ -56,12 +56,13 @@ export const updateAppointDTO = (req, res, next) => {
 };
 
 export const respondAppointDTO = appoint => {
-  const { id, petId, appointDate, cause, remark } = appoint;
+  const { id, pet, appointDate, appointTime, cause, remark } = appoint;
 
   return {
     id,
-    petId,
+    pet,
     appointDate,
+    appointTime,
     cause,
     remark,
   };
