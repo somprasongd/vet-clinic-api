@@ -5,6 +5,7 @@ import CountersRepository from './counters';
 import MembersRepository from './members';
 import PetsRepository from './pets';
 import VisitsRepository from './visits';
+import VisitVitalsignsRepository from './visit-vitalsigns';
 import LabResultsRepository from './labresults';
 import LabTestResultsRepository from './labtestresults';
 import OrdersRepository from './orders';
@@ -32,6 +33,7 @@ export default {
   MembersRepository,
   PetsRepository,
   VisitsRepository,
+  VisitVitalsignsRepository,
   LabResultsRepository,
   LabTestResultsRepository,
   OrdersRepository,

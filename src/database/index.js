@@ -52,6 +52,7 @@ const createConnection = () => {
       obj.members = new repos.MembersRepository(obj, pgp);
       obj.pets = new repos.PetsRepository(obj, pgp);
       obj.visits = new repos.VisitsRepository(obj, pgp);
+      obj.vitalsigns = new repos.VisitVitalsignsRepository(obj, pgp);
       obj.labresults = new repos.LabResultsRepository(obj, pgp);
       obj.labtestresults = new repos.LabTestResultsRepository(obj, pgp);
       obj.orders = new repos.OrdersRepository(obj, pgp);

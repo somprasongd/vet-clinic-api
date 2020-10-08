@@ -6,6 +6,7 @@ import { validJWT } from '../../middlewares/auth-validation.middleware';
 import { resizeAvatar, uploadAvatar } from '../../middlewares/upload.middleware';
 import { createUploadImageDTO } from '../upload/upload.dto';
 import * as uploadMiddleware from '../upload/upload.middleware';
+import { router as vsRouter } from './vitalsign/vitalsign.route';
 
 export const router = express.Router();
 
@@ -30,4 +31,15 @@ router.route('/:id/status/treatment').patch([validId], controller.setStatusTreat
 router.route('/:id/status/waiting-result').patch([validId], controller.setStatusWaitResult);
 router.route('/:id/status/reported').patch([validId], controller.setStatusReported);
 router.route('/:id/status/doctor-discharge').patch([validId], controller.dischargeDoctor);
-router.route('/:id/status/paid').patch([validId], controller.dischargeFinance);
+
+router.use(
+  '/:visitId/vs',
+  validParamId('visitId'),
+  (req, res, next) => {
+    const { visitId } = req.params;
+    console.log(req.params);
+    req.visitId = visitId;
+    next();
+  },
+  vsRouter
+);
