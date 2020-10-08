@@ -475,11 +475,11 @@ CREATE TABLE public.t_appoint (
 	from_visit_id int4 NULL,	
 	come_visit_id int4 NULL,
 	active bool NOT NULL DEFAULT true,	
-	upadte_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	upadte_by int4 NOT NULL,
+	update_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	update_by int4 NOT NULL,
 	CONSTRAINT t_appoint_pkey PRIMARY KEY (id),
 	CONSTRAINT t_appoint_pet_id_fk_t_pet_id FOREIGN KEY (pet_id) REFERENCES t_pet(id),
-	CONSTRAINT t_appoint_upadte_by_fk_c_user_id FOREIGN KEY (upadte_by) REFERENCES c_user(id),
+	CONSTRAINT t_appoint_update_by_fk_c_user_id FOREIGN KEY (update_by) REFERENCES c_user(id),
 	CONSTRAINT t_appoint_from_visit_id_fk_t_visit_id FOREIGN KEY (from_visit_id) REFERENCES t_visit(id),
 	CONSTRAINT t_appoint_come_visit_fk_t_visit_id FOREIGN KEY (come_visit_id) REFERENCES t_visit(id)
 );

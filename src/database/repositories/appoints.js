@@ -62,7 +62,7 @@ export default class PetsRepository extends Repository {
         INNER JOIN t_member on t_member.id = t_pet.owner_id
         LEFT JOIN m_prefix on m_prefix.id = t_member.prefix_id
         WHERE t_appoint.active=true  ${createSearchCondition(wheres)}
-        order by t_appoint.appoint_date
+        order by t_appoint.appoint_date, t_appoint.appoint_time
         offset $<offset> limit ${limit}`,
         {
           date,
