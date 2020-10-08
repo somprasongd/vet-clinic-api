@@ -1,17 +1,20 @@
 import express from 'express';
 import bootstrap from './bootstrap';
+import logger from './common/helpers/logger';
 
-// Create express instance
-const app = express();
-bootstrap(app);
+async function main() {
+  // Create express instance
+  const app = express();
 
-// Export express app
-module.exports = app;
+  await bootstrap(app);
 
-// Start standalone server if directly running
-if (require.main === module) {
+  // Start standalone server if directly running
   const port = process.env.PORT || 3001;
   app.listen(port, () => {
-    console.log(`API server listening on port ${port}`);
+    logger.log(`API server listening on port ${port}`);
   });
+
+  return app;
 }
+
+main();

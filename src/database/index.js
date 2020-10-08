@@ -16,7 +16,7 @@ const testConnection = async db => {
   return true;
 };
 
-const createConnection = () => {
+const createConnection = async () => {
   // pg-promise initialization options...
   const initOptions = {
     receive(data, result, e) {
@@ -99,7 +99,7 @@ const createConnection = () => {
   const db = (config.DB_URI && pgp(config.DB_URI)) || null;
 
   if (db) {
-    testConnection(db);
+    await testConnection(db);
     connection.db = db;
     connection.pgp = pgp;
   }
