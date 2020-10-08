@@ -35,6 +35,7 @@ export const createDaycareDTO = (req, res, next) => {
     petId: Joi.number()
       .min(1)
       .required(),
+    visitAt: Joi.date().iso(),
     note: Joi.string().allow('', null),
   });
 
