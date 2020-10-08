@@ -28,5 +28,5 @@ export const updateVisit = async (id, obj) => db.visits.update(id, obj);
 export const dischargeDoctor = async id => db.visits.dischargeDoctor(id);
 export const dischargeFinance = async (id, userId) => db.visits.dischargeFinance(id, userId);
 
-export const isVisitedByVisitId = petId => db.visits.isVisited(petId);
-export const isDaycaredByVisitId = petId => db.visits.isDaycared(petId);
+export const isVisitedByPetId = petId => db.visits.isVisited(petId);
+export const isDaycaredByPetId = petId => db.visits.isDaycared(petId);
