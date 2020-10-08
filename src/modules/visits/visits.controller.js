@@ -22,13 +22,18 @@ export const listVisit = async (req, res) => {
   res.json(results);
 };
 
-export const getVisit = async (req, res) => {
-  const { id } = req.params;
+export const getVisitById = async id => {
   const visit = await service.findVisitById(id);
 
   if (!visit) throw new NotFoundExceptions('The visit with the given ID was not found.');
 
-  res.json(respondVisitDTO(visit));
+  return visit;
+};
+
+export const getVisit = async (req, res) => {
+  const { id } = req.params;
+
+  res.json(respondVisitDTO(getVisitById(id)));
 };
 
 export const cancelVisit = async (req, res) => {

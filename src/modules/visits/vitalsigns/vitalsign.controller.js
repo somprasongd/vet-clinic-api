@@ -1,7 +1,6 @@
 import * as service from './vitalsign.service';
 import { NotFoundExceptions } from '../../../common/helpers/exceptions';
 import { respondVitalsignDTO } from './vitalsign.dto';
-import paginate from '../../../common/helpers/res-with-paginate';
 
 export const createVitalsign = async (req, res) => {
   const { dto } = req;
@@ -12,9 +11,9 @@ export const createVitalsign = async (req, res) => {
 };
 
 export const listVitalsign = async (req, res) => {
-  const { visitId } = req.params;
+  const { id } = req.visit;
 
-  const vitalsigns = await service.findAllVitalsign({ visitId });
+  const vitalsigns = await service.findAllVitalsign({ visitId: id });
 
   res.json(vitalsigns);
 };

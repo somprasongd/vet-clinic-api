@@ -465,6 +465,23 @@ CREATE INDEX t_visit_vitalsign_active ON public.t_visit_vitalsign USING btree (a
 CREATE INDEX t_visit_vitalsign_visit_id ON public.t_visit_vitalsign USING btree (visit_id);
 CREATE INDEX t_visit_vitalsign_vital_sign_at ON public.t_visit_vitalsign USING btree (vital_sign_at);
 
+
+CREATE TABLE public.t_visit_image (
+	id serial NOT NULL,
+	type_id int4 NOT NULL default 1, -- general
+	visit_id int4 NOT NULL,
+	image_id int4 NOT NULL,
+	CONSTRAINT t_visit_image_pk PRIMARY KEY (id),
+	CONSTRAINT t_visit_image_un UNIQUE (visit_id, image_id),
+	CONSTRAINT t_visit_image_fk_visit_id FOREIGN KEY (visit_id) REFERENCES t_visit(id),
+	CONSTRAINT t_visit_image_fk_image_id FOREIGN KEY (image_id) REFERENCES t_upload(id),
+	CONSTRAINT t_visit_image_fk_type_id FOREIGN KEY (type_id) REFERENCES m_media_type(id)
+);
+CREATE INDEX t_visit_image_image_id_idx ON public.t_visit_image USING btree (image_id);
+CREATE INDEX t_visit_image_visit_id_idx ON public.t_visit_image USING btree (visit_id);
+CREATE INDEX t_visit_image_type_id_idx ON public.t_visit_image USING btree (type_id);
+
+
 CREATE TABLE public.t_appoint (
 	id serial NOT NULL,
 	pet_id int4 NOT NULL,

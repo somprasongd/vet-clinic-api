@@ -3,10 +3,8 @@ import * as controller from './visits.controller';
 import { validId, validPagination, validParamId } from '../../middlewares/validation.middleware';
 import { createDaycareDTO, createVisitDTO, searchVisitDTO, updateVisitDTO } from './visits.dto';
 import { validJWT } from '../../middlewares/auth-validation.middleware';
-import { resizeAvatar, uploadAvatar } from '../../middlewares/upload.middleware';
-import { createUploadImageDTO } from '../upload/upload.dto';
-import * as uploadMiddleware from '../upload/upload.middleware';
-import { router as vsRouter } from './vitalsign/vitalsign.route';
+import { router as vsRouter } from './vitalsigns/vitalsign.route';
+// import { router as imageRouter } from './images/images.route';
 
 export const router = express.Router();
 
@@ -32,14 +30,17 @@ router.route('/:id/status/waiting-result').patch([validId], controller.setStatus
 router.route('/:id/status/reported').patch([validId], controller.setStatusReported);
 router.route('/:id/status/doctor-discharge').patch([validId], controller.dischargeDoctor);
 
-router.use(
-  '/:visitId/vs',
-  validParamId('visitId'),
-  (req, res, next) => {
-    const { visitId } = req.params;
-    console.log(req.params);
-    req.visitId = visitId;
+router.use('/:id/vs', validId, setVisit, vsRouter);
+
+// router.use('/:id/images', validId, setVisit, imageRouter);
+
+async function setVisit(req, res, next) {
+  const { id } = req.params;
+  try {
+    const visit = await controller.getVisitById(id);
+    req.visit = visit;
     next();
-  },
-  vsRouter
-);
+  } catch (error) {
+    next(error);
+  }
+}

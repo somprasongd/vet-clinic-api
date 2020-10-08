@@ -53,6 +53,7 @@ const createConnection = async () => {
       obj.pets = new repos.PetsRepository(obj, pgp);
       obj.visits = new repos.VisitsRepository(obj, pgp);
       obj.vitalsigns = new repos.VisitVitalsignsRepository(obj, pgp);
+      obj.visitImages = new repos.VisitImageRepository(obj, pgp);
       obj.labresults = new repos.LabResultsRepository(obj, pgp);
       obj.labtestresults = new repos.LabTestResultsRepository(obj, pgp);
       obj.orders = new repos.OrdersRepository(obj, pgp);
@@ -65,7 +66,6 @@ const createConnection = async () => {
       obj.receiptpayment = new repos.ReceiptPaymentRepository(obj, pgp);
       obj.pos = new repos.POSRepository(obj, pgp);
 
-      obj.visitimage = new repos.VisitImageRepository(obj, pgp);
       obj.visitmedia = new repos.VisitMediaRepository(obj, pgp);
       obj.linenotify = new repos.LineNotifyRepository(obj, pgp);
       obj.items = new repos.ItemRepository(obj, pgp);

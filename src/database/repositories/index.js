@@ -18,7 +18,7 @@ import ReceiptRepository from './receipt';
 import ReceiptPaymentRepository from './receiptpayment';
 import POSRepository from './pos';
 import UploadRepository from './upload';
-import VisitImageRepository from './visitimage';
+import VisitImageRepository from './visit-images';
 import VisitMediaRepository from './visitmedia';
 import LineNotifyRepository from './linenotify';
 import ItemRepository from './items';
