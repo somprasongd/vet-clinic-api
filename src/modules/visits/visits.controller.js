@@ -2,7 +2,6 @@ import * as service from './visits.service';
 import { NotFoundExceptions } from '../../common/helpers/exceptions';
 import { respondVisitDTO } from './visits.dto';
 import paginate from '../../common/helpers/res-with-paginate';
-import config from '../../common/config';
 
 export const createVisit = async (req, res) => {
   const { dto } = req;

@@ -129,6 +129,8 @@ function createSearchCondition(wheres) {
   }
   if (comeVisitId) {
     conditions += ` AND t_appoint.come_visit_id = $<comeVisitId>`;
+  } else {
+    conditions += ` AND t_appoint.come_visit_id is null`;
   }
 
   return conditions || '';
