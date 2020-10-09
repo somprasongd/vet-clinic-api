@@ -465,22 +465,25 @@ CREATE INDEX t_visit_vitalsign_active ON public.t_visit_vitalsign USING btree (a
 CREATE INDEX t_visit_vitalsign_visit_id ON public.t_visit_vitalsign USING btree (visit_id);
 CREATE INDEX t_visit_vitalsign_vital_sign_at ON public.t_visit_vitalsign USING btree (vital_sign_at);
 
-
-CREATE TABLE public.t_visit_image (
+CREATE TABLE public.t_visit_media (
 	id serial NOT NULL,
+	media_type upload_type NOT NULL,
 	type_id int4 NOT NULL default 1, -- general
 	visit_id int4 NOT NULL,
-	image_id int4 NOT NULL,
-	CONSTRAINT t_visit_image_pk PRIMARY KEY (id),
-	CONSTRAINT t_visit_image_un UNIQUE (visit_id, image_id),
-	CONSTRAINT t_visit_image_fk_visit_id FOREIGN KEY (visit_id) REFERENCES t_visit(id),
-	CONSTRAINT t_visit_image_fk_image_id FOREIGN KEY (image_id) REFERENCES t_upload(id),
-	CONSTRAINT t_visit_image_fk_type_id FOREIGN KEY (type_id) REFERENCES m_media_type(id)
+	media_id int4 NOT NULL,
+	description text NULL, 
+	update_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	update_by int4 NOT NULL,
+	CONSTRAINT t_visit_media_pk PRIMARY KEY (id),
+	CONSTRAINT t_visit_media_un UNIQUE (visit_id, media_id),
+	CONSTRAINT t_visit_media_fk_visit_id FOREIGN KEY (visit_id) REFERENCES t_visit(id),
+	CONSTRAINT t_visit_media_fk_media_id FOREIGN KEY (media_id) REFERENCES t_upload(id),
+	CONSTRAINT t_visit_media_fk_update_by FOREIGN KEY (update_by) REFERENCES c_user(id),
+	CONSTRAINT t_visit_media_fk_type_id FOREIGN KEY (type_id) REFERENCES m_media_type(id)
 );
-CREATE INDEX t_visit_image_image_id_idx ON public.t_visit_image USING btree (image_id);
-CREATE INDEX t_visit_image_visit_id_idx ON public.t_visit_image USING btree (visit_id);
-CREATE INDEX t_visit_image_type_id_idx ON public.t_visit_image USING btree (type_id);
-
+CREATE INDEX t_visit_media_media_id_idx ON public.t_visit_media USING btree (media_id);
+CREATE INDEX t_visit_media_visit_id_idx ON public.t_visit_media USING btree (visit_id);
+CREATE INDEX t_visit_media_type_id_idx ON public.t_visit_media USING btree (type_id);
 
 CREATE TABLE public.t_appoint (
 	id serial NOT NULL,

@@ -1,7 +1,7 @@
 import Joi from 'joi';
 import validationHandler from '../../../common/helpers/validation-handler';
 
-export const createVisitImageDTO = (req, res, next) => {
+export const createVisitFileDTO = (req, res, next) => {
   const schema = Joi.object().keys({
     typeId: Joi.number()
       .min(1)
@@ -21,18 +21,18 @@ export const createVisitImageDTO = (req, res, next) => {
   next();
 };
 
-export const searchVisitImageDTO = (req, res, next) => {
+export const searchVisitFileDTO = (req, res, next) => {
   const schema = Joi.object().keys({
     typeId: Joi.number().min(1),
   });
 
   const { dto } = validationHandler(req.query, schema);
 
-  req.dto = { ...dto, visitId: req.visit.id, mediaType: 'image' };
+  req.dto = { ...dto, visitId: req.visit.id, mediaType: 'file' };
   next();
 };
 
-export const updateVisitImageDTO = (req, res, next) => {
+export const updateVisitFileDTO = (req, res, next) => {
   const schema = Joi.object().keys({
     typeId: Joi.number()
       .min(1)
@@ -46,19 +46,19 @@ export const updateVisitImageDTO = (req, res, next) => {
   next();
 };
 
-export const respondVisitImageDTO = (visitImage, upload) => {
-  const { id, typeId, visitId, description = '', media = null } = visitImage;
+export const respondVisitFileDTO = (visitFile, upload) => {
+  const { id, typeId, visitId, description = '', media = null } = visitFile;
 
   const res = {
     id,
     typeId,
     visitId,
     description,
-    image: media,
+    file: media === null ? null : { id: media.id, url: media.url },
   };
 
   if (upload) {
-    res.image = { ...upload };
+    res.file = { ...upload };
   }
 
   return res;

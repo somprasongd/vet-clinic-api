@@ -76,7 +76,7 @@ export const getMemberAvatar = async (req, res) => {
   }
 
   const qs = Object.keys(req.query).reduce((acc, cur) => `${acc}&${cur}=${req.query[cur]}`, '?');
-  console.log(`/api/upload/file/${member.avatarId}${qs}`);
+
   req.url = `/api/upload/file/${member.avatarId}${qs}`;
   req.app.handle(req, res);
 };

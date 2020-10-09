@@ -4,7 +4,8 @@ import { validId, validPagination, validParamId } from '../../middlewares/valida
 import { createDaycareDTO, createVisitDTO, searchVisitDTO, updateVisitDTO } from './visits.dto';
 import { validJWT } from '../../middlewares/auth-validation.middleware';
 import { router as vsRouter } from './vitalsigns/vitalsign.route';
-// import { router as imageRouter } from './images/images.route';
+import { router as imageRouter } from './images/images.route';
+import { router as fileRouter } from './files/files.route';
 
 export const router = express.Router();
 
@@ -32,7 +33,8 @@ router.route('/:id/status/doctor-discharge').patch([validId], controller.dischar
 
 router.use('/:id/vs', validId, setVisit, vsRouter);
 
-// router.use('/:id/images', validId, setVisit, imageRouter);
+router.use('/:id/images', validId, setVisit, imageRouter);
+router.use('/:id/files', validId, setVisit, fileRouter);
 
 async function setVisit(req, res, next) {
   const { id } = req.params;

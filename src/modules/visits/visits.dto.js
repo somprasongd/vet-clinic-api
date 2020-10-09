@@ -22,6 +22,9 @@ export const createVisitDTO = (req, res, next) => {
       .allow(null),
     weight: Joi.number().allow(null),
     temp: Joi.number().allow(null),
+    appointId: Joi.number()
+      .min(1)
+      .allow(null),
   });
 
   const { dto } = validationHandler(req.body, schema);

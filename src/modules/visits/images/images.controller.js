@@ -1,39 +1,56 @@
 import * as service from './images.service';
 import { NotFoundExceptions } from '../../../common/helpers/exceptions';
+import { respondVisitImageDTO } from './images.dto';
 
 export const createVisitImage = async (req, res) => {
-  const { visit } = req;
+  const { dto } = req;
 
-  const { uploadDTO } = req;
+  const visitImage = await service.createVisitImage(dto);
 
-  await service.updateVisitAvatar(visit, uploadDTO.id);
-
-  res.json(uploadDTO);
+  res.json(respondVisitImageDTO(visitImage, req.uploadDTO));
 };
 
-export const getVisitAvatar = async (req, res) => {
-  const visitId = req.params.id;
+export const getVisitImages = async (req, res) => {
+  const { dto } = req;
 
-  const visit = await service.findVisitById(visitId);
+  const mediaUrl = `${req.getHost()}/`;
 
-  if (!visit || visit.avatarId === null) {
-    return res.sendFile(config.DEFAULT_AVATAR_PET);
-  }
+  const results = await service.findAllVisitImageByVisitId(dto, mediaUrl);
 
-  const qs = Object.keys(req.query).reduce((acc, cur) => `${acc}&${cur}=${req.query[cur]}`, '?');
-
-  req.url = `/api/upload/file/${visit.avatarId}${qs}`;
-  req.app.handle(req, res);
+  res.json(results);
 };
 
-export const deleteVisitAvatar = async (req, res) => {
-  const visitId = req.params.id;
+export const getVisitImage = async (req, res) => {
+  const { id } = req.params;
 
-  const visit = await service.findVisitById(visitId);
+  const mediaUrl = `${req.getHost()}/`;
 
-  if (!visit) throw new NotFoundExceptions('The visit with the given ID was not found.');
+  const visitImage = await service.findVisitImageById(id, req.visit.id, mediaUrl);
 
-  await service.updateVisitAvatar(visit, null);
+  if (!visitImage) throw new NotFoundExceptions('The visit image with the given ID was not found.');
+
+  res.json(respondVisitImageDTO(visitImage));
+};
+
+export const deleteVisitImage = async (req, res) => {
+  const { id } = req.params;
+
+  const visitImage = await service.deleteVisitImage(id, req.visit.id);
+
+  if (!visitImage) throw new NotFoundExceptions('The visit image with the given ID was not found.');
 
   res.status(204).end();
+};
+
+export const updateVisitImage = async (req, res) => {
+  const { dto } = req;
+
+  let visitImage = await service.updateVisitImage(req.params.id, dto);
+  if (!visitImage) throw new NotFoundExceptions('The visit image with the given ID was not found.');
+
+  const mediaUrl = `${req.getHost()}/`;
+
+  visitImage = await service.findVisitImageById(visitImage.id, visitImage.visitId, mediaUrl);
+
+  res.json(respondVisitImageDTO(visitImage));
 };

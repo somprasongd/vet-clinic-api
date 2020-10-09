@@ -1,13 +1,23 @@
 import connection from '../../../database';
+import { deleteById as deleteImage } from '../../upload/upload.service';
 
 const { db } = connection;
 
-export const findVitalsignById = id => db.vitalsigns.findById(id);
+export const findVisitImageById = (id, visitId, url) => db.visitMedias.findById(id, visitId, 'image', url);
 
-export const findAllVitalsign = ({ visitId }) => db.vitalsigns.find({ visitId });
+export const findAllVisitImageByVisitId = ({ visitId, typeId }, url) =>
+  db.visitMedias.find({ visitId, typeId, mediaType: 'image' }, url);
 
-export const createVitalsign = obj => db.vitalsigns.create(obj);
+export const createVisitImage = obj => db.visitMedias.create(obj);
 
-export const updateVitalsign = async (id, obj) => db.vitalsigns.update(id, obj);
+export const updateVisitImage = async (id, obj) => db.visitMedias.update(id, obj);
 
-export const deleteVitalsign = async id => db.vitalsigns.remove(id);
+export const deleteVisitImage = async (id, visitId) => {
+  const visitImage = await db.visitMedias.removeFrom({ id: +id, visitId, mediaType: 'image' });
+
+  if (visitImage) {
+    deleteImage(visitImage.mediaId);
+  }
+
+  return visitImage;
+};

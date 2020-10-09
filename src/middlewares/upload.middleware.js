@@ -75,8 +75,9 @@ export const resizeImage = (req, res, next) => {
 
   const uuid = uuidv1();
   const { group = 'img', typeId = 1 } = req.body;
+  const { visit } = req;
 
-  const fileName = `${group}-${typeId}-${uuid}`;
+  const fileName = `${visit === null ? group : visit.vn}-${typeId}-${uuid}`;
 
   req.file.filename = `media/image/${fileName}.jpeg`;
   req.file.filenameThumbnail = `media/image/${fileName}_thumbnail.jpeg`;
@@ -109,9 +110,10 @@ const multerFileStorage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     const uuid = uuidv1();
-    const { group = 'file', typeId = 1 } = req.body;
 
-    const fileName = `${group}-${typeId}-${uuid}`;
+    const { visit } = req;
+
+    const fileName = `${visit === null ? '' : visit.vn}-${uuid}`;
     cb(null, `${fileName}-${file.originalname.split(' ').join('-')}`);
   },
 });

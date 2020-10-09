@@ -13,6 +13,19 @@ export default class {
     return changeToSnakeCase(cols);
   }
 
+  where(model) {
+    const obj = this.columnize(model);
+    const condition = Object.keys(obj).reduce((acc, cur) => {
+      const newObj = { ...acc };
+      if (model[cur] !== undefined) {
+        newObj[cur] = model[cur];
+      }
+      return `${acc} and ${cur} = $<${cur}>`;
+    }, '');
+    const where = this.pgp.as.format(`WHERE 1=1 ${condition}`, { ...obj }); // pre-format WHERE condition
+    return where;
+  }
+
   create(model) {
     const obj = removeUndefinedColumn(model);
 
@@ -38,12 +51,8 @@ export default class {
     return this.db.result(`DELETE FROM ${this.tableName} WHERE id = $1`, id, r => r.rowCount);
   }
 
-  removeFrom(tableName, obj) {
-    return this.db.result(
-      `DELETE FROM ${tableName} WHERE $<this:name> = $<this:csv>`,
-      this.columnize(obj),
-      r => r.rowCount
-    );
+  removeFrom(obj) {
+    return this.db.result(`DELETE FROM ${this.tableName} $1:raw`, this.where(obj), r => r.rowCount);
   }
 
   all() {
@@ -51,18 +60,11 @@ export default class {
   }
 
   count(obj = []) {
-    return this.db.one(
-      `SELECT count(*) FROM ${this.tableName}WHERE 1=1 and $<this:name> = $<this:csv>`,
-      this.columnize(obj),
-      a => +a.count
-    );
+    return this.db.one(`SELECT count(*) FROM ${this.tableName} $1:raw`, this.where(obj), a => +a.count);
   }
 
   find(obj = []) {
-    return this.db.OrNone(
-      `SELECT * FROM ${this.tableName} WHERE 1=1 and $<this:name> = $<this:csv>`,
-      this.columnize(obj)
-    );
+    return this.db.manyOrNone(`SELECT * FROM ${this.tableName} $1:raw`, this.where(obj));
   }
 
   findById(id) {

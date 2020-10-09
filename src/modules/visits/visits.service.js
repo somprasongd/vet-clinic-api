@@ -1,5 +1,4 @@
 import connection from '../../database';
-import { deleteById as deleteAvatar } from '../upload/upload.service';
 
 const { db } = connection;
 
@@ -11,14 +10,19 @@ export const createVisit = newVisit =>
   db.tx(async t => {
     const code = await t.counters.getCode('V');
     newVisit.vn = code;
-    const { weight, temp } = newVisit;
+    const { weight, temp, appointId } = newVisit;
     delete newVisit.weight;
     delete newVisit.temp;
+    delete newVisit.appointId;
 
     const visit = await t.visits.create(newVisit);
 
     if (weight || temp) {
       await t.base.create('t_visit_vitalsign', { visitId: visit.id, weight, temp, updateBy: visit.updateBy });
+    }
+
+    if (appointId) {
+      await t.base.update('t_appoint', appointId, { comeVisitId: visit.id });
     }
     return visit;
   });

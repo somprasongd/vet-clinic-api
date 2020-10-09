@@ -18,8 +18,7 @@ import ReceiptRepository from './receipt';
 import ReceiptPaymentRepository from './receiptpayment';
 import POSRepository from './pos';
 import UploadRepository from './upload';
-import VisitImageRepository from './visit-images';
-import VisitMediaRepository from './visitmedia';
+import VisitMediaRepository from './visit-medias';
 import LineNotifyRepository from './linenotify';
 import ItemRepository from './items';
 import ItemDrugRepository from './item-drugs';
@@ -46,7 +45,6 @@ export default {
   ReceiptPaymentRepository,
   POSRepository,
   UploadRepository,
-  VisitImageRepository,
   VisitMediaRepository,
   LineNotifyRepository,
   ItemRepository,
