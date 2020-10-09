@@ -42,7 +42,7 @@ export default class PetsRepository extends Repository {
 
   // find(wheres, options)
   find(wheres, { offset = 0, limit = 'all' }) {
-    const { date, dateRange0, dateRange1, petId, doctorId } = wheres;
+    const { date, dateRange0, dateRange1, petId, doctorId, comeVisitId } = wheres;
     return this.db.task(async t => {
       const p1 = t.manyOrNone(
         `SELECT
@@ -82,6 +82,7 @@ export default class PetsRepository extends Repository {
           dateRange1,
           petId,
           doctorId,
+          comeVisitId,
           offset,
         }
       );
@@ -95,6 +96,7 @@ export default class PetsRepository extends Repository {
           dateRange1,
           petId,
           doctorId,
+          comeVisitId,
         },
         a => +a.count
       );
@@ -105,7 +107,7 @@ export default class PetsRepository extends Repository {
 }
 
 function createSearchCondition(wheres) {
-  const { date, dateRange0, dateRange1, petId, doctorId } = wheres;
+  const { date, dateRange0, dateRange1, petId, doctorId, comeVisitId } = wheres;
   let conditions = '';
   if (date) {
     conditions += ` AND appoint_date = $<date>`;
@@ -124,6 +126,9 @@ function createSearchCondition(wheres) {
   }
   if (doctorId) {
     conditions += ` AND t_appoint.doctor_id = $<doctorId>`;
+  }
+  if (comeVisitId) {
+    conditions += ` AND t_appoint.come_visit_id = $<comeVisitId>`;
   }
 
   return conditions || '';

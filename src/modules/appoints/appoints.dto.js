@@ -38,11 +38,17 @@ export const searchAppointDTO = (req, res, next) => {
     dateRange1: Joi.date().format('YYYY-MM-DD'),
     petId: Joi.number().min(1),
     doctorId: Joi.number().min(1),
+    showVisited: Joi.bool().default(false),
   });
 
   const { dto } = validationHandler(req.query, schema);
+  const { showVisited } = dto;
+  delete dto.showVisited;
 
-  req.dto = dto;
+  req.dto = { ...dto };
+  if (!showVisited) {
+    req.dto.comeVisitId = null;
+  }
   next();
 };
 
