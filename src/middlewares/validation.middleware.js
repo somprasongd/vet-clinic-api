@@ -1,13 +1,10 @@
 import Joi from 'joi';
-import config from '../common/config';
 import { InvalidExceptions } from '../common/helpers/exceptions';
 
 function validatePagination(data) {
-  const defaultLimit = +config.PAGE_LIMIT;
+  // const defaultLimit = +config.PAGE_LIMIT;
   const schema = Joi.object().keys({
-    limit: Joi.number()
-      .min(0)
-      .default(defaultLimit),
+    limit: Joi.number().min(0),
     offset: Joi.number().min(0),
     page: Joi.number().min(1),
   });
@@ -19,11 +16,9 @@ export const validPagination = (req, res, next) => {
 
   if (error) return next(new InvalidExceptions(error.details[0].message));
 
-  const { limit, offset, page } = value;
+  const { limit = 0, offset, page } = value;
 
   req.query.limit = limit === 0 ? 'all' : limit;
-  req.query.offset = 0;
-  req.query.page = 1;
 
   if (limit > 0) {
     if (req.query.hasOwnProperty('offset')) {
@@ -32,9 +27,11 @@ export const validPagination = (req, res, next) => {
     } else if (req.query.hasOwnProperty('page')) {
       req.query.page = page;
       req.query.offset = (page - 1) * req.query.limit;
+    } else {
+      req.query.page = 1;
+      req.query.offset = 0;
     }
   }
-
   next();
 };
 
