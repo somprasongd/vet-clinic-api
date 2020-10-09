@@ -122,7 +122,7 @@ function createSearchCondition(wheres) {
     }
   }
   if (petId) {
-    conditions += ` AND t_appoint.pet_d = $<petId>`;
+    conditions += ` AND t_appoint.pet_id = $<petId>`;
   }
   if (doctorId) {
     conditions += ` AND t_appoint.doctor_id = $<doctorId>`;
