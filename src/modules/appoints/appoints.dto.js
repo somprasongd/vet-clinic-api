@@ -9,6 +9,9 @@ export const createAppointDTO = (req, res, next) => {
     petId: Joi.number()
       .min(1)
       .required(),
+    doctorId: Joi.number()
+      .min(1)
+      .allow(null),
     appointDate: Joi.date()
       .format('YYYY-MM-DD')
       .required(),
@@ -34,6 +37,7 @@ export const searchAppointDTO = (req, res, next) => {
     dateRange0: Joi.date().format('YYYY-MM-DD'),
     dateRange1: Joi.date().format('YYYY-MM-DD'),
     petId: Joi.number().min(1),
+    doctorId: Joi.number().min(1),
   });
 
   const { dto } = validationHandler(req.query, schema);
@@ -44,6 +48,9 @@ export const searchAppointDTO = (req, res, next) => {
 
 export const updateAppointDTO = (req, res, next) => {
   const schema = Joi.object().keys({
+    doctorId: Joi.number()
+      .min(1)
+      .allow(null),
     appointDate: Joi.date().format('YYYY-MM-DD'),
     cause: Joi.string(),
     remark: Joi.string().allow('', null),
@@ -56,11 +63,12 @@ export const updateAppointDTO = (req, res, next) => {
 };
 
 export const respondAppointDTO = appoint => {
-  const { id, pet, appointDate, appointTime, cause, remark } = appoint;
+  const { id, pet, doctor, appointDate, appointTime, cause, remark } = appoint;
 
   return {
     id,
     pet,
+    doctor,
     appointDate,
     appointTime,
     cause,

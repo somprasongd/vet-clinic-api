@@ -487,6 +487,7 @@ CREATE TABLE public.t_appoint (
 	pet_id int4 NOT NULL,
 	appoint_date date NOT NULL,
 	appoint_time time NULL,
+	doctor_id int4 NULL,
 	cause text NULL,
 	remark text NULL,
 	from_visit_id int4 NULL,	
@@ -496,6 +497,7 @@ CREATE TABLE public.t_appoint (
 	update_by int4 NOT NULL,
 	CONSTRAINT t_appoint_pkey PRIMARY KEY (id),
 	CONSTRAINT t_appoint_pet_id_fk_t_pet_id FOREIGN KEY (pet_id) REFERENCES t_pet(id),
+	CONSTRAINT t_appoint_doctor_id_fk_t_pet_id FOREIGN KEY (doctor_id) REFERENCES c_user(id),
 	CONSTRAINT t_appoint_update_by_fk_c_user_id FOREIGN KEY (update_by) REFERENCES c_user(id),
 	CONSTRAINT t_appoint_from_visit_id_fk_t_visit_id FOREIGN KEY (from_visit_id) REFERENCES t_visit(id),
 	CONSTRAINT t_appoint_come_visit_fk_t_visit_id FOREIGN KEY (come_visit_id) REFERENCES t_visit(id)
@@ -503,4 +505,5 @@ CREATE TABLE public.t_appoint (
 CREATE INDEX t_appoint_active ON public.t_appoint USING btree (active);
 CREATE INDEX t_appoint_appoint_date ON public.t_appoint USING btree (appoint_date);
 CREATE INDEX t_appoint_pet_id ON public.t_appoint USING btree (pet_id);
+CREATE INDEX t_appoint_doctor_id ON public.t_appoint USING btree (doctor_id);
 
