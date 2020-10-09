@@ -58,8 +58,14 @@ export const updateAppointDTO = (req, res, next) => {
       .min(1)
       .allow(null),
     appointDate: Joi.date().format('YYYY-MM-DD'),
+    appointTime: Joi.string()
+      .regex(/^\d{2}:\d{2}$/)
+      .required(),
     cause: Joi.string(),
     remark: Joi.string().allow('', null),
+    comeVisitId: Joi.number()
+      .min(1)
+      .allow(null),
   });
 
   const { dto } = validationHandler(req.body, schema);
