@@ -63,9 +63,6 @@ export const updateAppointDTO = (req, res, next) => {
       .required(),
     cause: Joi.string(),
     remark: Joi.string().allow('', null),
-    comeVisitId: Joi.number()
-      .min(1)
-      .allow(null),
   });
 
   const { dto } = validationHandler(req.body, schema);
