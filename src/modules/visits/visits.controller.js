@@ -32,7 +32,9 @@ export const getVisitById = async id => {
 export const getVisit = async (req, res) => {
   const { id } = req.params;
 
-  res.json(respondVisitDTO(getVisitById(id)));
+  const visit = await getVisitById(id);
+
+  res.json(respondVisitDTO(visit));
 };
 
 export const cancelVisit = async (req, res) => {
