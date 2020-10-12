@@ -77,7 +77,9 @@ export const updateVisitDTO = (req, res, next) => {
     visitPriorityId: Joi.number().min(1),
     visitStatusId: Joi.number().min(1),
     visitTypeId: Joi.number().min(1),
-    doctorId: Joi.number().min(1),
+    doctorId: Joi.number()
+      .min(1)
+      .allow(null),
   });
 
   const { dto } = validationHandler(req.body, schema);
@@ -90,19 +92,18 @@ export const respondVisitDTO = visit => {
   const {
     id,
     vn,
-    petId,
     visitAt,
-    // visitBy,
-    visitTypeId,
-    visitStatusId,
-    visitPriorityId,
+    pet,
+    visitType,
+    visitStatus,
+    visitPriority,
     visitCause = '',
     note = '',
     cc = '',
     dx = '',
     ht = '',
     pe = '',
-    doctorId,
+    doctor,
     // doctorDischargeAt,
     // dischargeAt,
   } = visit;
@@ -110,19 +111,18 @@ export const respondVisitDTO = visit => {
   return {
     id,
     vn,
-    petId,
     visitAt,
-    // visitBy,
-    visitTypeId,
-    visitStatusId,
-    visitPriorityId,
+    pet,
+    visitType,
+    visitStatus,
+    visitPriority,
     visitCause,
     note,
     cc,
     dx,
     ht,
     pe,
-    doctorId,
+    doctor,
     // doctorDischargeAt,
     // dischargeAt,
   };
