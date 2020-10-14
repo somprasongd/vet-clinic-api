@@ -3,6 +3,7 @@ import validationHandler from '../../../common/helpers/validation-handler';
 
 export const createVitalsignDTO = (req, res, next) => {
   const schema = Joi.object().keys({
+    vitalSignAt: Joi.date().iso(),
     weight: Joi.number().allow(null),
     temp: Joi.number().allow(null),
     rr: Joi.number().allow(null),
@@ -27,6 +28,7 @@ export const createVitalsignDTO = (req, res, next) => {
 
 export const updateVitalsignDTO = (req, res, next) => {
   const schema = Joi.object().keys({
+    vitalSignAt: Joi.date().iso(),
     weight: Joi.number().allow(null),
     temp: Joi.number().allow(null),
     rr: Joi.number().allow(null),

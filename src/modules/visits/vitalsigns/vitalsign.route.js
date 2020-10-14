@@ -1,6 +1,6 @@
 import express from 'express';
 import * as controller from './vitalsign.controller';
-import { validId, validPagination, validParamId } from '../../../middlewares/validation.middleware';
+import { validId, validPagination } from '../../../middlewares/validation.middleware';
 import { createVitalsignDTO, updateVitalsignDTO } from './vitalsign.dto';
 import { validJWT } from '../../../middlewares/auth-validation.middleware';
 
