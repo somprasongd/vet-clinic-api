@@ -25,6 +25,10 @@ export default class PetsRepository extends Repository {
       ) as visit_priority
       , t_visit.visit_cause
       , t_visit.note
+      , t_visit.cc
+      , t_visit.dx
+      , t_visit.ht
+      , t_visit.pe
       , t_visit.discharge_at
       , t_visit.doctor_discharge_at
       , json_build_object(
@@ -120,6 +124,10 @@ export default class PetsRepository extends Repository {
       ) as visit_priority
       , t_visit.visit_cause
       , t_visit.note
+      , t_visit.cc
+      , t_visit.dx
+      , t_visit.ht
+      , t_visit.pe
       , t_visit.discharge_at
       , t_visit.doctor_discharge_at
       , json_build_object(
