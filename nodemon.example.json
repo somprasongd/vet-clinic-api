@@ -1,14 +1,6 @@
 {
   "env": {
-    "DEBUG": "app:*",
-    "HOSCONNECT_PORT": 3001,
-    "HOSCONNECT_USE_VERSION": false,
-    "HOSCONNECT_USE_SECURE": false,
-    "HOSCONNECT_JWT_SECRET": "thisisascretkey",
-    "HOSCONNECT_DB_URI": "mongodb://localhost/transaction",
-    "HOSCONNECT_APP": "HOSXP_or_HOSPITAL-OS",
-    "HOSCONNECT_HIS_DB_URI":
-      "postgres://user:passowrd@ip:port/dbname_For_HOSPITAL-OS",
-    "HOSCONNECT_HIS_API_URI": "http://ip:port_For_HOSXP"
+    "PAGE_LIMIT": 20,
+    "VC_API_DB_URI": "postgres://user:pwd@ip:5432/vcdb"
   }
 }

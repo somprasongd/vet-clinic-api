@@ -562,7 +562,7 @@ CREATE TABLE public.t_order_drug (
 );
 CREATE INDEX t_order_drug_order_id ON public.t_order_drug USING btree (order_id);
 
-CREATE TABLE public.t_xray_result (
+CREATE TABLE public.t_result_xray (
 	id serial NOT NULL,	
 	order_id int4 NOT NULL,
 	xn varchar(20) NULL,
@@ -570,18 +570,19 @@ CREATE TABLE public.t_xray_result (
 	"result" varchar(200) NOT NULL DEFAULT ''::character varying,
 	update_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	update_by int4 NOT NULL,
-	CONSTRAINT t_xray_result_pkey PRIMARY KEY (id),
-	CONSTRAINT t_xray_result_order_id_fk FOREIGN KEY (order_id) REFERENCES t_order(id),
-	CONSTRAINT t_xray_result_update_by_fk FOREIGN KEY (update_by) REFERENCES c_user(id)
+	CONSTRAINT t_result_xray_pkey PRIMARY KEY (id),
+	CONSTRAINT t_result_xray_order_id_fk FOREIGN KEY (order_id) REFERENCES t_order(id),
+	CONSTRAINT t_result_xray_update_by_fk FOREIGN KEY (update_by) REFERENCES c_user(id)
 );
-CREATE INDEX t_xray_result_order_id ON public.t_xray_result USING btree (order_id);
-CREATE INDEX t_xray_result_xn ON public.t_xray_result USING btree (xn);
-CREATE INDEX t_xray_result_xn_like ON public.t_xray_result USING btree (xn varchar_pattern_ops);
+CREATE INDEX t_result_xray_order_id ON public.t_result_xray USING btree (order_id);
+CREATE INDEX t_result_xray_xn ON public.t_result_xray USING btree (xn);
+CREATE INDEX t_result_xray_xn_like ON public.t_result_xray USING btree (xn varchar_pattern_ops);
 
-CREATE TABLE public.t_lab_result (
+CREATE TABLE public.t_result_lab (
 	id serial NOT NULL,
 	order_id int4 NOT NULL,
 	item_id int4 NOT NULL,
+	item_set_id int4 NULL,
 	"label" varchar(100) NOT NULL,
 	"result" varchar(200) NOT NULL DEFAULT ''::character varying,
 	result_type result_type NOT NULL DEFAULT 'text',
@@ -593,13 +594,14 @@ CREATE TABLE public.t_lab_result (
 	update_by int4 NOT NULL,
 	interpret varchar(50) NULL,
 	interpret_level int4 NULL,
-	CONSTRAINT t_lab_result_pkey PRIMARY KEY (id),
-	CONSTRAINT t_lab_result_order_id_fk FOREIGN KEY (order_id) REFERENCES t_order(id),
-	CONSTRAINT t_lab_result_item_id_fk FOREIGN KEY (item_id) REFERENCES c_item(id),
-	CONSTRAINT t_lab_result_update_by_fk FOREIGN KEY (update_by) REFERENCES c_user(id)
+	CONSTRAINT t_result_lab_pkey PRIMARY KEY (id),
+	CONSTRAINT t_result_lab_order_id_fk FOREIGN KEY (order_id) REFERENCES t_order(id),
+	CONSTRAINT t_result_lab_item_id_fk FOREIGN KEY (item_id) REFERENCES c_item(id),
+	CONSTRAINT t_result_lab_item_set_id_fk FOREIGN KEY (item_set_id) REFERENCES c_item(id),
+	CONSTRAINT t_result_lab_update_by_fk FOREIGN KEY (update_by) REFERENCES c_user(id)
 );
-CREATE INDEX t_lab_result_order_id ON public.t_lab_result USING btree (order_id);
-CREATE INDEX t_lab_result_item_id ON public.t_lab_result USING btree (item_id);
+CREATE INDEX t_result_lab_order_id ON public.t_result_lab USING btree (order_id);
+CREATE INDEX t_result_lab_item_id ON public.t_result_lab USING btree (item_id);
 
 -- Table Triggers
 
@@ -689,13 +691,13 @@ END;
 $function$
 ;
 
-CREATE OR REPLACE FUNCTION public.t_lab_result_interpret()
+CREATE OR REPLACE FUNCTION public.t_result_lab_interpret()
  RETURNS trigger
  LANGUAGE plpgsql
 AS $function$
 DECLARE
 BEGIN
-	UPDATE t_lab_result SET
+	UPDATE t_result_lab SET
 		interpret = case when NEW.result_type = 'numeric'
 									then lab_interpret(NEW.normal_min::numeric, NEW.normal_max::numeric, NEW.result::text)
 									else '' end 
@@ -708,8 +710,8 @@ END;
 $function$
 ;
 
-create trigger t_lab_result_interpret after
+create trigger t_result_lab_interpret after
 update
     on
-    public.t_lab_result for each row
-    when (((new.result)::text <> (old.result)::text)) execute procedure t_lab_result_interpret();
+    public.t_result_lab for each row
+    when (((new.result)::text <> (old.result)::text)) execute procedure t_result_lab_interpret();

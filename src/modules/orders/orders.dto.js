@@ -63,6 +63,22 @@ export const updateOrderDTO = (req, res, next) => {
   next();
 };
 
+export const updateOrderDrugDTO = (req, res, next) => {
+  const schema = Joi.object().keys({
+    dose: Joi.number(),
+    unit: Joi.string(),
+    caution: Joi.string(),
+    frequency: Joi.string(),
+    instruction: Joi.string(),
+    remark: Joi.string(),
+  });
+
+  const { dto } = validationHandler(req.body, schema);
+
+  req.dto = { ...dto, updateBy: req.user.id };
+  next();
+};
+
 export const respondOrderDTO = order => {
   const { id, visitId, posId, itemLabel, typeLabel, cost, price, qty, unit } = order;
 
@@ -76,5 +92,20 @@ export const respondOrderDTO = order => {
     price,
     qty,
     unit,
+  };
+};
+
+export const respondOrderDrugDTO = order => {
+  const { id, orderId, unit, dose, caution, frequency, instruction, remark } = order;
+
+  return {
+    id,
+    orderId,
+    unit,
+    dose,
+    caution,
+    frequency,
+    instruction,
+    remark,
   };
 };

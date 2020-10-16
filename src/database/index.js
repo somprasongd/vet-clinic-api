@@ -57,7 +57,7 @@ const createConnection = async () => {
       obj.labresults = new repos.LabResultsRepository(obj, pgp);
       obj.labtestresults = new repos.LabTestResultsRepository(obj, pgp);
       obj.orders = new repos.OrdersRepository(obj, pgp);
-      obj.orderdrugs = new repos.OrderDrugsRepository(obj, pgp);
+      obj.orderDrugs = new repos.OrderDrugsRepository(obj, pgp);
       obj.ordersets = new repos.OrderSetsRepository(obj, pgp);
       obj.xrayresults = new repos.XrayResultsRepository(obj, pgp);
       obj.deposit = new repos.DepositRepository(obj, pgp);
@@ -70,6 +70,7 @@ const createConnection = async () => {
       obj.items = new repos.ItemRepository(obj, pgp);
       obj.itemDrugs = new repos.ItemDrugRepository(obj, pgp);
       obj.itemLabs = new repos.ItemLabRepository(obj, pgp);
+      obj.itemSets = new repos.ItemSetRepository(obj, pgp);
     },
   };
 

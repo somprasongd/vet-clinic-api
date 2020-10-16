@@ -1,6 +1,6 @@
 import * as service from './orders.service';
 import { NotFoundExceptions } from '../../common/helpers/exceptions';
-import { respondOrderDTO } from './orders.dto';
+import { respondOrderDrugDTO, respondOrderDTO } from './orders.dto';
 import paginate from '../../common/helpers/res-with-paginate';
 
 export const createOrder = async (req, res) => {
@@ -49,4 +49,23 @@ export const updateOrder = async (req, res) => {
   if (!order) throw new NotFoundExceptions('The order with the given ID was not found.');
 
   res.json(respondOrderDTO(order));
+};
+
+export const getOrderDrug = async (req, res) => {
+  const { id: orderId } = req.params;
+  const orderDrug = await service.findOrderDrugByOrderId(orderId);
+
+  if (!orderDrug) throw new NotFoundExceptions('The order drug with the given Order ID was not found.');
+
+  res.json(respondOrderDTO(orderDrug));
+};
+
+export const updateOrderDrug = async (req, res) => {
+  const { dto } = req;
+
+  const { id: orderId } = req.params;
+  const orderDrug = await service.updateOrderDrugByOrderId(orderId, dto);
+  if (!orderDrug) throw new NotFoundExceptions('The order drug with the given Order ID was not found.');
+
+  res.json(respondOrderDrugDTO(orderDrug));
 };

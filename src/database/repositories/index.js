@@ -9,7 +9,7 @@ import VisitVitalsignsRepository from './visit-vitalsigns';
 import LabResultsRepository from './labresults';
 import LabTestResultsRepository from './labtestresults';
 import OrdersRepository from './orders';
-import OrderDrugsRepository from './orderdrugs';
+import OrderDrugsRepository from './order-drugs';
 import OrderSetsRepository from './ordersets';
 import XrayResultsRepository from './xrayresults';
 import DepositRepository from './deposit';
@@ -23,6 +23,7 @@ import LineNotifyRepository from './linenotify';
 import ItemRepository from './items';
 import ItemDrugRepository from './item-drugs';
 import ItemLabRepository from './item-labs';
+import ItemSetRepository from './item-sets';
 
 export default {
   UsersRepository,
@@ -50,4 +51,5 @@ export default {
   ItemRepository,
   ItemDrugRepository,
   ItemLabRepository,
+  ItemSetRepository,
 };
