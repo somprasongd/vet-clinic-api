@@ -1,12 +1,3 @@
-INSERT INTO public."m_appoint_status"
-("label")
-VALUES('รอการนัด'),
-('มาตามนัด'),
-('ผิดนัด'),
-('ยกเลิกนัด'),
-('มาก่อนนัด'),
-('มาหลังนัด');
-
 INSERT INTO public."m_appoint_type"
 ("label")
 VALUES('ติดตามอาการ'),
@@ -23,7 +14,7 @@ VALUES('ยา'),
 ('เวชภัณฑ์ทางการแพทย์'),
 ('Lab'),
 ('X-Ray'),
-('Service Charge');
+('ค่าบริการ');
 
 INSERT INTO public."m_item_lab_group"
 ("label")
@@ -39,13 +30,13 @@ VALUES('ทั่วไป'),
 ('Lab'),
 ('Xray');
 
-INSERT INTO public."m_order_status"
-("label")
-VALUES('สั่งรายการ'),
-('ดำเนินการ'),
-('ยกเลิก'),
-('รายงานผล'),
-('จ่าย');
+-- INSERT INTO public."m_order_status"
+-- ("label")
+-- VALUES('สั่งรายการ'),
+-- ('ดำเนินการ'),
+-- ('ยกเลิก'),
+-- ('รายงานผล'),
+-- ('จ่าย');
 
 INSERT INTO public."m_payment_type"
 ("label")

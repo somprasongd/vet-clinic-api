@@ -1,5 +1,4 @@
 import connection from '../../database';
-import { deleteById as deleteAvatar } from '../upload/upload.service';
 
 const { db } = connection;
 

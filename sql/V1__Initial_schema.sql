@@ -4,14 +4,6 @@
 -- t is transaction data
 
 -- master data
-CREATE TABLE public.m_appoint_status (
-	id serial NOT NULL,
-	"label" varchar NOT NULL,
-	active bool NOT NULL DEFAULT true,
-	CONSTRAINT m_appoint_status_pk PRIMARY KEY (id)
-);
-CREATE INDEX m_appoint_status_active_idx ON public.m_appoint_status USING btree (active);
-
 CREATE TABLE public.m_appoint_type (
 	id serial NOT NULL,
 	"label" varchar NOT NULL,
@@ -52,13 +44,13 @@ CREATE TABLE public.m_media_type (
 );
 CREATE INDEX m_media_type_active_idx ON public.m_media_type USING btree (active);
 
-CREATE TABLE public.m_order_status (
-	id serial NOT NULL,
-	"label" varchar NOT NULL,
-	active bool NOT NULL DEFAULT true,
-	CONSTRAINT m_order_status_pk PRIMARY KEY (id)
-);
-CREATE INDEX m_order_status_active_idx ON public.m_order_status USING btree (active);
+-- CREATE TABLE public.m_order_status (
+-- 	id serial NOT NULL,
+-- 	"label" varchar NOT NULL,
+-- 	active bool NOT NULL DEFAULT true,
+-- 	CONSTRAINT m_order_status_pk PRIMARY KEY (id)
+-- );
+-- CREATE INDEX m_order_status_active_idx ON public.m_order_status USING btree (active);
 
 CREATE TABLE public.m_payment_type (
 	id serial NOT NULL,
@@ -510,3 +502,214 @@ CREATE INDEX t_appoint_appoint_date ON public.t_appoint USING btree (appoint_dat
 CREATE INDEX t_appoint_pet_id ON public.t_appoint USING btree (pet_id);
 CREATE INDEX t_appoint_doctor_id ON public.t_appoint USING btree (doctor_id);
 
+create type pos_state as enum('pending', 'active', 'success', 'cancel');
+
+CREATE TABLE public.t_pos (
+	id serial NOT NULL,
+	pos_number varchar(20) NULL,
+	pos_state pos_state NOT NULL DEFAULT 'active',
+	remark text NULL,
+	create_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	update_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	update_by int4 NOT NULL,
+	CONSTRAINT t_pos_pkey PRIMARY KEY (id)
+);
+CREATE INDEX t_pos_pos_state ON public.t_pos USING btree (pos_state);
+CREATE INDEX t_pos_pos_number ON public.t_pos USING btree (pos_number);
+CREATE INDEX t_pos_pos_number_like ON public.t_pos USING btree (pos_number varchar_pattern_ops);
+CREATE INDEX t_pos_create_at ON public.t_pos USING btree (create_at);
+
+CREATE TABLE public.t_order (
+	id serial NOT NULL,
+	visit_id int4 NULL,	
+	pos_id int4 NULL,
+	item_id int4 NOT NULL,
+	item_label varchar NOT NULL,
+	type_id int4 NOT NULL,
+	type_label varchar NOT NULL,
+	"cost" float8 NOT NULL,
+	price float8 NOT NULL,
+	qty float8 NOT NULL DEFAULT 1,
+	active bool NOT NULL DEFAULT true,
+	update_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	update_by int4 NOT NULL,
+	CONSTRAINT t_order_pkey PRIMARY KEY (id),
+	CONSTRAINT t_order_item_id_fk_c_item_id FOREIGN KEY (item_id) REFERENCES c_item(id),
+	CONSTRAINT t_order_type_id_fk_m_item_group_id FOREIGN KEY (type_id) REFERENCES m_item_group(id),
+	CONSTRAINT t_order_pos_id_fk_t_pos_id FOREIGN KEY (pos_id) REFERENCES t_pos(id),
+	CONSTRAINT t_order_visit_id_fk_t_visit_id FOREIGN KEY (visit_id) REFERENCES t_visit(id)
+);
+CREATE INDEX t_order_item_id ON public.t_order USING btree (item_id);
+CREATE INDEX t_order_type_id ON public.t_order USING btree (type_id);
+CREATE INDEX t_order_active ON public.t_order USING btree (active);
+CREATE INDEX t_order_pos_id ON public.t_order USING btree (pos_id);
+CREATE INDEX t_order_visit_id ON public.t_order USING btree (visit_id);
+
+CREATE TABLE public.t_order_drug (
+	id serial NOT NULL,
+	order_id int4 NOT NULL,
+	unit varchar(50) NOT NULL,
+	dose float8 NULL,
+	caution text NULL,
+	frequency text NULL,
+	instruction text NULL,
+	remark text NULL,	
+	update_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	update_by int4 NOT NULL,
+	CONSTRAINT t_order_drug_pkey PRIMARY KEY (id),
+	CONSTRAINT t_order_drug_order_id_fk FOREIGN KEY (order_id) REFERENCES t_order(id),
+	CONSTRAINT t_order_drug_update_by_fk FOREIGN KEY (update_by) REFERENCES c_user(id)
+);
+CREATE INDEX t_order_drug_order_id ON public.t_order_drug USING btree (order_id);
+
+CREATE TABLE public.t_xray_result (
+	id serial NOT NULL,	
+	order_id int4 NOT NULL,
+	xn varchar(20) NULL,
+	"label" varchar(100) NOT NULL,
+	"result" varchar(200) NOT NULL DEFAULT ''::character varying,
+	update_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	update_by int4 NOT NULL,
+	CONSTRAINT t_xray_result_pkey PRIMARY KEY (id),
+	CONSTRAINT t_xray_result_order_id_fk FOREIGN KEY (order_id) REFERENCES t_order(id),
+	CONSTRAINT t_xray_result_update_by_fk FOREIGN KEY (update_by) REFERENCES c_user(id)
+);
+CREATE INDEX t_xray_result_order_id ON public.t_xray_result USING btree (order_id);
+CREATE INDEX t_xray_result_xn ON public.t_xray_result USING btree (xn);
+CREATE INDEX t_xray_result_xn_like ON public.t_xray_result USING btree (xn varchar_pattern_ops);
+
+CREATE TABLE public.t_lab_result (
+	id serial NOT NULL,
+	order_id int4 NOT NULL,
+	item_id int4 NOT NULL,
+	"label" varchar(100) NOT NULL,
+	"result" varchar(200) NOT NULL DEFAULT ''::character varying,
+	result_type result_type NOT NULL DEFAULT 'text',
+	normal_str varchar(100) NULL,
+	normal_max float8 NULL,
+	normal_min float8 NULL,
+	unit varchar(100) NULL,
+	update_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	update_by int4 NOT NULL,
+	interpret varchar(50) NULL,
+	interpret_level int4 NULL,
+	CONSTRAINT t_lab_result_pkey PRIMARY KEY (id),
+	CONSTRAINT t_lab_result_order_id_fk FOREIGN KEY (order_id) REFERENCES t_order(id),
+	CONSTRAINT t_lab_result_item_id_fk FOREIGN KEY (item_id) REFERENCES c_item(id),
+	CONSTRAINT t_lab_result_update_by_fk FOREIGN KEY (update_by) REFERENCES c_user(id)
+);
+CREATE INDEX t_lab_result_order_id ON public.t_lab_result USING btree (order_id);
+CREATE INDEX t_lab_result_item_id ON public.t_lab_result USING btree (item_id);
+
+-- Table Triggers
+
+CREATE OR REPLACE FUNCTION public.isnumeric(text)
+ RETURNS boolean
+ LANGUAGE plpgsql
+AS $function$
+DECLARE x NUMERIC;
+BEGIN
+	x = $1::NUMERIC;
+	RETURN TRUE;
+EXCEPTION WHEN others THEN
+  RETURN FALSE;
+END;
+$function$
+;
+
+
+CREATE OR REPLACE FUNCTION public.lab_interpret(p_min numeric, p_max numeric, p_result text)
+ RETURNS text
+ LANGUAGE plpgsql
+AS $function$
+DECLARE 
+  n_result numeric;
+BEGIN
+	IF isnumeric(p_result) THEN
+		n_result = p_result::numeric;
+		IF p_min > n_result  THEN 
+			RETURN 'Low';
+		ELSIF p_max < n_result THEN
+			RETURN 'High';
+		ELSE
+			RETURN 'Normal';
+		END IF;
+	ELSE
+		RETURN NULL;
+	END IF;
+END;
+$function$
+;
+
+CREATE OR REPLACE FUNCTION public.lab_interpret_level(p_min numeric, p_max numeric, p_result text)
+ RETURNS integer
+ LANGUAGE plpgsql
+AS $function$
+DECLARE 
+	n_result numeric;
+	max_min10 numeric := (p_max - p_min)/10;
+BEGIN
+	IF isnumeric(p_result) THEN
+		n_result = p_result::numeric;
+		IF p_min > n_result  THEN 
+					RETURN 0;
+		ELSIF p_min = n_result THEN
+					RETURN 1;
+		ELSIF p_min < n_result AND n_result < (p_min + (1 * max_min10)) THEN
+					RETURN 2;
+		ELSIF p_min <= n_result AND n_result < (p_min + (2 * max_min10)) THEN
+					RETURN 3;
+		ELSIF p_min <= n_result AND n_result < (p_min + (3 * max_min10)) THEN
+					RETURN 4;
+		ELSIF p_min <= n_result AND n_result < (p_min + (4 * max_min10)) THEN
+					RETURN 5;
+		ELSIF p_min <= n_result AND n_result < (p_min + (5 * max_min10)) THEN
+					RETURN 6;
+		ELSIF p_min <= n_result AND n_result < (p_min + (6 * max_min10)) THEN
+					RETURN 7;
+		ELSIF p_min <= n_result AND n_result < (p_min + (7 * max_min10)) THEN
+					RETURN 8;
+		ELSIF p_min <= n_result AND n_result < (p_min + (8 * max_min10)) THEN
+					RETURN 9;
+		ELSIF p_min <= n_result AND n_result < (p_min + (9 * max_min10)) THEN
+					RETURN 10;
+		ELSIF p_min <= n_result AND n_result < (p_min + (10 * max_min10)) THEN
+					RETURN 11;
+		ELSIF p_max = n_result  THEN
+					RETURN 12;
+		ELSIF p_max < n_result THEN
+					RETURN 13; 
+		ELSE
+					RETURN NULL;
+		END IF;
+	ELSE
+		RETURN NULL;
+	END IF;
+END;
+$function$
+;
+
+CREATE OR REPLACE FUNCTION public.t_lab_result_interpret()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+BEGIN
+	UPDATE t_lab_result SET
+		interpret = case when NEW.result_type = 'numeric'
+									then lab_interpret(NEW.normal_min::numeric, NEW.normal_max::numeric, NEW.result::text)
+									else '' end 
+	, interpret_level = case when NEW.result_type = 'numeric'
+									then lab_interpret_level(NEW.normal_min::numeric,NEW.normal_max::numeric,NEW.result::text)
+									else (case when (upper(trim(NEW.result)) = upper(trim(normal_str))) then 1 else 0 end) end
+	WHERE id = NEW.id ; 
+	RETURN new;
+END;
+$function$
+;
+
+create trigger t_lab_result_interpret after
+update
+    on
+    public.t_lab_result for each row
+    when (((new.result)::text <> (old.result)::text)) execute procedure t_lab_result_interpret();
