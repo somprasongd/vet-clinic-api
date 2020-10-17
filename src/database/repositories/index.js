@@ -6,12 +6,11 @@ import MembersRepository from './members';
 import PetsRepository from './pets';
 import VisitsRepository from './visits';
 import VisitVitalsignsRepository from './visit-vitalsigns';
-import LabResultsRepository from './labresults';
-import LabTestResultsRepository from './labtestresults';
 import OrdersRepository from './orders';
 import OrderDrugsRepository from './order-drugs';
 import OrderSetsRepository from './ordersets';
-import XrayResultsRepository from './xrayresults';
+import ResultLabsRepository from './result-labs';
+import ResultXraysRepository from './result-xrays';
 import DepositRepository from './deposit';
 import BillingRepository from './billing';
 import ReceiptRepository from './receipt';
@@ -34,12 +33,11 @@ export default {
   PetsRepository,
   VisitsRepository,
   VisitVitalsignsRepository,
-  LabResultsRepository,
-  LabTestResultsRepository,
   OrdersRepository,
   OrderDrugsRepository,
   OrderSetsRepository,
-  XrayResultsRepository,
+  ResultLabsRepository,
+  ResultXraysRepository,
   DepositRepository,
   BillingRepository,
   ReceiptRepository,

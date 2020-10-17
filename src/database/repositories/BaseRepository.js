@@ -43,7 +43,7 @@ export default class {
     );
   }
 
-  // Tries to delete a pet by id, and returns the number of records deleted;
+  // Tries to delete by id, and returns the number of records deleted;
   remove(tableName, id) {
     return this.db.result(`DELETE FROM ${tableName} WHERE id = $1`, +id, r => r.rowCount);
   }

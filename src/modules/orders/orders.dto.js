@@ -12,7 +12,7 @@ export const createOrderDTO = (req, res, next) => {
       then: Joi.number()
         .min(1)
         .required(),
-      otherwise: Joi.default(null),
+      otherwise: null,
     }),
     itemId: Joi.number()
       .min(1)
@@ -34,13 +34,13 @@ export const searchOrderDTO = (req, res, next) => {
   const schema = Joi.object().keys({
     visitId: Joi.number()
       .min(1)
-      .default(undefined),
+      .default(null),
     posId: Joi.when('visitId', {
-      is: undefined,
+      is: null,
       then: Joi.number()
         .min(1)
         .required(),
-      otherwise: Joi.default(undefined),
+      otherwise: null,
     }),
   });
 
@@ -52,6 +52,7 @@ export const searchOrderDTO = (req, res, next) => {
 
 export const updateOrderDTO = (req, res, next) => {
   const schema = Joi.object().keys({
+    posId: Joi.number().min(1),
     qty: Joi.number().min(1),
     cost: Joi.number().min(0),
     price: Joi.number().min(0),

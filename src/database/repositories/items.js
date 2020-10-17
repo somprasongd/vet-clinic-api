@@ -1,12 +1,16 @@
 import Repository from '../helpers/repository';
 
-export default class UsersRepository extends Repository {
+export default class ItemsRepository extends Repository {
   constructor(db, pgp) {
     super(db, pgp, 'c_item', {});
   }
 
+  findById(id) {
+    return this.db.oneOrNone(`SELECT * FROM c_item WHERE id = $1 and active = true`, +id);
+  }
+
   // find(wheres, options)
-  find(wheres, { offset = 0, limit = 'all' }) {
+  find(wheres, { offset = 0, limit = 'all' } = {}) {
     const { code, label, groupId, groupIds, groupLabel, isSet } = wheres;
     return this.db.task(async t => {
       const p1 = t.manyOrNone(

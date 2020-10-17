@@ -103,10 +103,10 @@ function createSearchCondition(wheres) {
   const { code, name, microchipNo, genderId, typeId, ownerId } = wheres;
   let conditions = '';
   if (code) {
-    conditions += ` AND code = $<code>`;
+    conditions += ` AND code ilike '$<code:value>%'`;
   }
   if (name) {
-    conditions += `  AND name = $<name>`;
+    conditions += `  AND name ilike '%$<name:value>%'`;
   }
   if (microchipNo) {
     conditions += ` AND microchip_no = $<microchipNo>`;

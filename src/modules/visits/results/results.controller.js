@@ -1,46 +1,55 @@
 import * as service from './results.service';
 import { NotFoundExceptions } from '../../../common/helpers/exceptions';
-import { respondVitalsignDTO } from './results.dto';
+import { respondResultLabDTO, respondResultXrayDTO } from './results.dto';
 
-export const createVitalsign = async (req, res) => {
+export const listResultLabByVisitId = async (req, res) => {
+  const { id: visitId } = req.visit;
+
+  const resultLabs = await service.findAllResultLabByVisitId({ visitId });
+
+  res.json(resultLabs);
+};
+
+export const getResultLab = async (req, res) => {
+  const { id } = req.params;
+  const resultLab = await service.findResultLabById(id);
+
+  if (!resultLab) throw new NotFoundExceptions('The result lab with the given ID was not found.');
+
+  res.json(respondResultLabDTO(resultLab));
+};
+
+export const updateResultLab = async (req, res) => {
   const { dto } = req;
 
-  const vitalsign = await service.createVitalsign(dto);
+  const resultLab = await service.updateResultLab(req.params.id, dto);
+  if (!resultLab) throw new NotFoundExceptions('The result lab with the given ID was not found.');
 
-  res.json(respondVitalsignDTO(vitalsign));
+  res.json(respondResultLabDTO(resultLab));
 };
 
-export const listVitalsign = async (req, res) => {
-  const { id } = req.visit;
+export const listResultXrayByVisitId = async (req, res) => {
+  const { id: visitId } = req.visit;
 
-  const vitalsigns = await service.findAllVitalsign({ visitId: id });
+  const resultXrays = await service.findAllResultXrayByVisitId({ visitId });
 
-  res.json(vitalsigns);
+  res.json(resultXrays);
 };
 
-export const getVitalsign = async (req, res) => {
+export const getResultXray = async (req, res) => {
   const { id } = req.params;
-  const vitalsign = await service.findVitalsignById(id);
+  const resultXray = await service.findResultXrayById(id);
 
-  if (!vitalsign) throw new NotFoundExceptions('The vitalsign with the given ID was not found.');
+  if (!resultXray) throw new NotFoundExceptions('The result xray with the given ID was not found.');
 
-  res.json(respondVitalsignDTO(vitalsign));
+  res.json(respondResultXrayDTO(resultXray));
 };
 
-export const cancelVitalsign = async (req, res) => {
-  const { id } = req.params;
-  const vitalsign = await service.deleteVitalsign(id);
-
-  if (!vitalsign) throw new NotFoundExceptions('The vitalsign with the given ID was not found.');
-
-  res.status(204).end();
-};
-
-export const updateVitalsign = async (req, res) => {
+export const updateResultXray = async (req, res) => {
   const { dto } = req;
 
-  const vitalsign = await service.updateVitalsign(req.params.id, dto);
-  if (!vitalsign) throw new NotFoundExceptions('The vitalsign with the given ID was not found.');
+  const resultXray = await service.updateResultXray(req.params.id, dto);
+  if (!resultXray) throw new NotFoundExceptions('The result xray with the given ID was not found.');
 
-  res.json(respondVitalsignDTO(vitalsign));
+  res.json(respondResultXrayDTO(resultXray));
 };

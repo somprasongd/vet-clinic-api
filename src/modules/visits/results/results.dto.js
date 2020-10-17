@@ -1,48 +1,11 @@
 import Joi from 'joi';
 import validationHandler from '../../../common/helpers/validation-handler';
 
-export const createVitalsignDTO = (req, res, next) => {
+export const updateResultLabDTO = (req, res, next) => {
   const schema = Joi.object().keys({
-    vitalSignAt: Joi.date().iso(),
-    weight: Joi.number().allow(null),
-    temp: Joi.number().allow(null),
-    rr: Joi.number().allow(null),
-    sys: Joi.number()
-      .integer()
-      .allow(null),
-    dia: Joi.number()
-      .integer()
-      .allow(null),
-    pulse: Joi.number()
-      .integer()
-      .allow(null),
-    painScore: Joi.number().allow(null),
-    bcs: Joi.number().allow(null),
-  });
-
-  const { dto } = validationHandler(req.body, schema);
-
-  req.dto = { ...dto, visitId: req.visit.id, updateBy: req.user.id };
-  next();
-};
-
-export const updateVitalsignDTO = (req, res, next) => {
-  const schema = Joi.object().keys({
-    vitalSignAt: Joi.date().iso(),
-    weight: Joi.number().allow(null),
-    temp: Joi.number().allow(null),
-    rr: Joi.number().allow(null),
-    sys: Joi.number()
-      .integer()
-      .allow(null),
-    dia: Joi.number()
-      .integer()
-      .allow(null),
-    pulse: Joi.number()
-      .integer()
-      .allow(null),
-    painScore: Joi.number().allow(null),
-    bcs: Joi.number().allow(null),
+    result: Joi.string()
+      .allow('')
+      .required(),
   });
 
   const { dto } = validationHandler(req.body, schema);
@@ -51,32 +14,61 @@ export const updateVitalsignDTO = (req, res, next) => {
   next();
 };
 
-export const respondVitalsignDTO = vs => {
+export const respondResultLabDTO = vs => {
   const {
     id,
-    visitId,
-    vitalSignAt,
-    weight = '',
-    temp = '',
-    rr = '',
-    sys = '',
-    dia = '',
-    pulse = '',
-    painScore = '',
-    bcs = '',
+    orderId,
+    itemId,
+    itemSetId,
+    label,
+    result,
+    resultType,
+    normalStr,
+    normalMax,
+    normalMin,
+    unit,
+    interpret,
+    interpretLevel,
   } = vs;
 
   return {
     id,
-    visitId,
-    vitalSignAt,
-    weight,
-    temp,
-    rr,
-    sys,
-    dia,
-    pulse,
-    painScore,
-    bcs,
+    orderId,
+    itemId,
+    itemSetId,
+    label,
+    result,
+    resultType,
+    normalStr,
+    normalMax,
+    normalMin,
+    unit,
+    interpret,
+    interpretLevel,
+  };
+};
+
+export const updateResultXrayDTO = (req, res, next) => {
+  const schema = Joi.object().keys({
+    result: Joi.string()
+      .allow('')
+      .required(),
+  });
+
+  const { dto } = validationHandler(req.body, schema);
+
+  req.dto = { ...dto, updateBy: req.user.id };
+  next();
+};
+
+export const respondResultXrayDTO = vs => {
+  const { id, orderId, xn, label, result } = vs;
+
+  return {
+    id,
+    orderId,
+    xn,
+    label,
+    result,
   };
 };

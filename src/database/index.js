@@ -54,12 +54,11 @@ const createConnection = async () => {
       obj.visits = new repos.VisitsRepository(obj, pgp);
       obj.vitalsigns = new repos.VisitVitalsignsRepository(obj, pgp);
       obj.visitMedias = new repos.VisitMediaRepository(obj, pgp);
-      obj.labresults = new repos.LabResultsRepository(obj, pgp);
-      obj.labtestresults = new repos.LabTestResultsRepository(obj, pgp);
       obj.orders = new repos.OrdersRepository(obj, pgp);
       obj.orderDrugs = new repos.OrderDrugsRepository(obj, pgp);
       obj.ordersets = new repos.OrderSetsRepository(obj, pgp);
-      obj.xrayresults = new repos.XrayResultsRepository(obj, pgp);
+      obj.resultLabs = new repos.ResultLabsRepository(obj, pgp);
+      obj.resultXrays = new repos.ResultXraysRepository(obj, pgp);
       obj.deposit = new repos.DepositRepository(obj, pgp);
       obj.billing = new repos.BillingRepository(obj, pgp);
       obj.receipt = new repos.ReceiptRepository(obj, pgp);

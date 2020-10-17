@@ -2,12 +2,14 @@ import connection from '../../../database';
 
 const { db } = connection;
 
-export const findVitalsignById = id => db.vitalsigns.findById(id);
+export const findResultLabById = id => db.resultLabs.findById(id);
 
-export const findAllVitalsign = ({ visitId }) => db.vitalsigns.find({ visitId });
+export const findAllResultLabByVisitId = ({ visitId }) => db.resultLabs.find({ visitId });
 
-export const createVitalsign = obj => db.vitalsigns.create(obj);
+export const updateResultLab = async (id, obj) => db.resultLabs.update(id, obj);
 
-export const updateVitalsign = async (id, obj) => db.vitalsigns.update(id, obj);
+export const findResultXrayById = id => db.resultXrays.findById(id);
 
-export const deleteVitalsign = async id => db.vitalsigns.remove(id);
+export const findAllResultXrayByVisitId = ({ visitId }) => db.resultXrays.find({ visitId });
+
+export const updateResultXray = async (id, obj) => db.resultXrays.update(id, obj);

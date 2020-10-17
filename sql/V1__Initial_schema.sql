@@ -565,7 +565,7 @@ CREATE INDEX t_order_drug_order_id ON public.t_order_drug USING btree (order_id)
 CREATE TABLE public.t_result_xray (
 	id serial NOT NULL,	
 	order_id int4 NOT NULL,
-	xn varchar(20) NULL,
+	xn varchar(20) NOT NULL,
 	"label" varchar(100) NOT NULL,
 	"result" varchar(200) NOT NULL DEFAULT ''::character varying,
 	update_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,

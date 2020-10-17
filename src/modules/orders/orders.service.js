@@ -8,10 +8,10 @@ export const findOrderById = id => db.orders.findById(id);
 export const findAllOrder = (conditions, { limit, offset }) => db.orders.find(conditions, { limit, offset });
 
 export const createOrder = newOrder => {
-  const { visitId, posId, itemId, qty, cost = 0, price = 0 } = newOrder;
+  const { visitId, posId, itemId, qty, cost = 0, price = 0, updateBy } = newOrder;
 
   return db.tx(async t => {
-    const item = await t.items.find({ id: itemId, active: true });
+    const item = await t.items.findById(itemId);
     if (!item) {
       throw new NotFoundExceptions('The item with the given Item ID was not found.');
     }
@@ -28,6 +28,7 @@ export const createOrder = newOrder => {
       qty,
       cost: cost === 0 ? item.cost : cost,
       price: price === 0 ? item.price : price,
+      updateBy,
     };
 
     order = await t.orders.create(order);
