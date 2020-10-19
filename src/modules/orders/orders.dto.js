@@ -2,6 +2,14 @@ import Joi from 'joi';
 import validationHandler from '../../common/helpers/validation-handler';
 
 export const createOrderDTO = (req, res, next) => {
+  if (req.visit) {
+    req.body.visitId = req.visit.id;
+  }
+
+  if (req.pos) {
+    req.body.posId = req.pos.id;
+  }
+
   const schema = Joi.object().keys({
     visitId: Joi.number()
       .min(1)
@@ -31,6 +39,14 @@ export const createOrderDTO = (req, res, next) => {
 };
 
 export const searchOrderDTO = (req, res, next) => {
+  if (req.visit) {
+    req.query.visitId = req.visit.id;
+  }
+
+  if (req.pos) {
+    req.query.posId = req.pos.id;
+  }
+
   const schema = Joi.object().keys({
     visitId: Joi.number()
       .min(1)
@@ -51,6 +67,9 @@ export const searchOrderDTO = (req, res, next) => {
 };
 
 export const updateOrderDTO = (req, res, next) => {
+  if (req.pos) {
+    req.body.posId = req.pos.id;
+  }
   const schema = Joi.object().keys({
     posId: Joi.number().min(1),
     qty: Joi.number().min(1),
