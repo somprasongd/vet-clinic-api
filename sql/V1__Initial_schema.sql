@@ -296,6 +296,7 @@ create type result_type as enum('numeric', 'text');
 CREATE TABLE public.c_item_lab (
 	id serial NOT NULL,
 	item_id int4 NOT NULL,
+	group_id int4 NOT NULL,
 	result_type result_type NOT NULL DEFAULT 'text',
 	normal_str varchar(100) NULL,
 	normal_max float8 NULL,
@@ -305,6 +306,7 @@ CREATE TABLE public.c_item_lab (
 	update_by int4 NOT NULL,
 	CONSTRAINT c_item_lab_pkey PRIMARY KEY (id),
 	CONSTRAINT c_item_lab_item_id_fk_c_item_id FOREIGN KEY (item_id) REFERENCES c_item(id),
+	CONSTRAINT c_item_lab_item_id_fk_m_item_lab_group_id FOREIGN KEY (group_id) REFERENCES m_item_lab_group(id),
 	CONSTRAINT c_item_lab_update_by_fk_c_user_id FOREIGN KEY (update_by) REFERENCES c_user(id)
 );
 CREATE INDEX c_item_lab_item_id ON public.c_item_lab USING btree (item_id);

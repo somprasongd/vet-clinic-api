@@ -144,6 +144,9 @@ export const updateItemDrugDTO = (req, res, next) => {
 
 export const createItemLabDTO = (req, res, next) => {
   const schema = Joi.object().keys({
+    groupId: Joi.number()
+      .min(1)
+      .required(),
     resultType: Joi.string()
       .valid('numeric', 'text')
       .default('text'),
@@ -162,6 +165,7 @@ export const createItemLabDTO = (req, res, next) => {
 
 export const updateItemLabDTO = (req, res, next) => {
   const schema = Joi.object().keys({
+    groupId: Joi.number().min(1),
     resultType: Joi.string()
       .valid('numeric', 'text')
       .default('text'),
