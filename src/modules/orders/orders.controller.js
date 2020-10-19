@@ -57,7 +57,7 @@ export const getOrderDrug = async (req, res) => {
 
   if (!orderDrug) throw new NotFoundExceptions('The order drug with the given Order ID was not found.');
 
-  res.json(respondOrderDTO(orderDrug));
+  res.json(respondOrderDrugDTO(orderDrug));
 };
 
 export const updateOrderDrug = async (req, res) => {

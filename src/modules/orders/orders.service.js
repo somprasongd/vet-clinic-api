@@ -112,6 +112,6 @@ async function createResultLab(db, order, item, itemSetId = null) {
 
 export const updateOrder = async (id, obj) => db.orders.update(id, obj);
 
-export const findOrderOrderDrugByOrderId = orderId => db.orderDrugs.findByOrderId(orderId);
+export const findOrderDrugByOrderId = orderId => db.orderDrugs.findByOrderId(orderId);
 
 export const updateOrderDrugByOrderId = async (orderId, obj) => db.orderDrugs.updateByOrderId(orderId, obj);

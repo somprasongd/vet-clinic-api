@@ -67,10 +67,10 @@ export const updateOrderDTO = (req, res, next) => {
 export const updateOrderDrugDTO = (req, res, next) => {
   const schema = Joi.object().keys({
     dose: Joi.number(),
-    unit: Joi.string(),
     caution: Joi.string(),
     frequency: Joi.string(),
     instruction: Joi.string(),
+    unit: Joi.string(),
     remark: Joi.string(),
   });
 
@@ -96,8 +96,8 @@ export const respondOrderDTO = order => {
   };
 };
 
-export const respondOrderDrugDTO = order => {
-  const { id, orderId, unit, dose, caution, frequency, instruction, remark } = order;
+export const respondOrderDrugDTO = orderDrug => {
+  const { id, orderId, unit, dose, caution, frequency, instruction, remark } = orderDrug;
 
   return {
     id,
