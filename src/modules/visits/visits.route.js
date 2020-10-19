@@ -34,7 +34,7 @@ router.route('/:id/status/doctor-discharge').patch([validId], controller.dischar
 
 router.use('/:id/vs', validId, setVisit, vsRouter);
 
-router.use('/:id/result', validId, setVisit, resultRouter);
+router.use('/:id/results', validId, setVisit, resultRouter);
 
 router.use('/:id/images', validId, setVisit, imageRouter);
 router.use('/:id/files', validId, setVisit, fileRouter);

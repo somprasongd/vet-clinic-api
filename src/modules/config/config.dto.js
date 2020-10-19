@@ -147,10 +147,10 @@ export const createItemLabDTO = (req, res, next) => {
     resultType: Joi.string()
       .valid('numeric', 'text')
       .default('text'),
-    normalStr: Joi.string(),
+    normalStr: Joi.string().allow(''),
     normalMin: Joi.number(),
     normalMax: Joi.number(),
-    unit: Joi.string(),
+    unit: Joi.string().allow(''),
   });
 
   const { itemId } = req.params;

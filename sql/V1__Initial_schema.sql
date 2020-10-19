@@ -582,7 +582,7 @@ CREATE TABLE public.t_result_lab (
 	id serial NOT NULL,
 	order_id int4 NOT NULL,
 	item_id int4 NOT NULL,
-	item_set_id int4 NULL,
+	item_parent_id int4 NULL DEFAULT NULL,
 	"label" varchar(100) NOT NULL,
 	"result" varchar(200) NOT NULL DEFAULT ''::character varying,
 	result_type result_type NOT NULL DEFAULT 'text',

@@ -9,21 +9,22 @@ export default class ResultLabsRepository extends Repository {
     return this.db.oneOrNone(
       `SELECT t_result_xray.*
       FROM t_result_xray
-      INNER JOIN t_order on t_order.id = t_result_xray.order_id and t_order.active = true
+      INNER JOIN t_order on t_order.id = t_result_xray.order_id
+        and t_order.active = true and t_order.type_id = 4
       WHERE t_result_xray.id = $1`,
       +id
     );
   }
 
   // find(wheres, options)
-  find(wheres, { offset = 0, limit = 'all' }) {
+  find(wheres, { offset = 0, limit = 'all' } = {}) {
     const { visitId, label } = wheres;
     return this.db.task(async t => {
       const p1 = t.manyOrNone(
         `SELECT t_result_xray.*
         FROM t_result_xray
         INNER JOIN t_order on t_order.id = t_result_xray.order_id
-        WHERE t_order.active = true ${createSearchCondition(wheres)}
+        WHERE t_order.active = true and t_order.type_id = 4 ${createSearchCondition(wheres)}
         order by order_id, t_result_xray.label
         offset $<offset> limit ${limit}`,
         {
@@ -35,7 +36,7 @@ export default class ResultLabsRepository extends Repository {
       const p2 = t.one(
         `SELECT count(*)
     FROM t_order
-    WHERE t_order.active = true ${createSearchCondition(wheres)}`,
+    WHERE t_order.active = true and t_order.type_id = 4 ${createSearchCondition(wheres)}`,
         {
           visitId,
           label,

@@ -25,7 +25,7 @@ export const createOrder = newOrder => {
       itemLabel: item.label,
       typeId: itemGroup.id,
       typeLabel: itemGroup.label,
-      qty,
+      qty: itemGroup.id === 3 || itemGroup.id === 4 ? 1 : qty, // lab & xray must be 1
       cost: cost === 0 ? item.cost : cost,
       price: price === 0 ? item.price : price,
       updateBy,
@@ -85,10 +85,10 @@ async function createResultXray(db, order) {
     label: order.itemLabel,
     updateBy: order.updateBy,
   };
-  await db.base.create('t_result_xray', newResultXray);
+  await db.resultXrays.create(newResultXray);
 }
 
-async function createResultLab(db, order, item, itemSetId = null) {
+async function createResultLab(db, order, item, itemParentId = null) {
   const itemLabs = await db.base.find('c_item_lab', { itemId: order.itemId });
   if (!itemLabs) {
     throw new NotFoundExceptions('The item lab with the given Item ID was not found.');
@@ -98,8 +98,8 @@ async function createResultLab(db, order, item, itemSetId = null) {
   const newOrderDrug = {
     orderId: order.id,
     itemId: item.id,
-    itemSetId,
-    label: (itemSetId !== null ? `${order.itemLabel} - ` : '') + item.label,
+    itemParentId,
+    label: (itemParentId !== null ? `${order.itemLabel} - ` : '') + item.label,
     resultType,
     normalStr,
     normalMax,
@@ -107,7 +107,7 @@ async function createResultLab(db, order, item, itemSetId = null) {
     unit,
     updateBy: order.updateBy,
   };
-  order.orderDrug = await db.base.create('t_order_drug', newOrderDrug);
+  order.orderDrug = await db.resultLabs.create(newOrderDrug);
 }
 
 export const updateOrder = async (id, obj) => db.orders.update(id, obj);
