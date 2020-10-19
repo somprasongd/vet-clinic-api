@@ -78,6 +78,15 @@ export default class PetsRepository extends Repository {
   //   );
   // }
 
+  updateByVisitId(visitId, obj) {
+    return this.db.manyOrNone(
+      `UPDATE ${this.tableName} set ${
+        Object.keys(obj).length > 1 ? '($2:name)=($2:csv)' : '$2:name=$2:csv'
+      }, update_at=current_timestamp WHERE visit_id = $1 RETURNING *`,
+      [+visitId, this.columnize(obj)]
+    );
+  }
+
   // find(wheres, options)
   find(wheres, { offset = 0, limit = 'all' }) {
     const { visitId, posId } = wheres;

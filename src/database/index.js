@@ -47,6 +47,10 @@ const createConnection = async () => {
       obj.upload = new repos.UploadRepository(obj, pgp);
       obj.users = new repos.UsersRepository(obj, pgp);
       obj.base = new repos.BaseRepository(obj, pgp);
+      obj.items = new repos.ItemRepository(obj, pgp);
+      obj.itemDrugs = new repos.ItemDrugRepository(obj, pgp);
+      obj.itemLabs = new repos.ItemLabRepository(obj, pgp);
+      obj.itemSets = new repos.ItemSetRepository(obj, pgp);
       obj.appoints = new repos.AppointsRepository(obj, pgp);
       obj.counters = new repos.CountersRepository(obj, pgp);
       obj.members = new repos.MembersRepository(obj, pgp);
@@ -56,20 +60,11 @@ const createConnection = async () => {
       obj.visitMedias = new repos.VisitMediaRepository(obj, pgp);
       obj.orders = new repos.OrdersRepository(obj, pgp);
       obj.orderDrugs = new repos.OrderDrugsRepository(obj, pgp);
-      obj.ordersets = new repos.OrderSetsRepository(obj, pgp);
       obj.resultLabs = new repos.ResultLabsRepository(obj, pgp);
       obj.resultXrays = new repos.ResultXraysRepository(obj, pgp);
-      obj.deposit = new repos.DepositRepository(obj, pgp);
-      obj.billing = new repos.BillingRepository(obj, pgp);
-      obj.receipt = new repos.ReceiptRepository(obj, pgp);
-      obj.receiptpayment = new repos.ReceiptPaymentRepository(obj, pgp);
       obj.pos = new repos.POSRepository(obj, pgp);
 
       obj.linenotify = new repos.LineNotifyRepository(obj, pgp);
-      obj.items = new repos.ItemRepository(obj, pgp);
-      obj.itemDrugs = new repos.ItemDrugRepository(obj, pgp);
-      obj.itemLabs = new repos.ItemLabRepository(obj, pgp);
-      obj.itemSets = new repos.ItemSetRepository(obj, pgp);
     },
   };
 

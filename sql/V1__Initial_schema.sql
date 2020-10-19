@@ -508,18 +508,45 @@ create type pos_state as enum('pending', 'active', 'success', 'cancel');
 
 CREATE TABLE public.t_pos (
 	id serial NOT NULL,
-	pos_number varchar(20) NULL,
-	pos_state pos_state NOT NULL DEFAULT 'active',
+	visit_id int4 NULL,
+	pos_number varchar(20) NOT NULL,
+	state pos_state NOT NULL DEFAULT 'active'::pos_state,
 	remark text NULL,
+	receipt_number varchar(20) NULL,
+	qty int4 NOT NULL DEFAULT 0,
+	price float8 NOT NULL DEFAULT 0,
+	discount float8 NOT NULL DEFAULT 0,
+	final_price float8 NOT NULL DEFAULT 0,
 	create_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	update_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	update_by int4 NOT NULL,
-	CONSTRAINT t_pos_pkey PRIMARY KEY (id)
+	CONSTRAINT t_pos_pkey PRIMARY KEY (id),
+	CONSTRAINT t_pos_un_pos_no UNIQUE (pos_number),
+	CONSTRAINT t_pos_un_receipt_no UNIQUE (receipt_number),
+	CONSTRAINT t_pos_fk FOREIGN KEY (visit_id) REFERENCES t_visit(id)
 );
 CREATE INDEX t_pos_pos_state ON public.t_pos USING btree (pos_state);
 CREATE INDEX t_pos_pos_number ON public.t_pos USING btree (pos_number);
 CREATE INDEX t_pos_pos_number_like ON public.t_pos USING btree (pos_number varchar_pattern_ops);
+CREATE INDEX t_pos_receipt_number ON public.t_pos USING btree (receipt_number);
+CREATE INDEX t_pos_receipt_number_like ON public.t_pos USING btree (receipt_number varchar_pattern_ops);
 CREATE INDEX t_pos_create_at ON public.t_pos USING btree (create_at);
+CREATE INDEX t_pos_visit_id_idx ON public.t_pos (visit_id);
+
+
+-- CREATE TABLE public.t_pos_detail (
+-- 	id serial NOT NULL,
+-- 	pos_id varchar(20) NOT NULL,
+-- 	group_id int4 NOT NULL,
+-- 	group_label varchar NOT NULL,
+-- 	price float8 NOT NULL DEFAULT 0,
+-- 	discount float8 NOT NULL DEFAULT 0,
+-- 	final_price float8 NOT NULL DEFAULT 0,
+-- 	update_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+-- 	update_by int4 NOT NULL,
+-- 	CONSTRAINT t_pos_pkey PRIMARY KEY (id)
+-- );
+-- CREATE INDEX t_pos_pos_id ON public.t_pos USING btree (pos_id);
 
 CREATE TABLE public.t_order (
 	id serial NOT NULL,

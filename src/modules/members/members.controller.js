@@ -100,6 +100,6 @@ export const listPets = async (req, res) => {
 
   if (!member) throw new NotFoundExceptions('The member with the given ID was not found.');
 
-  req.url = `/api/pets?ownerId=${member.id}&limit=0`;
+  req.url = `/api/pets?ownerId=${member.id}`;
   req.app.handle(req, res);
 };

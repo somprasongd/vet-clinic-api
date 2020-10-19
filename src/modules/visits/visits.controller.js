@@ -1,4 +1,5 @@
 import * as service from './visits.service';
+import * as posService from '../pos/pos.service';
 import { NotFoundExceptions } from '../../common/helpers/exceptions';
 import { respondVisitDTO } from './visits.dto';
 import paginate from '../../common/helpers/res-with-paginate';
@@ -38,6 +39,18 @@ export const getVisit = async (req, res) => {
 };
 
 export const cancelVisit = async (req, res) => {
+  const obj = {
+    visitStatusId: 8,
+    updateBy: req.user.id,
+  };
+  const visit = await service.updateVisit(req.params.id, obj);
+
+  if (!visit) throw new NotFoundExceptions('The visit with the given ID was not found.');
+
+  res.status(204).end();
+};
+
+export const setStatusCancel = async (req, res) => {
   const obj = {
     visitStatusId: 8,
     updateBy: req.user.id,
@@ -94,11 +107,11 @@ export const dischargeDoctor = async (req, res) => {
 };
 
 export const dischargeFinance = async (req, res) => {
-  const visit = await service.dischargeFinance(req.params.id, req.user.id);
+  const pos = await service.dischargeFinance(req.params.id, req.user.id);
 
-  if (!visit) throw new NotFoundExceptions('The visit with the given ID was not found.');
-
-  res.status(204).end();
+  req.method = 'GET';
+  req.url = `/api/pos/${pos.id}`;
+  req.app.handle(req, res);
 };
 
 export const updateVisit = async (req, res) => {

@@ -8,13 +8,8 @@ import VisitsRepository from './visits';
 import VisitVitalsignsRepository from './visit-vitalsigns';
 import OrdersRepository from './orders';
 import OrderDrugsRepository from './order-drugs';
-import OrderSetsRepository from './ordersets';
 import ResultLabsRepository from './result-labs';
 import ResultXraysRepository from './result-xrays';
-import DepositRepository from './deposit';
-import BillingRepository from './billing';
-import ReceiptRepository from './receipt';
-import ReceiptPaymentRepository from './receiptpayment';
 import POSRepository from './pos';
 import UploadRepository from './upload';
 import VisitMediaRepository from './visit-medias';
@@ -25,29 +20,24 @@ import ItemLabRepository from './item-labs';
 import ItemSetRepository from './item-sets';
 
 export default {
+  UploadRepository,
   UsersRepository,
   BaseRepository,
+  ItemRepository,
+  ItemDrugRepository,
+  ItemLabRepository,
+  ItemSetRepository,
   AppointsRepository,
   CountersRepository,
   MembersRepository,
   PetsRepository,
   VisitsRepository,
   VisitVitalsignsRepository,
+  VisitMediaRepository,
   OrdersRepository,
   OrderDrugsRepository,
-  OrderSetsRepository,
   ResultLabsRepository,
   ResultXraysRepository,
-  DepositRepository,
-  BillingRepository,
-  ReceiptRepository,
-  ReceiptPaymentRepository,
   POSRepository,
-  UploadRepository,
-  VisitMediaRepository,
   LineNotifyRepository,
-  ItemRepository,
-  ItemDrugRepository,
-  ItemLabRepository,
-  ItemSetRepository,
 };

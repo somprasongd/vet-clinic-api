@@ -28,10 +28,12 @@ router
   .patch([validJWT, validId, updateVisitDTO], controller.updateVisit)
   .put([validJWT, validId, updateVisitDTO], controller.updateVisit);
 
-router.route('/:id/status/treatment').patch([validId], controller.setStatusTreatment);
-router.route('/:id/status/waiting-result').patch([validId], controller.setStatusWaitResult);
-router.route('/:id/status/reported').patch([validId], controller.setStatusReported);
-router.route('/:id/status/doctor-discharge').patch([validId], controller.dischargeDoctor);
+router.route('/:id/status/cancel').patch([validJWT, validId], controller.setStatusCancel);
+router.route('/:id/status/treatment').patch([validJWT, validId], controller.setStatusTreatment);
+router.route('/:id/status/waiting-result').patch([validJWT, validId], controller.setStatusWaitResult);
+router.route('/:id/status/reported').patch([validJWT, validId], controller.setStatusReported);
+router.route('/:id/status/doctor-discharge').patch([validJWT, validId], controller.dischargeDoctor);
+router.route('/:id/status/discharge').patch([validJWT, validId], controller.dischargeFinance);
 
 router.use('/:id/vs', validId, setVisit, vsRouter);
 
