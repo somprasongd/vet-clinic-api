@@ -7,8 +7,9 @@ import routeLoader from '../common/helpers/route-loader';
 
 export default app => {
   // Serving static files in Express
-  // app.use('/public', express.static('public'));
+  app.use('/public', express.static('public'));
   app.use('/media', express.static('media'));
+  app.get('/favicon.ico', (req, res) => res.status(204));
   // load api router
   const PATH = path.join(path.parse(__dirname).dir, 'modules');
   const apiRouter = routeLoader(PATH);

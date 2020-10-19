@@ -7,8 +7,10 @@ RUN mkdir logs &&\
     mkdir -p media/avatar &&\
     mkdir -p media/file &&\
     mkdir -p media/image &&\
-    mkdir -p media/default
+    mkdir -p media/default &&\
+    mkdir -p public
 COPY ./media/default ./media/default
+COPY ./public ./public
 COPY ./package* ./
 RUN npm ci && \
     npm cache clean --force

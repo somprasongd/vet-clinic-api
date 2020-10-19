@@ -744,3 +744,13 @@ update
     on
     public.t_result_lab for each row
     when (((new.result)::text <> (old.result)::text)) execute procedure t_result_lab_interpret();
+
+CREATE TABLE public.t_line_notify_tokens (
+	id serial NOT NULL,
+	member_id int4 NOT NULL,
+	line_token varchar NOT NULL,
+	create_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	CONSTRAINT t_line_notify_tokens_pk PRIMARY KEY (id),
+	CONSTRAINT t_line_notify_tokens_fk FOREIGN KEY (member_id) REFERENCES t_member(id) ON DELETE CASCADE
+);
+CREATE INDEX t_line_notify_tokens_member_id_idx ON public.t_line_notify_tokens USING btree (member_id);
