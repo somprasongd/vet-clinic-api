@@ -220,7 +220,7 @@ export const updateItem = async (req, res) => {
 export const createItemDrug = async (req, res) => {
   const { dto } = req;
 
-  const createdObj = await service.createItemDrug(dto);
+  const createdObj = await service.upsertItemDrug(req.params.itemId, dto);
 
   res.json(createdObj);
 };
@@ -238,7 +238,7 @@ export const findItemDrugByItemId = async (req, res) => {
 export const updateItemDrug = async (req, res) => {
   const { dto } = req;
 
-  const updatedObj = await service.updateItemDrug(req.params.itemId, dto);
+  const updatedObj = await service.upsertItemDrug(req.params.itemId, dto);
 
   if (!updatedObj) throw new NotFoundExceptions('The item drug with the given item id was not found.');
 
@@ -248,7 +248,7 @@ export const updateItemDrug = async (req, res) => {
 export const createItemLab = async (req, res) => {
   const { dto } = req;
 
-  const createdObj = await service.createItemLab(dto);
+  const createdObj = await service.upsertItemLab(req.params.itemId, dto);
 
   res.json(createdObj);
 };
@@ -266,7 +266,7 @@ export const findItemLabByItemId = async (req, res) => {
 export const updateItemLab = async (req, res) => {
   const { dto } = req;
 
-  const updatedObj = await service.updateItemLab(req.params.itemId, dto);
+  const updatedObj = await service.upsertItemLab(req.params.itemId, dto);
 
   if (!updatedObj) throw new NotFoundExceptions('The item drug with the given item id was not found.');
 

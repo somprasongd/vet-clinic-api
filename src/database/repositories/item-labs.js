@@ -5,6 +5,10 @@ export default class UsersRepository extends Repository {
     super(db, pgp, 'c_item_lab', {});
   }
 
+  findByItemId(id) {
+    return this.db.oneOrNone(`SELECT * FROM ${this.tableName} WHERE item_id = $1`, +id);
+  }
+
   update(itemId, model) {
     const obj = removeUndefinedColumn(model);
 

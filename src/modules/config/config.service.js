@@ -159,17 +159,37 @@ export const removeItem = id =>
 
 export const updateItem = async (id, dto) => update('c_item', id, dto);
 
-export const createItemDrug = dto => create('c_item_drug', dto);
+export const findItemDrugByItemId = itemId => db.itemDrugs.findByItemId(itemId);
 
-export const findItemDrugByItemId = itemId => db.base.find('c_item_drug', { itemId });
+export const upsertItemDrug = async (itemId, dto) => {
+  const itemDrug = await db.task(async t => {
+    let itemDrug = await t.itemDrugs.findByItemId(itemId);
+    if (!itemDrug) {
+      itemDrug = await t.itemDrugs.create(dto);
+    } else {
+      itemDrug = await t.itemDrugs.update(itemId, dto);
+    }
+    return itemDrug;
+  });
 
-export const updateItemDrug = async (itemId, dto) => db.itemDrugs.update(itemId, dto);
+  return itemDrug;
+};
 
-export const createItemLab = dto => create('c_item_lab', dto);
+export const findItemLabByItemId = itemId => db.itemLabs.findByItemId(itemId);
 
-export const findItemLabByItemId = itemId => db.base.find('c_item_lab', { itemId });
+export const upsertItemLab = async (itemId, dto) => {
+  const itemLab = await db.task(async t => {
+    let itemLab = await t.itemLabs.findByItemId(itemId);
+    if (!itemLab) {
+      itemLab = await t.itemLabs.create(dto);
+    } else {
+      itemLab = await t.itemLabs.update(itemId, dto);
+    }
+    return itemLab;
+  });
 
-export const updateItemLab = async (itemId, dto) => db.itemLabs.update(itemId, dto);
+  return itemLab;
+};
 
 export const createItemSet = dto => create('c_item_set', dto);
 
