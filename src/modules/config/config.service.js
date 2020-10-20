@@ -191,7 +191,28 @@ export const upsertItemLab = async (itemId, dto) => {
   return itemLab;
 };
 
-export const createItemSet = dto => create('c_item_set', dto);
+export const createItemSet = async dto => {
+  const itemSet = await db.task(async t => {
+    const itemParent = await t.items.findById(dto.itemId);
+    if (!itemParent) throw new NotFoundExceptions(`The item parent with the given ID was not found.`);
+
+    const itemChild = await t.items.findById(dto.itemSubsetId);
+    if (!itemChild) throw new NotFoundExceptions(`The item child with the given ID was not found.`);
+    if (itemChild.isSet) throw new InvalidExceptions(`The item child with the given ID is set can not add to set.`);
+
+    const itemSets = await t.itemSets.find({ itemId: dto.itemId, itemSubsetId: dto.itemSubsetId });
+
+    if (itemSets.length > 0) throw new InvalidExceptions(`The item child with the given ID is exists.`);
+
+    let itemSet = await t.itemSets.create(dto);
+
+    itemSet = await db.itemSets.findById(itemSet.id);
+
+    return itemSet;
+  });
+
+  return itemSet;
+};
 
 export const listItemSetByItemId = itemId => db.itemSets.findSubsetByItemId(itemId);
 

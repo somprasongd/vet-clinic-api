@@ -71,11 +71,11 @@ export const createItemDTO = (req, res, next) => {
 
 export const searchItemDTO = (req, res, next) => {
   const schema = Joi.object().keys({
-    code: Joi.string(),
-    label: Joi.string(),
+    code: Joi.string().allow(''),
+    label: Joi.string().allow(''),
     groupId: Joi.number().min(1),
     groupIds: Joi.array().items(Joi.number().min(1)),
-    groupLabel: Joi.string(),
+    groupLabel: Joi.string().allow(''),
     isSet: Joi.string(),
   });
 
