@@ -193,6 +193,6 @@ export const upsertItemLab = async (itemId, dto) => {
 
 export const createItemSet = dto => create('c_item_set', dto);
 
-export const listItemSetByItemId = itemId => db.base.find('c_item_set', { itemId });
+export const listItemSetByItemId = itemId => db.itemSets.findSubsetByItemId(itemId);
 
 export const removeItemSet = async itemSubsetId => db.base.removeFrom('c_item_set', { itemSubsetId });
