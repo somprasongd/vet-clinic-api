@@ -87,7 +87,7 @@ export default class MembersRepository extends Repository {
 
   // find(wheres, options)
   findWithPet(wheres, { offset = 0, limit = 'all' }) {
-    const { firstName, lastName, houseNo, petName, tel, code } = wheres;
+    const { firstName, lastName, houseNo, petName, tel, code, microchipNo } = wheres;
     const { conditions, orderby } = createSearchWithPetCondition(wheres);
     return this.db.task(async t => {
       const p1 = t.manyOrNone(
@@ -113,7 +113,8 @@ export default class MembersRepository extends Repository {
                         'id', m_pet_gender.id,
                         'label', m_pet_gender.label
                       ),
-              'color', t_pet.color
+              'color', t_pet.color,
+              'microchip', t_pet.microchip_no
           )) 
           end as pets
         FROM t_member
@@ -132,6 +133,7 @@ export default class MembersRepository extends Repository {
           petName,
           tel,
           code,
+          microchipNo,
           offset,
         }
       );
@@ -147,6 +149,7 @@ export default class MembersRepository extends Repository {
           petName,
           tel,
           code,
+          microchipNo,
         },
         a => +a.count
       );
@@ -175,7 +178,7 @@ function createSearchCondition(wheres) {
 }
 
 function createSearchWithPetCondition(wheres) {
-  const { firstName, lastName, houseNo, petName, tel, code } = wheres;
+  const { firstName, lastName, houseNo, petName, tel, code, microchipNo } = wheres;
   let conditions = '';
   let orderby = 't_member.house_no, t_member.first_name, t_member.last_name';
   if (houseNo) {
@@ -200,7 +203,9 @@ function createSearchWithPetCondition(wheres) {
   }
   if (petName) {
     conditions += ` AND t_pet.name ilike '%$<petName:value>%'`;
-    orderby = 't_member.house_no, t_member.first_name, t_member.last_name';
+  }
+  if (microchipNo) {
+    conditions += ` AND t_pet.microchip_no ilike '$<microchipNo:value>%'`;
   }
 
   return { conditions: conditions || '', orderby };

@@ -7,6 +7,7 @@ export const searchDTO = (req, res, next) => {
     houseNo: Joi.string(),
     firstName: Joi.string(),
     lastName: Joi.string(),
+    microchipNo: Joi.string(),
     petName: Joi.string(),
     tel: Joi.string()
       .min(9)
