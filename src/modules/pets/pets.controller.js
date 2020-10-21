@@ -103,3 +103,14 @@ export const getPetOwner = async (req, res) => {
   req.url = `/api/members/${pet.ownerId}`;
   req.app.handle(req, res);
 };
+
+export const changeOwner = async (req, res) => {
+  const { id: petId, newOwnerId } = req.params;
+
+  const pet = await service.findPetById(petId);
+
+  if (!pet) throw new NotFoundExceptions('The pet with the given ID was not found.');
+
+  await service.changeOwner(pet, newOwnerId);
+  res.status(204).end();
+};

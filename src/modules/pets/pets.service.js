@@ -1,3 +1,4 @@
+import { InvalidExceptions } from '../../common/helpers/exceptions';
 import connection from '../../database';
 import { deleteById as deleteAvatar } from '../upload/upload.service';
 
@@ -25,3 +26,12 @@ export const updatePetAvatar = async (pet, avatarId) => {
     deleteAvatar(oldAvatarId);
   }
 };
+
+export const changeOwner = async (pet, newOwnerId) =>
+  db.tx(async t => {
+    const newMember = await t.members.findById(newOwnerId);
+    if (!newMember) throw new InvalidExceptions('The owner with the given ID was not found.');
+    const member = await t.members.findById(pet.ownerId);
+    const note = `${pet.note ? `${pet.note} ` : ''}(Previous owner ${member.fullName})`;
+    await t.pets.update(pet.id, { ownerId: newOwnerId, note });
+  });
