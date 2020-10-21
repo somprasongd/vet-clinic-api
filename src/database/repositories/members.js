@@ -36,7 +36,7 @@ export default class MembersRepository extends Repository {
 
   // find(wheres, options)
   find(wheres, { offset = 0, limit = 'all' }) {
-    const { code, firstName, lastName, houseNo } = wheres;
+    const { code, firstName, lastName, houseNo, tel } = wheres;
     return this.db.task(async t => {
       const p1 = t.manyOrNone(
         `SELECT
@@ -65,6 +65,7 @@ export default class MembersRepository extends Repository {
           firstName,
           lastName,
           houseNo,
+          tel,
           offset,
         }
       );
@@ -77,6 +78,7 @@ export default class MembersRepository extends Repository {
           firstName,
           lastName,
           houseNo,
+          tel,
         },
         a => +a.count
       );
@@ -160,7 +162,7 @@ export default class MembersRepository extends Repository {
 }
 
 function createSearchCondition(wheres) {
-  const { code, firstName, lastName, houseNo } = wheres;
+  const { code, firstName, lastName, houseNo, tel } = wheres;
   let conditions = '';
   if (code) {
     conditions += ` AND code = $<code>`;
@@ -173,6 +175,9 @@ function createSearchCondition(wheres) {
   }
   if (houseNo) {
     conditions += ` AND house_no ilike '%$<houseNo:value>%'`;
+  }
+  if (tel) {
+    conditions += ` AND $<tel> = ANY(t_member.tels)`;
   }
   return conditions || '';
 }

@@ -34,6 +34,9 @@ export const searchMemberDTO = (req, res, next) => {
     houseNo: Joi.string(),
     firstName: Joi.string(),
     lastName: Joi.string(),
+    tel: Joi.string()
+      .min(9)
+      .max(10),
   });
 
   const { dto } = validationHandler(req.query, schema);
