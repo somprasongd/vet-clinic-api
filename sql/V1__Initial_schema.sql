@@ -254,8 +254,8 @@ CREATE INDEX c_dx_update_by_ac024b10 ON public.c_dx USING btree (update_by);
 CREATE TABLE public.c_item (
 	id serial NOT NULL,
 	code varchar(20) NOT NULL,
-	"label" varchar(100) NOT NULL,
-	unit varchar(50) NOT NULL,
+	"label" varchar(100) NOT NULL,	
+	unit varchar(50) NULL DEFAULT ''::character varying,
 	active bool NOT NULL DEFAULT true,
 	item_group_id int4 NOT NULL,
 	is_set bool NOT NULL DEFAULT false, -- for lab
@@ -554,7 +554,7 @@ CREATE TABLE public.t_order (
 	pos_id int4 NULL,
 	item_id int4 NOT NULL,
 	item_label varchar NOT NULL,
-	unit varchar(50) NOT NULL,
+	unit varchar(50) NULL DEFAULT ''::character varying,
 	type_id int4 NOT NULL,
 	type_label varchar NOT NULL,
 	"cost" float8 NOT NULL,

@@ -23,6 +23,7 @@ export const createOrder = newOrder => {
       posId,
       itemId,
       itemLabel: item.label,
+      unit: item.unit,
       typeId: itemGroup.id,
       typeLabel: itemGroup.label,
       qty: itemGroup.id === 3 || itemGroup.id === 4 ? 1 : qty, // lab & xray must be 1
