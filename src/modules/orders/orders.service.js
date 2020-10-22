@@ -64,10 +64,9 @@ async function createOrderDrug(db, order) {
   if (!itemDrugs) {
     throw new NotFoundExceptions('The item drug with the given Item ID was not found.');
   }
-  const { unit, dose, caution, frequency, instruction, remark } = itemDrugs[0];
+  const { dose, caution, frequency, instruction, remark } = itemDrugs[0];
   const newOrderDrug = {
     orderId: order.id,
-    unit,
     dose,
     caution,
     frequency,
