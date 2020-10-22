@@ -721,29 +721,29 @@ $function$
 ;
 
 CREATE OR REPLACE FUNCTION public.t_result_lab_interpret()
- RETURNS trigger
- LANGUAGE plpgsql
-AS $function$
-DECLARE
-BEGIN
-	UPDATE t_result_lab SET
-		interpret = case when NEW.result_type = 'numeric'
+RETURNS trigger AS $$	
+    BEGIN        
+        NEW.interpret = case when NEW.result_type = 'numeric'
 									then lab_interpret(NEW.normal_min::numeric, NEW.normal_max::numeric, NEW.result::text)
-									else '' end 
-	, interpret_level = case when NEW.result_type = 'numeric'
+									else case when NEW.normal_str is null or trim(NEW.normal_str) = '' 
+											then ''
+											else (case when (upper(trim(NEW.result)) = upper(trim(NEW.normal_str))) then 'Normal' else 'Abnormal' end) 
+											end
+									end;
+        NEW.interpret_level = case when NEW.result_type = 'numeric'
 									then lab_interpret_level(NEW.normal_min::numeric,NEW.normal_max::numeric,NEW.result::text)
-									else (case when (upper(trim(NEW.result)) = upper(trim(normal_str))) then 1 else 0 end) end
-	WHERE id = NEW.id ; 
-	RETURN new;
-END;
-$function$
-;
+									else case when NEW.normal_str is null or trim(NEW.normal_str) = '' 
+											then 1
+											else (case when (upper(trim(NEW.result)) = upper(trim(NEW.normal_str))) then 1 else 0 end) 
+											end
+									end;
+        RETURN NEW;
+    END;
+$$ LANGUAGE plpgsql;
 
-create trigger t_result_lab_interpret after
-update
-    on
-    public.t_result_lab for each row
-    when (((new.result)::text <> (old.result)::text)) execute procedure t_result_lab_interpret();
+create trigger t_result_lab_interpret BEFORE UPDATE 
+on public.t_result_lab for each row
+when (((new.result)::text <> (old.result)::text)) execute procedure t_result_lab_interpret();
 
 CREATE TABLE public.t_line_notify_tokens (
 	id serial NOT NULL,
