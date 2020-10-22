@@ -18,6 +18,7 @@ export const respondResultLabDTO = vs => {
   const {
     id,
     orderId,
+    orderLabel,
     itemId,
     itemSetId,
     label,
@@ -34,6 +35,7 @@ export const respondResultLabDTO = vs => {
   return {
     id,
     orderId,
+    orderLabel,
     itemId,
     itemSetId,
     label,

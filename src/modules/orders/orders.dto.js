@@ -28,6 +28,9 @@ export const createOrderDTO = (req, res, next) => {
     qty: Joi.number()
       .min(1)
       .default(1),
+    unit: Joi.string()
+      .allow('')
+      .default(''),
     cost: Joi.number().min(0),
     price: Joi.number().min(0),
   });
@@ -116,12 +119,11 @@ export const respondOrderDTO = order => {
 };
 
 export const respondOrderDrugDTO = orderDrug => {
-  const { id, orderId, unit, dose, caution, frequency, instruction, remark } = orderDrug;
+  const { id, orderId, dose, caution, frequency, instruction, remark } = orderDrug;
 
   return {
     id,
     orderId,
-    unit,
     dose,
     caution,
     frequency,

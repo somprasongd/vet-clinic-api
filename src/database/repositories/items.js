@@ -18,6 +18,7 @@ export default class ItemsRepository extends Repository {
       c_item.id
       , c_item.code
       , c_item.label
+      , c_item.unit
       , c_item.cost
       , c_item.price
       , c_item.is_set

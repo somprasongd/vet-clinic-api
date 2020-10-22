@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import Joi, { allow } from 'joi';
 import validationHandler from '../../common/helpers/validation-handler';
 
 export const updateSiteDTO = (req, res, next) => {
@@ -49,11 +49,14 @@ export const createItemDTO = (req, res, next) => {
   const schema = Joi.object().keys({
     code: Joi.string().required(),
     label: Joi.string().required(),
+    unit: Joi.string()
+      .allow('')
+      .default(''),
     cost: Joi.number()
-      .min(1)
+      .min(0)
       .required(),
     price: Joi.number()
-      .min(1)
+      .min(0)
       .required(),
     active: Joi.boolean().default(true),
     isSet: Joi.boolean().default(false),
@@ -89,11 +92,12 @@ export const updateItemDTO = (req, res, next) => {
   const schema = Joi.object().keys({
     code: Joi.string().required(),
     label: Joi.string().required(),
+    unit: Joi.string().allow(''),
     cost: Joi.number()
-      .min(1)
+      .min(0)
       .required(),
     price: Joi.number()
-      .min(1)
+      .min(0)
       .required(),
     active: Joi.boolean().default(true),
     isSet: Joi.boolean().default(false),
@@ -111,7 +115,6 @@ export const updateItemDTO = (req, res, next) => {
 
 export const createItemDrugDTO = (req, res, next) => {
   const schema = Joi.object().keys({
-    unit: Joi.string().required(),
     dose: Joi.number(),
     caution: Joi.string().default(''),
     frequency: Joi.string().default(''),

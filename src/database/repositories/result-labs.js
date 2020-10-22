@@ -7,7 +7,7 @@ export default class ResultLabsRepository extends Repository {
 
   findById(id) {
     return this.db.oneOrNone(
-      `SELECT t_result_lab.*
+      `SELECT t_result_lab.*, t_order.item_label as order_label
       FROM t_result_lab
       INNER JOIN t_order on t_order.id = t_result_lab.order_id 
         and t_order.active = true and t_order.type_id = 3
@@ -21,7 +21,7 @@ export default class ResultLabsRepository extends Repository {
     const { visitId, label } = wheres;
     return this.db.task(async t => {
       const p1 = t.manyOrNone(
-        `SELECT t_result_lab.*
+        `SELECT t_result_lab.*, t_order.item_label as order_label
         FROM t_result_lab
         INNER JOIN t_order on t_order.id = t_result_lab.order_id
         WHERE t_order.active = true and t_order.type_id = 3 ${createSearchCondition(wheres)}

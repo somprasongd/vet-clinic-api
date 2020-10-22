@@ -255,6 +255,7 @@ CREATE TABLE public.c_item (
 	id serial NOT NULL,
 	code varchar(20) NOT NULL,
 	"label" varchar(100) NOT NULL,
+	unit varchar(50) NOT NULL,
 	active bool NOT NULL DEFAULT true,
 	item_group_id int4 NOT NULL,
 	is_set bool NOT NULL DEFAULT false, -- for lab
@@ -275,8 +276,7 @@ CREATE INDEX c_item_label_like ON public.c_item USING btree (label varchar_patte
 
 CREATE TABLE public.c_item_drug (
 	id serial NOT NULL,
-	item_id int4 NOT NULL,
-	unit varchar(50) NOT NULL,
+	item_id int4 NOT NULL,	
 	dose float8 NULL,
 	caution text NULL,
 	frequency text NULL,
@@ -554,6 +554,7 @@ CREATE TABLE public.t_order (
 	pos_id int4 NULL,
 	item_id int4 NOT NULL,
 	item_label varchar NOT NULL,
+	unit varchar(50) NOT NULL,
 	type_id int4 NOT NULL,
 	type_label varchar NOT NULL,
 	"cost" float8 NOT NULL,
@@ -577,7 +578,6 @@ CREATE INDEX t_order_visit_id ON public.t_order USING btree (visit_id);
 CREATE TABLE public.t_order_drug (
 	id serial NOT NULL,
 	order_id int4 NOT NULL,
-	unit varchar(50) NOT NULL,
 	dose float8 NULL,
 	caution text NULL,
 	frequency text NULL,
