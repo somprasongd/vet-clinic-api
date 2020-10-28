@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import { InvalidExceptions } from '../../common/helpers/exceptions';
 import validationHandler from '../../common/helpers/validation-handler';
 
 export const createPOSDTO = (req, res, next) => {
@@ -30,9 +31,6 @@ export const updatePOSDTO = (req, res, next) => {
     state: Joi.string()
       .valid('pending', 'active')
       .required(),
-    // qty: Joi.number().min(0),
-    // price: Joi.number().min(0),
-    // remark: Joi.string(),
   });
 
   const { dto } = validationHandler(req.body, schema);
@@ -41,54 +39,37 @@ export const updatePOSDTO = (req, res, next) => {
   next();
 };
 
-export const createReceiptDTO = (req, res, next) => {
-  const schema = Joi.object().keys({
-    qty: Joi.number().min(1),
-    price: Joi.number()
-      .min(0)
-      .default(0),
-    discount: Joi.number()
-      .min(0)
-      .default(0),
-    finalPrice: Joi.number().min(0),
-    remark: Joi.string(),
-  });
+export const cancelPOSDTO = (req, res, next) => {
+  const { pos: state } = req;
 
-  const { dto } = validationHandler(req.body, schema);
-
-  if (!dto.finalPrice) {
-    dto.finalPrice = dto.price - dto.discount;
+  if (state === 'cancel') {
+    next(new InvalidExceptions('Can not cancel the pos with the given ID was canceled.'));
+    return;
   }
 
-  req.dto = { ...dto, state: 'success', updateBy: req.user.id };
-  next();
-};
+  let dto = { state: 'cancel', updateBy: req.user.id };
+  if (state === 'success') {
+    const schema = Joi.object().keys({
+      cancelReason: Joi.string().required(),
+    });
 
-export const cancelReceiptDTO = (req, res, next) => {
-  const schema = Joi.object().keys({
-    remark: Joi.string().required(),
-  });
+    const { dto: validations } = validationHandler(req.body, schema);
+    dto = { ...dto, ...validations };
+  }
 
-  const { dto } = validationHandler(req.body, schema);
-
-  req.dto = { ...dto, state: 'active', updateBy: req.user.id };
+  req.dto = { ...dto };
   next();
 };
 
 export const respondPOSDTO = pos => {
-  const { id, posNumber, state, remark, createAt, receiptNumber, qty, price, discount, finalPrice, visit } = pos;
+  const { id, posNumber, state, createAt, receiptNumber, visit } = pos;
 
   return {
     id,
     posNumber,
     state,
-    remark,
     createAt,
     receiptNumber,
-    qty,
-    price,
-    discount,
-    finalPrice,
     visit,
   };
 };

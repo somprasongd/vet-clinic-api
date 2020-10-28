@@ -1,5 +1,4 @@
 import * as service from './visits.service';
-import * as posService from '../pos/pos.service';
 import { NotFoundExceptions } from '../../common/helpers/exceptions';
 import { respondVisitDTO } from './visits.dto';
 import paginate from '../../common/helpers/res-with-paginate';

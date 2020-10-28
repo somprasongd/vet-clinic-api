@@ -17,7 +17,7 @@ export default class CountersRepository extends Repository {
       const today = moment().format('YYMMDD');
       if (moment(counter.date).format('YYMMDD') !== today) {
         counter.seq = 1;
-        counter.date = moment();
+        counter.date = today;
       }
       counter = await this.update(counter.id, {
         date: counter.date,

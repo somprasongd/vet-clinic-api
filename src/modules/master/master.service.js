@@ -35,10 +35,6 @@ export const findAllAppointType = (search, limit, offset) => findAll('m_appoint_
 
 export const findAppointTypeById = id => findById('m_appoint_type', id);
 
-export const findAllBillingType = (search, limit, offset) => findAll('m_billing_type', search, limit, offset);
-
-export const findBillingTypeById = id => findById('m_billing_type', id);
-
 export const findAllItemGroup = (search, limit, offset) => findAll('m_item_group', search, limit, offset);
 
 export const findItemGroupById = id => findById('m_item_group', id);
@@ -51,13 +47,19 @@ export const findAllMediaType = (search, limit, offset) => findAll('m_media_type
 
 export const findMediaTypeById = id => findById('m_media_type', id);
 
-export const findAllOrderStatus = (search, limit, offset) => findAll('m_order_status', search, limit, offset);
-
-export const findOrderStatusById = id => findById('m_order_status', id);
-
 export const findAllPaymentType = (search, limit, offset) => findAll('m_payment_type', search, limit, offset);
 
 export const findPaymentTypeById = id => findById('m_payment_type', id);
+
+export const findAllCreditCardIssuer = (search, limit, offset) =>
+  findAll('m_credit_card_issuer', search, limit, offset);
+
+export const findCreditCardIssuerById = id => findById('m_credit_card_issuer', id);
+
+export const findAllCreditCardFeesMethod = (search, limit, offset) =>
+  findAll('m_credit_card_fees_method', search, limit, offset);
+
+export const findCreditCardFeesMethodById = id => findById('m_credit_card_fees_method', id);
 
 export const findAllPrefix = (search, limit, offset) => findAll('m_prefix', search, limit, offset);
 
@@ -86,10 +88,6 @@ export const findVisitPriorityById = id => findById('m_visit_priority', id);
 export const findAllVisitStatus = (search, limit, offset) => findAll('m_visit_status', search, limit, offset);
 
 export const findVisitStatusById = id => findById('m_visit_status', id);
-
-export const findAllVisitTreatment = (search, limit, offset) => findAll('m_visit_treatment', search, limit, offset);
-
-export const findVisitTreatmentById = id => findById('m_visit_treatment', id);
 
 export const findAllVisitType = (search, limit, offset) => findAll('m_visit_type', search, limit, offset);
 

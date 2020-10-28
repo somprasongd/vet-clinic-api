@@ -1,4 +1,4 @@
-import { NotFoundExceptions } from '../../common/helpers/exceptions';
+import { InvalidExceptions, NotFoundExceptions } from '../../common/helpers/exceptions';
 import connection from '../../database';
 
 const { db } = connection;
@@ -15,19 +15,32 @@ export const createPOS = newPOS =>
     return pos;
   });
 
-export const updatePOS = (id, obj) => db.pos.update(id, obj);
-
-export const createReceipt = async (id, obj) => {
-  const receipt = await db.tx(async t => {
-    const code = await t.counters.getCode('R');
-    obj.receiptNumber = code;
-    const pos = await t.pos.update(id, obj);
+export const updatePOSState = async (id, obj) => {
+  const pos = await db.tx(async t => {
+    let pos = await t.pos.findById(id);
 
     if (!pos) throw new NotFoundExceptions('The pos with the given ID was not found.');
 
-    const receipt = await t.pos.getReceipt(id);
+    if (pos.state === 'success')
+      throw new InvalidExceptions('Can not change state the pos with the given ID was successed.');
+    if (pos.state === 'cancel')
+      throw new InvalidExceptions('Can not change state the pos with the given ID was canceled.');
 
-    return receipt;
+    pos = await t.pos.update(id, obj);
+    return pos;
   });
-  return receipt;
+  return pos;
+};
+
+export const cancelPOS = async (id, obj) => {
+  await db.tx(async t => {
+    const pos = await t.pos.findById(id);
+
+    if (!pos) throw new NotFoundExceptions('The pos with the given ID was not found.');
+
+    if (pos.state === 'success') throw new InvalidExceptions('Can not cancel the pos with the given ID was successed.');
+    if (pos.state === 'cancel') throw new InvalidExceptions('Can not cancel the pos with the given ID was canceled.');
+
+    await t.pos.update(id, obj);
+  });
 };

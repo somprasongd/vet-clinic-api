@@ -11,7 +11,7 @@ import OrderDrugsRepository from './order-drugs';
 import ResultLabsRepository from './result-labs';
 import ResultXraysRepository from './result-xrays';
 import POSRepository from './pos';
-import ReceiptRepository from './receipt';
+import ReceiptRepository from './receipts';
 import UploadRepository from './upload';
 import VisitMediaRepository from './visit-medias';
 import LineNotifyRepository from './linenotify';

@@ -20,67 +20,34 @@ export const listPOS = async (req, res) => {
   const results = paginate(datas, counts, limit, offset, page);
   res.json(results);
 };
-
-export const getPOS = async (req, res) => {
-  const { id } = req.params;
+export const getPOSById = async id => {
   const pos = await service.findPOSById(id);
 
   if (!pos) throw new NotFoundExceptions('The pos with the given ID was not found.');
+
+  return pos;
+};
+
+export const getPOS = async (req, res) => {
+  const { id } = req.params;
+
+  const pos = await getPOSById(id);
 
   res.json(respondPOSDTO(pos));
 };
 
 export const removePOS = async (req, res) => {
-  const obj = {
-    state: 'cancel',
-    updateBy: req.user.id,
-  };
-  const pos = await service.updatePOS(req.params.id, obj);
-
-  if (!pos) throw new NotFoundExceptions('The pos with the given ID was not found.');
+  const { dto } = req;
+  await service.c(req.params.id, dto);
 
   res.status(204).end();
 };
 
-export const updatePOS = async (req, res) => {
+export const updatePOSState = async (req, res) => {
   const { dto } = req;
 
-  const pos = await service.updatePOS(req.params.id, dto);
+  const pos = await service.updatePOSState(req.params.id, dto);
   if (!pos) throw new NotFoundExceptions('The pos with the given ID was not found.');
 
   res.json(respondPOSDTO(pos));
-};
-
-export const createReceipt = async (req, res) => {
-  const { dto } = req;
-  const { id } = req.params;
-  const pos = await service.findPOSById(id);
-
-  if (!pos) throw new NotFoundExceptions('The pos with the given ID was not found.');
-  if (pos.state !== 'active') throw new InvalidExceptions('The pos with the given ID state can not make receipt.');
-
-  const receipt = await service.createReceipt(id, dto);
-
-  if (!receipt) throw new Error('The pos with the given ID can not create receipt.');
-
-  // print
-  res.json(receipt);
-};
-
-export const cancelReceipt = async (req, res) => {
-  const { dto } = req;
-  const obj = {
-    ...dto,
-    receiptNumber: null,
-    qty: 0,
-    price: 0,
-    discount: 0,
-    finalPrice: 0,
-    state: 'active',
-  };
-  const pos = await service.updatePOS(req.params.id, obj);
-
-  if (!pos) throw new NotFoundExceptions('The pos with the given ID was not found.');
-
-  res.status(204).end();
 };

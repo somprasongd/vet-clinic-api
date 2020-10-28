@@ -15,10 +15,6 @@ router.route('/appoint-types').get([validJWT, validPagination], controller.findA
 
 router.route('/appoint-types/:id').get([validJWT, validId], controller.findAppointTypeById);
 
-router.route('/billing-types').get([validJWT, validPagination], controller.findAllBillingType);
-
-router.route('/billing-types/:id').get([validJWT, validId], controller.findBillingTypeById);
-
 router.route('/item-groups').get([validJWT, validPagination], controller.findAllItemGroup);
 
 router.route('/item-groups/:id').get([validJWT, validId], controller.findItemGroupById);
@@ -31,13 +27,17 @@ router.route('/media-types').get([validJWT, validPagination], controller.findAll
 
 router.route('/media-types/:id').get([validJWT, validId], controller.findMediaTypeById);
 
-router.route('/order-statuses').get([validJWT, validPagination], controller.findAllOrderStatus);
-
-router.route('/order-statuses/:id').get([validJWT, validId], controller.findOrderStatusById);
-
 router.route('/payment-types').get([validJWT, validPagination], controller.findAllPaymentType);
 
 router.route('/payment-types/:id').get([validJWT, validId], controller.findPaymentTypeById);
+
+router.route('/credit-card-issuers').get([validJWT, validPagination], controller.findAllCreditCardIssuer);
+
+router.route('/credit-card-issuers/:id').get([validJWT, validId], controller.findCreditCardIssuerById);
+
+router.route('/credit-card-fees-methods').get([validJWT, validPagination], controller.findAllCreditCardFeesMethod);
+
+router.route('/credit-card-fees-methods/:id').get([validJWT, validId], controller.findCreditCardFeesMethodById);
 
 router.route('/prefixes').get([validJWT, validPagination], controller.findAllPrefix);
 
@@ -66,10 +66,6 @@ router.route('/visit-priorities/:id').get([validJWT, validId], controller.findVi
 router.route('/visit-statues').get([validJWT, validPagination], controller.findAllVisitStatus);
 
 router.route('/visit-statues/:id').get([validJWT, validId], controller.findVisitStatusById);
-
-router.route('/visit-treatments').get([validJWT, validPagination], controller.findAllVisitTreatment);
-
-router.route('/visit-treatments/:id').get([validJWT, validId], controller.findVisitTreatmentById);
 
 router.route('/visit-types').get([validJWT, validPagination], controller.findAllVisitType);
 

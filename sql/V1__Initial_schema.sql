@@ -12,13 +12,13 @@ CREATE TABLE public.m_appoint_type (
 );
 CREATE INDEX m_appoint_type_active_idx ON public.m_appoint_type USING btree (active);
 
-CREATE TABLE public.m_billing_type (
-	id serial NOT NULL,
-	"label" varchar NOT NULL,
-	active bool NOT NULL DEFAULT true,
-	CONSTRAINT m_billing_type_pk PRIMARY KEY (id)
-);
-CREATE INDEX m_billing_type_active_idx ON public.m_billing_type USING btree (active);
+-- CREATE TABLE public.m_billing_type (
+-- 	id serial NOT NULL,
+-- 	"label" varchar NOT NULL,
+-- 	active bool NOT NULL DEFAULT true,
+-- 	CONSTRAINT m_billing_type_pk PRIMARY KEY (id)
+-- );
+-- CREATE INDEX m_billing_type_active_idx ON public.m_billing_type USING btree (active);
 
 CREATE TABLE public.m_item_group (
 	id serial NOT NULL,
@@ -43,14 +43,6 @@ CREATE TABLE public.m_media_type (
 	CONSTRAINT m_media_type_pk PRIMARY KEY (id)
 );
 CREATE INDEX m_media_type_active_idx ON public.m_media_type USING btree (active);
-
--- CREATE TABLE public.m_order_status (
--- 	id serial NOT NULL,
--- 	"label" varchar NOT NULL,
--- 	active bool NOT NULL DEFAULT true,
--- 	CONSTRAINT m_order_status_pk PRIMARY KEY (id)
--- );
--- CREATE INDEX m_order_status_active_idx ON public.m_order_status USING btree (active);
 
 CREATE TABLE public.m_payment_type (
 	id serial NOT NULL,
@@ -131,14 +123,6 @@ CREATE TABLE public.m_visit_status (
 	CONSTRAINT m_visit_status_pkey PRIMARY KEY (id)
 );
 CREATE INDEX m_visit_status_active_idx ON public.m_visit_status USING btree (active);
-
--- CREATE TABLE public.m_visit_treatment (
--- 	id serial NOT NULL,
--- 	"label" varchar(50) NOT NULL,
--- 	active bool NOT NULL DEFAULT true,
--- 	CONSTRAINT m_visit_treatment_pkey PRIMARY KEY (id)
--- );
--- CREATE INDEX m_visit_treatment_active_idx ON public.m_visit_treatment USING btree (active);
 
 CREATE TABLE public.m_visit_type (
 	id serial NOT NULL,
@@ -531,6 +515,7 @@ CREATE TABLE public.t_pos (
 	create_by int4 NOT NULL,
 	update_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	update_by int4 NOT NULL,
+	cancel_reason text NULL,
 	CONSTRAINT t_pos_pkey PRIMARY KEY (id),
 	CONSTRAINT t_pos_un UNIQUE (pos_number),
 	CONSTRAINT t_pos_fk FOREIGN KEY (visit_id) REFERENCES t_visit(id)
@@ -553,7 +538,7 @@ CREATE TABLE public.t_receipt (
 	credit_card_issuer_id int4 NULL,
 	credit_card_fees_method_id int4 NULL,
 	credit_card_fees float8 NOT NULL DEFAULT 0,
-	remark text NULL,
+	note text NULL,
 	details jsonb NOT NULL,
 	create_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	create_by int4 NOT NULL,
@@ -567,20 +552,6 @@ CREATE TABLE public.t_receipt (
 CREATE INDEX t_receipt_receipt_number ON public.t_receipt USING btree (receipt_number);
 CREATE INDEX t_receipt_receipt_number_like ON public.t_receipt USING btree (receipt_number varchar_pattern_ops);
 CREATE INDEX t_receipt_pos_id_idx ON public.t_receipt (pos_id);
-
--- CREATE TABLE public.t_pos_detail (
--- 	id serial NOT NULL,
--- 	pos_id varchar(20) NOT NULL,
--- 	group_id int4 NOT NULL,
--- 	group_label varchar NOT NULL,
--- 	price float8 NOT NULL DEFAULT 0,
--- 	discount float8 NOT NULL DEFAULT 0,
--- 	final_price float8 NOT NULL DEFAULT 0,
--- 	update_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
--- 	update_by int4 NOT NULL,
--- 	CONSTRAINT t_pos_pkey PRIMARY KEY (id)
--- );
--- CREATE INDEX t_pos_pos_id ON public.t_pos USING btree (pos_id);
 
 CREATE TABLE public.t_order (
 	id serial NOT NULL,

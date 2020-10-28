@@ -3,11 +3,6 @@ INSERT INTO public."m_appoint_type"
 VALUES('ติดตามอาการ'),
 ('ทำหมัน');
 
-INSERT INTO public."m_billing_type"
-("label")
-VALUES('เข้ารับบริการ'),
-('POS');
-
 INSERT INTO public."m_item_group"
 ("label")
 VALUES('ยา'),
@@ -29,14 +24,6 @@ VALUES('ทั่วไป'),
 ('PE ( Physical Examination )'),
 ('Lab'),
 ('Xray');
-
--- INSERT INTO public."m_order_status"
--- ("label")
--- VALUES('สั่งรายการ'),
--- ('ดำเนินการ'),
--- ('ยกเลิก'),
--- ('รายงานผล'),
--- ('จ่าย');
 
 INSERT INTO public."m_payment_type"
 ("label")
@@ -117,11 +104,6 @@ VALUES('รอตรวจ'),
 ('จบการรับบริการ'),
 ('ยกเลิก'),
 ('ฝากเลี้ยง');
-
--- INSERT INTO public."m_visit_treatment"
--- ("label")
--- VALUES('ตรวจทั่วไป'),
--- ('ตรวจเฉพาะทาง');
 
 INSERT INTO public."m_visit_type"
 ("label")

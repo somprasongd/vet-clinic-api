@@ -34,22 +34,6 @@ export const findAppointTypeById = async (req, res) => {
   res.json(result);
 };
 
-export const findAllBillingType = async (req, res) => {
-  const { limit, offset, page, search } = req.query;
-
-  const { datas, counts } = await service.findAllBillingType(search, limit, offset);
-
-  const results = paginate(datas, counts, limit, offset, page);
-  res.json(results);
-};
-
-export const findBillingTypeById = async (req, res) => {
-  const { id } = req.params;
-  const result = await service.findBillingTypeById(id);
-
-  res.json(result);
-};
-
 export const findAllItemGroup = async (req, res) => {
   const { limit, offset, page, search } = req.query;
 
@@ -98,22 +82,6 @@ export const findMediaTypeById = async (req, res) => {
   res.json(result);
 };
 
-export const findAllOrderStatus = async (req, res) => {
-  const { limit, offset, page, search } = req.query;
-
-  const { datas, counts } = await service.findAllOrderStatus(search, limit, offset);
-
-  const results = paginate(datas, counts, limit, offset, page);
-  res.json(results);
-};
-
-export const findOrderStatusById = async (req, res) => {
-  const { id } = req.params;
-  const result = await service.findOrderStatusById(id);
-
-  res.json(result);
-};
-
 export const findAllPaymentType = async (req, res) => {
   const { limit, offset, page, search } = req.query;
 
@@ -126,6 +94,38 @@ export const findAllPaymentType = async (req, res) => {
 export const findPaymentTypeById = async (req, res) => {
   const { id } = req.params;
   const result = await service.findPaymentTypeById(id);
+
+  res.json(result);
+};
+
+export const findAllCreditCardIssuer = async (req, res) => {
+  const { limit, offset, page, search } = req.query;
+
+  const { datas, counts } = await service.findAllCreditCardIssuer(search, limit, offset);
+
+  const results = paginate(datas, counts, limit, offset, page);
+  res.json(results);
+};
+
+export const findCreditCardIssuerById = async (req, res) => {
+  const { id } = req.params;
+  const result = await service.findCreditCardIssuerById(id);
+
+  res.json(result);
+};
+
+export const findAllCreditCardFeesMethod = async (req, res) => {
+  const { limit, offset, page, search } = req.query;
+
+  const { datas, counts } = await service.findAllCreditCardFeesMethod(search, limit, offset);
+
+  const results = paginate(datas, counts, limit, offset, page);
+  res.json(results);
+};
+
+export const findCreditCardFeesMethodById = async (req, res) => {
+  const { id } = req.params;
+  const result = await service.findCreditCardFeesMethodById(id);
 
   res.json(result);
 };
@@ -238,22 +238,6 @@ export const findAllVisitStatus = async (req, res) => {
 export const findVisitStatusById = async (req, res) => {
   const { id } = req.params;
   const result = await service.findVisitStatusById(id);
-
-  res.json(result);
-};
-
-export const findAllVisitTreatment = async (req, res) => {
-  const { limit, offset, page, search } = req.query;
-
-  const { datas, counts } = await service.findAllVisitTreatment(search, limit, offset);
-
-  const results = paginate(datas, counts, limit, offset, page);
-  res.json(results);
-};
-
-export const findVisitTreatmentById = async (req, res) => {
-  const { id } = req.params;
-  const result = await service.findVisitTreatmentById(id);
 
   res.json(result);
 };
