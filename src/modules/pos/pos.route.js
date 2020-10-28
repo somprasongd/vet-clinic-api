@@ -18,7 +18,7 @@ router
   .patch([validJWT, validId, updatePOSDTO], controller.updatePOS) // partial update
   .put([validJWT, validId, updatePOSDTO], controller.updatePOS);
 
-router
-  .route('/:id/receipt')
-  .post([validJWT, validId, createReceiptDTO], controller.createReceipt)
-  .delete([validJWT, validId, createReceiptDTO], controller.cancelReceipt);
+// router
+//   .route('/:id/receipt')
+//   .post([validJWT, validId, createReceiptDTO], controller.createReceipt)
+//   .delete([validJWT, validId, createReceiptDTO], controller.cancelReceipt);

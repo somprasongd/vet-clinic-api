@@ -63,7 +63,7 @@ const createConnection = async () => {
       obj.resultLabs = new repos.ResultLabsRepository(obj, pgp);
       obj.resultXrays = new repos.ResultXraysRepository(obj, pgp);
       obj.pos = new repos.POSRepository(obj, pgp);
-
+      obj.receipts = new repos.ReceiptRepository(obj, pgp);
       obj.linenotify = new repos.LineNotifyRepository(obj, pgp);
     },
   };

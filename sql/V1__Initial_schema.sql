@@ -60,6 +60,22 @@ CREATE TABLE public.m_payment_type (
 );
 CREATE INDEX m_payment_type_active_idx ON public.m_payment_type USING btree (active);
 
+CREATE TABLE public.m_credit_card_issuer (
+	id serial NOT NULL,
+	"label" varchar NOT NULL,
+	active bool NOT NULL DEFAULT true,
+	CONSTRAINT m_credit_card_issuer_pk PRIMARY KEY (id)
+);
+CREATE INDEX m_credit_card_issuer_active_idx ON public.m_credit_card_issuer USING btree (active);
+
+CREATE TABLE public.m_credit_card_fees_method (
+	id serial NOT NULL,
+	"label" varchar NOT NULL,
+	active bool NOT NULL DEFAULT true,
+	CONSTRAINT m_credit_card_fees_method_pk PRIMARY KEY (id)
+);
+CREATE INDEX m_credit_card_fees_method_active_idx ON public.m_credit_card_fees_method USING btree (active);
+
 CREATE TABLE public.m_prefix (
 	id serial NOT NULL,
 	"label" varchar NOT NULL,
@@ -511,28 +527,46 @@ CREATE TABLE public.t_pos (
 	visit_id int4 NULL,
 	pos_number varchar(20) NOT NULL,
 	state pos_state NOT NULL DEFAULT 'active'::pos_state,
-	remark text NULL,
-	receipt_number varchar(20) NULL,
-	qty int4 NOT NULL DEFAULT 0,
-	price float8 NOT NULL DEFAULT 0,
-	discount float8 NOT NULL DEFAULT 0,
-	final_price float8 NOT NULL DEFAULT 0,
 	create_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	create_by int4 NOT NULL,
 	update_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	update_by int4 NOT NULL,
 	CONSTRAINT t_pos_pkey PRIMARY KEY (id),
-	CONSTRAINT t_pos_un_pos_no UNIQUE (pos_number),
-	CONSTRAINT t_pos_un_receipt_no UNIQUE (receipt_number),
+	CONSTRAINT t_pos_un UNIQUE (pos_number),
 	CONSTRAINT t_pos_fk FOREIGN KEY (visit_id) REFERENCES t_visit(id)
 );
-CREATE INDEX t_pos_pos_state ON public.t_pos USING btree (pos_state);
+CREATE INDEX t_pos_pos_state ON public.t_pos USING btree (state);
 CREATE INDEX t_pos_pos_number ON public.t_pos USING btree (pos_number);
 CREATE INDEX t_pos_pos_number_like ON public.t_pos USING btree (pos_number varchar_pattern_ops);
-CREATE INDEX t_pos_receipt_number ON public.t_pos USING btree (receipt_number);
-CREATE INDEX t_pos_receipt_number_like ON public.t_pos USING btree (receipt_number varchar_pattern_ops);
 CREATE INDEX t_pos_create_at ON public.t_pos USING btree (create_at);
 CREATE INDEX t_pos_visit_id_idx ON public.t_pos (visit_id);
 
+CREATE TABLE public.t_receipt (
+	id serial NOT NULL,
+	pos_id int4 NOT NULL,
+	receipt_number varchar(20) NULL,
+	qty int4 NOT NULL DEFAULT 0,
+	sales_price float8 NOT NULL DEFAULT 0,
+	discount float8 NOT NULL DEFAULT 0,
+	net_price float8 NOT NULL DEFAULT 0,
+	payment_type_id int4 NOT NULL DEFAULT 1, -- cash
+	credit_card_issuer_id int4 NULL,
+	credit_card_fees_method_id int4 NULL,
+	credit_card_fees float8 NOT NULL DEFAULT 0,
+	remark text NULL,
+	details jsonb NOT NULL,
+	create_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	create_by int4 NOT NULL,
+	CONSTRAINT t_receipt_pkey PRIMARY KEY (id),
+	CONSTRAINT t_receipt_un UNIQUE (receipt_number),
+	CONSTRAINT t_receipt_fk FOREIGN KEY (pos_id) REFERENCES t_pos(id),
+	CONSTRAINT t_receipt_fk_payment_type_id FOREIGN KEY (payment_type_id) REFERENCES m_payment_type(id),
+	CONSTRAINT t_receipt_fk_credit_card_issuer_id FOREIGN KEY (credit_card_issuer_id) REFERENCES m_credit_card_issuer(id),
+	CONSTRAINT t_receipt_fk_credit_card_fees_method_id FOREIGN KEY (credit_card_fees_method_id) REFERENCES m_credit_card_fees_method(id)
+);
+CREATE INDEX t_receipt_receipt_number ON public.t_receipt USING btree (receipt_number);
+CREATE INDEX t_receipt_receipt_number_like ON public.t_receipt USING btree (receipt_number varchar_pattern_ops);
+CREATE INDEX t_receipt_pos_id_idx ON public.t_receipt (pos_id);
 
 -- CREATE TABLE public.t_pos_detail (
 -- 	id serial NOT NULL,

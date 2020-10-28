@@ -40,9 +40,20 @@ VALUES('ทั่วไป'),
 
 INSERT INTO public."m_payment_type"
 ("label")
-VALUES('จ่ายล่วงหน้า'),
-('เงินสด'),
+VALUES('เงินสด'),
+('โอนเงิน'),
 ('เครดิตการ์ด');
+
+INSERT INTO public."m_credit_card_issuer"
+("label")
+VALUES('Master Card'),
+('Visa'),
+('อื่นๆ');
+
+INSERT INTO public."m_credit_card_fees_method"
+("label")
+VALUES('คิดรวมในยอดขาย'),
+('คิดเพิ่มจากยอดขาย');
 
 INSERT INTO public."m_prefix"
 ("label")

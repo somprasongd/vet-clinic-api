@@ -11,6 +11,7 @@ import OrderDrugsRepository from './order-drugs';
 import ResultLabsRepository from './result-labs';
 import ResultXraysRepository from './result-xrays';
 import POSRepository from './pos';
+import ReceiptRepository from './receipt';
 import UploadRepository from './upload';
 import VisitMediaRepository from './visit-medias';
 import LineNotifyRepository from './linenotify';
@@ -39,5 +40,6 @@ export default {
   ResultLabsRepository,
   ResultXraysRepository,
   POSRepository,
+  ReceiptRepository,
   LineNotifyRepository,
 };

@@ -2,7 +2,7 @@ import Joi from 'joi';
 import validationHandler from '../../common/helpers/validation-handler';
 
 export const createPOSDTO = (req, res, next) => {
-  req.dto = { updateBy: req.user.id };
+  req.dto = { createBy: req.user.id, updateBy: req.user.id };
   next();
 };
 
@@ -10,9 +10,13 @@ export const searchPOSDTO = (req, res, next) => {
   const schema = Joi.object().keys({
     posNumber: Joi.string(),
     receiptNumber: Joi.string(),
+    date: Joi.date(),
+    dateRange0: Joi.date(),
+    dateRange1: Joi.date(),
     state: Joi.string()
-      .valid('pending', 'active', 'success', 'cancel')
-      .default('active'),
+      .valid('pending', 'success', 'cancel')
+      .default('pending'),
+    states: Joi.array().items(Joi.string().valid('pending', 'success', 'cancel')),
   });
 
   const { dto } = validationHandler(req.query, schema);
