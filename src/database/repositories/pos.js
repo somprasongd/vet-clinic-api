@@ -32,7 +32,7 @@ export default class POSRepository extends Repository {
 
   // find(wheres, options)
   find(wheres, { offset = 0, limit = 'all' } = {}) {
-    const { posNumber, receiptNumber, state, date, dateRange0, dateRange1 } = wheres;
+    const { posNumber, receiptNumber, state, states, date, dateRange0, dateRange1 } = wheres;
     return this.db.task(async t => {
       const p1 = t.manyOrNone(
         `SELECT
@@ -60,6 +60,7 @@ export default class POSRepository extends Repository {
           posNumber,
           receiptNumber,
           state,
+          states,
           date,
           dateRange0,
           dateRange1,
@@ -74,6 +75,7 @@ export default class POSRepository extends Repository {
           posNumber,
           receiptNumber,
           state,
+          states,
           date,
           dateRange0,
           dateRange1,
@@ -87,7 +89,7 @@ export default class POSRepository extends Repository {
 }
 
 function createSearchCondition(wheres) {
-  const { posNumber, receiptNumber, state, date, dateRange0, dateRange1 } = wheres;
+  const { posNumber, receiptNumber, state, states, date, dateRange0, dateRange1 } = wheres;
   let conditions = '';
   if (posNumber) {
     conditions += ` AND t_pos.pos_number = $<posNumber>`;
@@ -97,6 +99,9 @@ function createSearchCondition(wheres) {
   }
   if (state) {
     conditions += ` AND t_pos.state = $<state>`;
+  }
+  if (states) {
+    conditions += ` AND t_pos.state = ANY($<states>)`;
   }
   if (date) {
     conditions += ` AND t_pos.create_at::date = $<date>::date`;
