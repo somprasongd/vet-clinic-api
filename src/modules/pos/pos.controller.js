@@ -38,7 +38,7 @@ export const getPOS = async (req, res) => {
 
 export const removePOS = async (req, res) => {
   const { dto } = req;
-  await service.c(req.params.id, dto);
+  await service.cancelPOS(req.params.id, dto);
 
   res.status(204).end();
 };

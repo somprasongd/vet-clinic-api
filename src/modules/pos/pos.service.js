@@ -32,15 +32,4 @@ export const updatePOSState = async (id, obj) => {
   return pos;
 };
 
-export const cancelPOS = async (id, obj) => {
-  await db.tx(async t => {
-    const pos = await t.pos.findById(id);
-
-    if (!pos) throw new NotFoundExceptions('The pos with the given ID was not found.');
-
-    if (pos.state === 'success') throw new InvalidExceptions('Can not cancel the pos with the given ID was successed.');
-    if (pos.state === 'cancel') throw new InvalidExceptions('Can not cancel the pos with the given ID was canceled.');
-
-    await t.pos.update(id, obj);
-  });
-};
+export const cancelPOS = (id, obj) => db.pos.update(id, obj);

@@ -40,7 +40,9 @@ export const updatePOSDTO = (req, res, next) => {
 };
 
 export const cancelPOSDTO = (req, res, next) => {
-  const { pos: state } = req;
+  const {
+    pos: { state },
+  } = req;
 
   if (state === 'cancel') {
     next(new InvalidExceptions('Can not cancel the pos with the given ID was canceled.'));
@@ -48,12 +50,14 @@ export const cancelPOSDTO = (req, res, next) => {
   }
 
   let dto = { state: 'cancel', updateBy: req.user.id };
+  console.log(state, state === 'success');
   if (state === 'success') {
     const schema = Joi.object().keys({
       cancelReason: Joi.string().required(),
     });
 
     const { dto: validations } = validationHandler(req.body, schema);
+    console.log(validations);
     dto = { ...dto, ...validations };
   }
 
