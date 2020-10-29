@@ -14,23 +14,41 @@ export const createReceiptDTO = (req, res, next) => {
     paymentTypeId: Joi.number()
       .valid(1, 2, 3)
       .required(),
+    cash: Joi.any().when('paymentTypeId', {
+      is: 1,
+      then: Joi.number()
+        .min(0)
+        .required(),
+      otherwise: Joi.forbidden(),
+    }),
+    change: Joi.any().when('paymentTypeId', {
+      is: 1,
+      then: Joi.number()
+        .min(0)
+        .required(),
+      otherwise: Joi.forbidden(),
+    }),
     creditCardIssuerId: Joi.any().when('paymentTypeId', {
       is: 3,
       then: Joi.number()
         .valid(1, 2, 3)
         .required(),
-      otherwise: Joi.optional(),
+      otherwise: Joi.forbidden(),
     }),
     creditCardFeesMethodId: Joi.any().when('paymentTypeId', {
       is: 3,
       then: Joi.number()
         .valid(1, 2)
         .required(),
-      otherwise: Joi.optional(),
+      otherwise: Joi.forbidden(),
     }),
-    creditCardFees: Joi.number()
-      .min(0)
-      .default(0),
+    creditCardFees: Joi.any().when('paymentTypeId', {
+      is: 3,
+      then: Joi.number()
+        .min(0)
+        .required(),
+      otherwise: Joi.forbidden(),
+    }),
     note: Joi.string().allow(''),
   });
 
@@ -72,6 +90,8 @@ export const respondReceiptDTO = receipt => {
     discount,
     netPrice,
     paymentType,
+    cash,
+    change,
     creditCardIssuer,
     creditCardFeesMethod,
     creditCardFees,
@@ -93,6 +113,8 @@ export const respondReceiptDTO = receipt => {
     discount,
     netPrice,
     paymentType,
+    cash,
+    change,
     creditCardIssuer,
     creditCardFeesMethod,
     creditCardFees,

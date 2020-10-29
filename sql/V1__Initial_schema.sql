@@ -535,6 +535,8 @@ CREATE TABLE public.t_receipt (
 	discount float8 NOT NULL DEFAULT 0,
 	net_price float8 NOT NULL DEFAULT 0,
 	payment_type_id int4 NOT NULL DEFAULT 1, -- cash
+	cash float8 NOT NULL DEFAULT 0,
+	"change" float8 NOT NULL DEFAULT 0,
 	credit_card_issuer_id int4 NULL,
 	credit_card_fees_method_id int4 NULL,
 	credit_card_fees float8 NOT NULL DEFAULT 0,

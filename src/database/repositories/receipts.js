@@ -19,6 +19,8 @@ export default class ReceiptRepository extends Repository {
       t_receipt.discount ,
       t_receipt.net_price ,
       m_payment_type.label as payment_type ,
+      t_receipt.cash ,
+      t_receipt.change ,
       m_credit_card_issuer.label as credit_card_issuer ,
       m_credit_card_fees_method.label as credit_card_fees_method ,
       t_receipt.credit_card_fees ,
