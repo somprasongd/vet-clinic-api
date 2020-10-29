@@ -31,7 +31,7 @@ export const createReceiptDTO = (req, res, next) => {
     creditCardFees: Joi.number()
       .min(0)
       .default(0),
-    note: Joi.string(),
+    note: Joi.string().allow(''),
   });
 
   const { dto } = validationHandler(req.body, schema);
@@ -76,6 +76,9 @@ export const respondReceiptDTO = receipt => {
     creditCardFeesMethod,
     creditCardFees,
     details,
+    createAt,
+    createBy,
+    customer,
   } = receipt;
 
   return {
@@ -94,5 +97,8 @@ export const respondReceiptDTO = receipt => {
     creditCardFeesMethod,
     creditCardFees,
     details,
+    createAt,
+    createBy,
+    customer,
   };
 };
