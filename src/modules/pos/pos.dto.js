@@ -14,9 +14,7 @@ export const searchPOSDTO = (req, res, next) => {
     date: Joi.date(),
     dateRange0: Joi.date(),
     dateRange1: Joi.date(),
-    state: Joi.string()
-      .valid('pending', 'success', 'cancel')
-      .default('pending'),
+    state: Joi.string().valid('pending', 'success', 'cancel'),
     states: Joi.array().items(Joi.string().valid('pending', 'success', 'cancel')),
   });
 

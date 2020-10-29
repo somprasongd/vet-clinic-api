@@ -101,7 +101,7 @@ function createSearchCondition(wheres) {
     conditions += ` AND t_pos.state = $<state>`;
   }
   if (states) {
-    conditions += ` AND t_pos.state = ANY($<states>)`;
+    conditions += ` AND t_pos.state = ANY($<states>::pos_state[])`;
   }
   if (date) {
     conditions += ` AND t_pos.create_at::date = $<date>::date`;
