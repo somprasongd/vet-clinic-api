@@ -45,17 +45,17 @@ export const createReceiptDTO = (req, res, next) => {
 };
 
 export const getReceiptDTO = (req, res, next) => {
-  const schema = Joi.object()
-    .keys({
-      receiptId: Joi.number().min(1),
-      posId: Joi.number().min(1),
-      receiptNumber: Joi.string(),
-    })
-    .xor('receiptId', 'posId', 'receiptNumber');
+  // const schema = Joi.object()
+  //   .keys({
+  //     receiptId: Joi.number().min(1),
+  //     posId: Joi.number().min(1),
+  //     receiptNumber: Joi.string(),
+  //   })
+  //   .xor('receiptId', 'posId', 'receiptNumber');
 
-  const { dto } = validationHandler(req.query, schema);
+  // const { dto } = validationHandler(req.query, schema);
 
-  req.dto = { ...dto };
+  req.dto = { posId: req.pos.id };
   next();
 };
 
