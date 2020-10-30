@@ -388,7 +388,7 @@ CREATE TABLE public.t_pet (
 	CONSTRAINT t_pet_pkey PRIMARY KEY (id),
 	CONSTRAINT t_pet_avatar_id_fk_t_upload_id FOREIGN KEY (avatar_id) REFERENCES t_upload(id),
 	CONSTRAINT t_pet_owner_id_fk_t_member_id FOREIGN KEY (owner_id) REFERENCES t_member(id),
-	CONSTRAINT t_pet_gender_id_fk_m_pet_gender_id FOREIGN KEY (gender_id) REFERENCES pets_sex(id),
+	CONSTRAINT t_pet_gender_id_fk_m_pet_gender_id FOREIGN KEY (gender_id) REFERENCES m_pet_gender(id),
 	CONSTRAINT t_pet_type_id_fk_m_pet_type_id FOREIGN KEY (type_id) REFERENCES m_pet_type(id),
 	CONSTRAINT t_pet_update_by_fk_c_user_id FOREIGN KEY (update_by) REFERENCES c_user(id)
 );
@@ -634,7 +634,7 @@ CREATE TABLE public.t_result_lab (
 	CONSTRAINT t_result_lab_pkey PRIMARY KEY (id),
 	CONSTRAINT t_result_lab_order_id_fk FOREIGN KEY (order_id) REFERENCES t_order(id),
 	CONSTRAINT t_result_lab_item_id_fk FOREIGN KEY (item_id) REFERENCES c_item(id),
-	CONSTRAINT t_result_lab_item_set_id_fk FOREIGN KEY (item_set_id) REFERENCES c_item(id),
+	CONSTRAINT t_result_lab_item_parent_id_fk FOREIGN KEY (item_parent_id) REFERENCES c_item(id),
 	CONSTRAINT t_result_lab_update_by_fk FOREIGN KEY (update_by) REFERENCES c_user(id)
 );
 CREATE INDEX t_result_lab_order_id ON public.t_result_lab USING btree (order_id);

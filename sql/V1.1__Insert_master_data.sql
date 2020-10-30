@@ -114,7 +114,7 @@ VALUES('OPD'),
 
 INSERT INTO public.c_user ("username","password","name","email","phone","is_admin","active") VALUES('admin','$2a$10$uoS1kYsu9b42YuIpXKkK4Oy.UuiaINNuxHzSI.oTStxyAoLJRvkv6','Administrator','admin@mail.com',null,true,true);
 
-INSERT INTO public.c_user_roles ("user_id","role_id") VALUES(1,1), (1,2), (1,3), (1,4), (1,5), (1,6);
+INSERT INTO public.c_user_roles ("user_id","role_id") VALUES(1,1), (1,2), (1,3), (1,4), (1,5), (1,6), (1,7);
 
 INSERT INTO public.c_site
 ("name", branch_no, branch_name, phone, address, update_by)
