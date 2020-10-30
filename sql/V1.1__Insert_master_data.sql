@@ -73,7 +73,8 @@ VALUES('register'),
 ('lab'),
 ('xray'),
 ('pharmacy'),
-('cashier');
+('cashier'),
+('report');
 
 INSERT INTO public."m_visit_cause"
 ("label")
