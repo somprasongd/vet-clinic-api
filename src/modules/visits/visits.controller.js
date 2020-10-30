@@ -108,6 +108,10 @@ export const dischargeDoctor = async (req, res) => {
 export const dischargeFinance = async (req, res) => {
   const pos = await service.dischargeFinance(req.params.id, req.user.id);
 
+  if (pos === null) {
+    return res.status(204).end();
+  }
+
   req.method = 'GET';
   req.url = `/api/pos/${pos.id}`;
   req.app.handle(req, res);

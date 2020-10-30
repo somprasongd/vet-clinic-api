@@ -15,7 +15,7 @@ export default class PetsRepository extends Repository {
   }
 
   // find(wheres, options)
-  find(wheres, { offset = 0, limit = 'all' }) {
+  find(wheres, { offset = 0, limit = 'all' } = {}) {
     const { visitId, posId } = wheres;
     return this.db.task(async t => {
       const p1 = t.manyOrNone(

@@ -58,6 +58,12 @@ async function dischargeFinanceTx(t, { id, userId }) {
 
   if (!visit) throw new NotFoundExceptions('The visit with the given ID was not found.');
 
+  const orders = await t.orders.find({ visitId: visit.id });
+
+  if (orders.counts === 0) {
+    return null;
+  }
+
   const code = await t.counters.getCode('P');
   const pos = await t.pos.create({
     posNumber: code,
