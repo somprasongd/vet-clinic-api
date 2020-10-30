@@ -114,7 +114,7 @@ export const dischargeFinance = async (req, res) => {
 };
 
 export const takeHome = async (req, res) => {
-  const pos = await service.dischargeFinance(req.params.id, req.user.id);
+  const pos = await service.takeHome(req.params.id, req.user.id, req.dto);
 
   req.method = 'GET';
   req.url = `/api/pos/${pos.id}`;

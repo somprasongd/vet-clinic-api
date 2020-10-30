@@ -7,56 +7,107 @@ export const findOrderById = id => db.orders.findById(id);
 
 export const findAllOrder = (conditions, { limit, offset }) => db.orders.find(conditions, { limit, offset });
 
-export const createOrder = newOrder => {
+export const createOrder = newOrder =>
+  // const { visitId, posId, itemId, qty, cost = 0, price = 0, updateBy } = newOrder;
+
+  db.tx(async t => {
+    const order = await createOrderTx(t, newOrder);
+    return order;
+    // const item = await t.items.findById(itemId);
+    // if (!item) {
+    //   throw new NotFoundExceptions('The item with the given Item ID was not found.');
+    // }
+
+    // const itemGroup = await t.base.findById('m_item_group', item.itemGroupId);
+
+    // let order = {
+    //   visitId,
+    //   posId,
+    //   itemId,
+    //   itemLabel: item.label,
+    //   unit: item.unit,
+    //   typeId: itemGroup.id,
+    //   typeLabel: itemGroup.label,
+    //   qty: itemGroup.id === 3 || itemGroup.id === 4 ? 1 : qty, // lab & xray must be 1
+    //   cost: cost === 0 ? item.cost : cost,
+    //   price: price === 0 ? item.price : price,
+    //   updateBy,
+    // };
+
+    // order = await t.orders.create(order);
+    // // order drug
+    // if (itemGroup.id === 1) {
+    //   await createOrderDrug(t, order);
+    // }
+    // // xray result
+    // if (itemGroup.id === 4) {
+    //   await createResultXray(t, order);
+    // }
+    // // lab result
+    // if (itemGroup.id === 3) {
+    //   if (!item.isSet) {
+    //     await createResultLab(t, order, item);
+    //   } else {
+    //     const items = await t.itemSets.findSubsetByItemId(item.id);
+    //     if (!items) {
+    //       throw new NotFoundExceptions('The item sub set with the given Item ID was not found.');
+    //     }
+    //     for (let index = 0; index < items.length; index++) {
+    //       await createResultLab(t, order, items[index], item.id);
+    //     }
+    //   }
+    // }
+    // return order;
+  });
+
+export const createOrderTx = async (t, newOrder) => {
   const { visitId, posId, itemId, qty, cost = 0, price = 0, updateBy } = newOrder;
 
-  return db.tx(async t => {
-    const item = await t.items.findById(itemId);
-    if (!item) {
-      throw new NotFoundExceptions('The item with the given Item ID was not found.');
-    }
+  const item = await t.items.findById(itemId);
+  if (!item) {
+    throw new NotFoundExceptions('The item with the given Item ID was not found.');
+  }
 
-    const itemGroup = await t.base.findById('m_item_group', item.itemGroupId);
+  const itemGroup = await t.base.findById('m_item_group', item.itemGroupId);
 
-    let order = {
-      visitId,
-      posId,
-      itemId,
-      itemLabel: item.label,
-      unit: item.unit,
-      typeId: itemGroup.id,
-      typeLabel: itemGroup.label,
-      qty: itemGroup.id === 3 || itemGroup.id === 4 ? 1 : qty, // lab & xray must be 1
-      cost: cost === 0 ? item.cost : cost,
-      price: price === 0 ? item.price : price,
-      updateBy,
-    };
+  let order = {
+    visitId,
+    posId,
+    itemId,
+    itemLabel: item.label,
+    unit: item.unit,
+    typeId: itemGroup.id,
+    typeLabel: itemGroup.label,
+    qty: itemGroup.id === 3 || itemGroup.id === 4 ? 1 : qty, // lab & xray must be 1
+    cost: cost === 0 ? item.cost : cost,
+    price: price === 0 ? item.price : price,
+    updateBy,
+  };
 
-    order = await t.orders.create(order);
-    // order drug
-    if (itemGroup.id === 1) {
-      await createOrderDrug(t, order);
-    }
-    // xray result
-    if (itemGroup.id === 4) {
-      await createResultXray(t, order);
-    }
-    // lab result
-    if (itemGroup.id === 3) {
-      if (!item.isSet) {
-        await createResultLab(t, order, item);
-      } else {
-        const items = await t.itemSets.findSubsetByItemId(item.id);
-        if (!items) {
-          throw new NotFoundExceptions('The item sub set with the given Item ID was not found.');
-        }
-        for (let index = 0; index < items.length; index++) {
-          await createResultLab(t, order, items[index], item.id);
-        }
+  order = await t.orders.create(order);
+  // order drug
+  if (itemGroup.id === 1) {
+    await createOrderDrug(t, order);
+  }
+  // xray result
+  if (itemGroup.id === 4) {
+    await createResultXray(t, order);
+  }
+  // lab result
+  if (itemGroup.id === 3) {
+    if (!item.isSet) {
+      await createResultLab(t, order, item);
+    } else {
+      const items = await t.itemSets.findSubsetByItemId(item.id);
+      if (!items) {
+        throw new NotFoundExceptions('The item sub set with the given Item ID was not found.');
+      }
+      for (let index = 0; index < items.length; index++) {
+        await createResultLab(t, order, items[index], item.id);
       }
     }
-    return order;
-  });
+  }
+  return order;
 };
 
 async function createOrderDrug(db, order) {

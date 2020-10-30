@@ -88,6 +88,23 @@ export const updateVisitDTO = (req, res, next) => {
   next();
 };
 
+export const takeHomeDTO = (req, res, next) => {
+  const schema = Joi.object().keys({
+    price: Joi.number()
+      .min(0)
+      .required(),
+    qty: Joi.number()
+      .integer()
+      .min(1)
+      .required(),
+  });
+
+  const { dto } = validationHandler(req.body, schema);
+
+  req.dto = { ...dto };
+  next();
+};
+
 export const respondVisitDTO = visit => {
   const {
     id,

@@ -1,7 +1,7 @@
 import express from 'express';
 import * as controller from './visits.controller';
 import { validId, validPagination, validParamId } from '../../middlewares/validation.middleware';
-import { createDaycareDTO, createVisitDTO, searchVisitDTO, updateVisitDTO } from './visits.dto';
+import { createDaycareDTO, createVisitDTO, searchVisitDTO, takeHomeDTO, updateVisitDTO } from './visits.dto';
 import { validJWT } from '../../middlewares/auth-validation.middleware';
 import { router as vsRouter } from './vitalsigns/vitalsign.route';
 import { router as resultRouter } from './results/results.route';
@@ -34,7 +34,7 @@ router.route('/:id/status/waiting-result').patch([validJWT, validId], controller
 router.route('/:id/status/reported').patch([validJWT, validId], controller.setStatusReported);
 router.route('/:id/status/doctor-discharge').patch([validJWT, validId], controller.dischargeDoctor);
 router.route('/:id/status/discharge').patch([validJWT, validId], controller.dischargeFinance);
-router.route('/:id/status/take-home').patch([validJWT, validId], controller.takeHome);
+router.route('/:id/status/take-home').patch([validJWT, validId, takeHomeDTO], controller.takeHome);
 
 router.use('/:id/vs', validId, setVisit, vsRouter);
 
