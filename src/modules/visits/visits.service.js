@@ -38,7 +38,12 @@ export const dischargeFinance = (id, userId) =>
     if (!visit) throw new NotFoundExceptions('The visit with the given ID was not found.');
 
     const code = await t.counters.getCode('P');
-    const pos = await t.pos.create({ posNumber: code, visitId: visit.id, updateBy: visit.updateBy });
+    const pos = await t.pos.create({
+      posNumber: code,
+      visitId: visit.id,
+      createBy: userId,
+      updateBy: userId,
+    });
 
     await t.orders.updateByVisitId(visit.id, { posId: pos.id });
     return pos;
