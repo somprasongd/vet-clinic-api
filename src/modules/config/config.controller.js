@@ -1,5 +1,5 @@
 import * as service from './config.service';
-import { NotFoundExceptions } from '../../common/helpers/exceptions';
+import { InvalidExceptions, NotFoundExceptions } from '../../common/helpers/exceptions';
 import paginate from '../../common/helpers/res-with-paginate';
 
 export const getSiteInfo = async (req, res) => {
@@ -204,6 +204,9 @@ export const findItemById = async (req, res) => {
 };
 
 export const removeItem = async (req, res) => {
+  if (req.params.id === '1') {
+    throw new InvalidExceptions('Can not delete master item');
+  }
   await service.removeItem(req.params.id);
 
   res.status(204).end();

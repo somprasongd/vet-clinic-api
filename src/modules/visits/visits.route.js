@@ -34,6 +34,7 @@ router.route('/:id/status/waiting-result').patch([validJWT, validId], controller
 router.route('/:id/status/reported').patch([validJWT, validId], controller.setStatusReported);
 router.route('/:id/status/doctor-discharge').patch([validJWT, validId], controller.dischargeDoctor);
 router.route('/:id/status/discharge').patch([validJWT, validId], controller.dischargeFinance);
+router.route('/:id/status/take-home').patch([validJWT, validId], controller.takeHome);
 
 router.use('/:id/vs', validId, setVisit, vsRouter);
 

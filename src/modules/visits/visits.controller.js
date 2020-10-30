@@ -113,6 +113,14 @@ export const dischargeFinance = async (req, res) => {
   req.app.handle(req, res);
 };
 
+export const takeHome = async (req, res) => {
+  const pos = await service.dischargeFinance(req.params.id, req.user.id);
+
+  req.method = 'GET';
+  req.url = `/api/pos/${pos.id}`;
+  req.app.handle(req, res);
+};
+
 export const updateVisit = async (req, res) => {
   const { dto } = req;
 

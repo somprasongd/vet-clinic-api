@@ -99,12 +99,6 @@ export const updateItemDTO = (req, res, next) => {
     price: Joi.number()
       .min(0)
       .required(),
-    active: Joi.boolean().default(true),
-    isSet: Joi.boolean().default(false),
-    itemGroupId: Joi.number()
-      .integer()
-      .min(1)
-      .required(),
   });
 
   const { dto } = validationHandler(req.body, schema);
