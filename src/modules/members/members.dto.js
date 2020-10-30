@@ -9,8 +9,7 @@ export const createMemberDTO = (req, res, next) => {
     address: Joi.string().allow('', null),
     tels: Joi.array().items(
       Joi.string()
-        .min(9)
-        .max(10)
+        .regex(/^[0-9]{9,10}$/)
         .required()
     ),
     email: Joi.string()
@@ -34,9 +33,7 @@ export const searchMemberDTO = (req, res, next) => {
     houseNo: Joi.string(),
     firstName: Joi.string(),
     lastName: Joi.string(),
-    tel: Joi.string()
-      .min(9)
-      .max(10),
+    tel: Joi.string().regex(/^[0-9]{9,10}$/),
   });
 
   const { dto } = validationHandler(req.query, schema);
@@ -53,8 +50,7 @@ export const updateMemberDTO = (req, res, next) => {
     address: Joi.string().allow('', null),
     tels: Joi.array().items(
       Joi.string()
-        .min(9)
-        .max(10)
+        .regex(/^[0-9]{9,10}$/)
         .required()
     ),
     email: Joi.string()

@@ -14,9 +14,7 @@ export const createUserDTO = (req, res, next) => {
     email: Joi.string()
       .max(50)
       .email(),
-    phone: Joi.string()
-      .min(9)
-      .max(10),
+    phone: Joi.string().regex(/^[0-9]{9,10}$/),
     password: Joi.string()
       .min(5)
       .max(50)
@@ -64,7 +62,7 @@ export const updateUserDTO = (req, res, next) => {
       .max(50)
       .allow(null),
     email: Joi.string().email(),
-    phone: Joi.string().max(10),
+    phone: Joi.string().regex(/^[0-9]{9,10}$/),
     isAdmin: Joi.boolean().default(false),
     active: Joi.boolean().default(true),
     roles: Joi.array()

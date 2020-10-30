@@ -9,9 +9,7 @@ export const searchDTO = (req, res, next) => {
     lastName: Joi.string(),
     microchipNo: Joi.string(),
     petName: Joi.string(),
-    tel: Joi.string()
-      .min(9)
-      .max(10),
+    tel: Joi.string().regex(/^[0-9]{9,10}$/),
   });
 
   const { dto } = validationHandler(req.query, schema);
