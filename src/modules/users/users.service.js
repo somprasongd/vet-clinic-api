@@ -1,3 +1,4 @@
+import { InvalidExceptions } from '../../common/helpers/exceptions';
 import connection from '../../database';
 import { deleteById as deleteAvatar } from '../upload/upload.service';
 
@@ -59,4 +60,9 @@ export const updateUserAvatar = async (user, avatarId) => {
 
 export const updateUserPassword = (id, password) => db.users.updatePassword(id, password);
 
-export const deleteUser = id => db.users.remove(id);
+export const deleteUser = id => {
+  if (id === '1') {
+    throw new InvalidExceptions('Can not delete master data');
+  }
+  return db.users.remove(id);
+};
