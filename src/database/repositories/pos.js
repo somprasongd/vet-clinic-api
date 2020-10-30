@@ -54,7 +54,7 @@ export default class POSRepository extends Repository {
       LEFT JOIN m_prefix on m_prefix.id = t_member.prefix_id
       LEFT JOIN c_user on c_user.id = t_visit.doctor_id
       WHERE 1=1 ${createSearchCondition(wheres)}
-      order by t_pos.create_at asc
+      order by t_pos.create_at desc
       offset $<offset> limit ${limit}`,
         {
           posNumber,
