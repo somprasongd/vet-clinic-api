@@ -442,12 +442,12 @@ CREATE TABLE public.t_visit_vitalsign (
 	vital_sign_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	weight float8 NULL,
 	temp float8 NULL,
-	rr float8 NULL, -- respiratory_rate
+	rr int4 NULL, -- respiratory_rate
 	sys int4 NULL, -- systolic_blood_pressure
 	dia int4 NULL, -- diastolic_blood_pressure
 	pulse int4 NULL,
-	pain_score float8 NULL,
-	bcs float8 NULL,
+	pain_score int4 NULL, -- 1-10
+	bcs int4 NULL, -- 1-9
 	active bool NOT NULL DEFAULT true,
 	update_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	update_by int4 NOT NULL,	
