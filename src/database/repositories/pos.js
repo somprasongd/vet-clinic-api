@@ -8,23 +8,32 @@ export default class POSRepository extends Repository {
   findById(id) {
     return this.db.oneOrNone(
       `SELECT
-      t_pos.*
+      t_pos.id
+      , t_pos.pos_number
+      , t_pos.create_at
+      , c_user.name as create_by
+      , t_pos.state
+      , t_pos.cancel_reason
       , t_receipt.receipt_number
+      , t_receipt.create_at as receipt_at
+      , ru.name as receipt_by
+      , t_receipt.net_price
+      , case when t_member.id is null then '' else trim(both ' ' from (m_prefix.label || t_member.first_name || ' ' || t_member.last_name)) end as customer
       , case when t_visit.id is null then null else 
       json_build_object(
         'visitAt', t_visit.visit_at,
-        'pet', t_pet.name || ' ('|| m_pet_type.label ||')',
-        'owner', trim(both ' ' from (m_prefix.label || t_member.first_name || ' ' || t_member.last_name)),
-        'tels', t_member.tels
+        'pet', t_pet.name || ' ('|| m_pet_type.label ||')'
       ) end as visit
       FROM t_pos 
+      inner join c_user on c_user.id = t_pos.create_by
       LEFT JOIN t_receipt on t_receipt.pos_id = t_pos.id
+      LEFT join c_user as ru on ru.id = t_receipt.create_by
       LEFT JOIN t_visit on t_visit.id = t_pos.visit_id 
       LEFT JOIN t_pet on t_pet.id = t_visit.pet_id
       LEFT JOIN m_pet_type on m_pet_type.id = t_pet.type_id
-      LEFT JOIN t_member on t_member.id = t_pet.owner_id
+      left join t_member on t_member.id = t_pos.customer_id
       LEFT JOIN m_prefix on m_prefix.id = t_member.prefix_id
-      LEFT JOIN c_user on c_user.id = t_visit.doctor_id
+      
       WHERE t_pos.id = $1`,
       +id
     );
@@ -36,23 +45,31 @@ export default class POSRepository extends Repository {
     return this.db.task(async t => {
       const p1 = t.manyOrNone(
         `SELECT
-      t_pos.*
+      t_pos.id
+      , t_pos.pos_number
+      , t_pos.create_at
+      , c_user.name as create_by
+      , t_pos.state
+      , t_pos.cancel_reason
       , t_receipt.receipt_number
+      , t_receipt.create_at as receipt_at
+      , ru.name as receipt_by
+      , t_receipt.net_price
+      , case when t_member.id is null then '' else trim(both ' ' from (m_prefix.label || t_member.first_name || ' ' || t_member.last_name)) end as customer
       , case when t_visit.id is null then null else 
       json_build_object(
         'visitAt', t_visit.visit_at,
-        'pet', t_pet.name || ' ('|| m_pet_type.label ||')',
-        'owner', trim(both ' ' from (m_prefix.label || t_member.first_name || ' ' || t_member.last_name)),
-        'tels', t_member.tels
+        'pet', t_pet.name || ' ('|| m_pet_type.label ||')'
       ) end as visit
       FROM t_pos 
+      inner join c_user on c_user.id = t_pos.create_by
       LEFT JOIN t_receipt on t_receipt.pos_id = t_pos.id
+      LEFT join c_user as ru on ru.id = t_receipt.create_by
       LEFT JOIN t_visit on t_visit.id = t_pos.visit_id 
       LEFT JOIN t_pet on t_pet.id = t_visit.pet_id
       LEFT JOIN m_pet_type on m_pet_type.id = t_pet.type_id
-      LEFT JOIN t_member on t_member.id = t_pet.owner_id
+      left join t_member on t_member.id = t_pos.customer_id
       LEFT JOIN m_prefix on m_prefix.id = t_member.prefix_id
-      LEFT JOIN c_user on c_user.id = t_visit.doctor_id
       WHERE 1=1 ${createSearchCondition(wheres)}
       order by t_pos.create_at desc
       offset $<offset> limit ${limit}`,

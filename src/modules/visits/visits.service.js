@@ -58,6 +58,8 @@ async function dischargeFinanceTx(t, { id, userId }) {
 
   if (!visit) throw new NotFoundExceptions('The visit with the given ID was not found.');
 
+  const pet = await t.pets.findById(visit.pet_id);
+
   const orders = await t.orders.find({ visitId: visit.id });
 
   if (orders.counts === 0) {
@@ -68,6 +70,7 @@ async function dischargeFinanceTx(t, { id, userId }) {
   const pos = await t.pos.create({
     posNumber: code,
     visitId: visit.id,
+    customerId: pet.ownerId,
     createBy: userId,
     updateBy: userId,
   });

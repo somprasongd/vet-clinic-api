@@ -34,9 +34,7 @@ export default class ReceiptRepository extends Repository {
     inner join m_payment_type on m_payment_type.id = t_receipt.payment_type_id
     left join m_credit_card_issuer on m_credit_card_issuer.id = t_receipt.credit_card_issuer_id
     left join m_credit_card_fees_method on m_credit_card_fees_method.id = t_receipt.credit_card_fees_method_id
-    left join t_visit on t_visit.id = t_pos.visit_id
-    left join t_pet on t_pet.id = t_visit.pet_id
-    left join t_member on t_member.id = t_pet.owner_id
+    left join t_member on t_member.id = t_pos.customer_id
     LEFT JOIN m_prefix on m_prefix.id = t_member.prefix_id
     cross join c_site cs 
     where 1=1 ${createSearchCondition({ receiptId, receiptNumber, posId })}`,

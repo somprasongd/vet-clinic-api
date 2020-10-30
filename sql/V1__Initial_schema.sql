@@ -509,6 +509,7 @@ create type pos_state as enum('pending', 'active', 'success', 'cancel');
 CREATE TABLE public.t_pos (
 	id serial NOT NULL,
 	visit_id int4 NULL,
+	customer_id int4 NULL,
 	pos_number varchar(20) NOT NULL,
 	state pos_state NOT NULL DEFAULT 'active'::pos_state,
 	create_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
