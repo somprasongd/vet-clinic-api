@@ -83,10 +83,15 @@ async function update(tableName, id, model) {
 export const getSite = async url => {
   const site = await findById('c_site', 1);
 
+  // set default
+  site.logo = {
+    url: `${url}${'media/default/avatar_pet.svg'}`,
+    urlThumbnail: '',
+    urlThumbnailSm: '',
+  };
+
   if (site.logoId && site.logoId !== null) {
     const upload = await findById('t_upload', site.logoId);
-
-    delete site.logoId;
 
     const logo = {
       url: `${url}${upload.filename}`,
@@ -95,6 +100,9 @@ export const getSite = async url => {
     };
     site.logo = logo;
   }
+
+  delete site.logoId;
+
   return site;
 };
 

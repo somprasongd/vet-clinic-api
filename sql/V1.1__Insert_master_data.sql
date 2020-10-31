@@ -54,7 +54,7 @@ INSERT INTO public."m_pet_gender"
 VALUES('ผู้'),
 ('เมีย');
 
-INSERT INTO public."m_appoint_type"
+INSERT INTO public."m_pet_type"
 ("label")
 VALUES('สุนัข'),
 ('แมว'),
