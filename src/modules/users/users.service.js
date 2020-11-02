@@ -31,7 +31,7 @@ export const updateUser = async (id, user, roles) => {
   const updatedUser = await db.tx(async t => {
     const result = await t.users.update(id, user);
 
-    if (roles.length > 0) {
+    if (roles && roles.length > 0) {
       await t.base.removeFrom('c_user_roles', { userId: id });
 
       roles.forEach(async roleId => {

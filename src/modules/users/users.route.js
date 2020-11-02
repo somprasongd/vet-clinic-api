@@ -3,7 +3,7 @@ import * as controller from './users.controller';
 import * as uploadMiddleware from '../upload/upload.middleware';
 import { onlyAdmin } from '../../middlewares/auth-policy.middleware';
 import { validId, validPagination } from '../../middlewares/validation.middleware';
-import { createUserDTO, searchUserDTO, updateUserDTO, updateUserPasswordDTO } from './users.dto';
+import { createUserDTO, searchUserDTO, updateUserDTO, updateUserPasswordDTO, updateProfileDTO } from './users.dto';
 import { validJWT } from '../../middlewares/auth-validation.middleware';
 import { resizeAvatar, uploadAvatar } from '../../middlewares/upload.middleware';
 import { createUploadImageDTO } from '../upload/upload.dto';
@@ -15,7 +15,11 @@ router
   .post([validJWT, createUserDTO], controller.create)
   .get([validJWT, validPagination, searchUserDTO], controller.findAll);
 
-router.get('/me', [validJWT], controller.findMe);
+router
+  .route('/me')
+  .get([validJWT], controller.findMe)
+  .patch([validJWT, updateProfileDTO], controller.update)
+  .put([validJWT, updateProfileDTO], controller.update);
 
 router
   .route('/me/avatar')

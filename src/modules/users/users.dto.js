@@ -55,28 +55,44 @@ export const updateUserDTO = (req, res, next) => {
   const schema = Joi.object().keys({
     name: Joi.string()
       .min(2)
-      .max(100)
-      .required(),
+      .max(100),
     password: Joi.string()
       .min(5)
       .max(50)
       .allow(null),
     email: Joi.string().email(),
     phone: Joi.string().regex(/^[0-9]{9,10}$/),
-    isAdmin: Joi.boolean().default(false),
-    active: Joi.boolean().default(true),
-    roles: Joi.array()
-      .items(
-        Joi.number()
-          .integer()
-          .min(1)
-          .required()
-      )
-      .default([]),
+    isAdmin: Joi.boolean(),
+    roles: Joi.array().items(
+      Joi.number()
+        .integer()
+        .min(1)
+        .required()
+    ),
   });
 
   const { dto } = validationHandler(req.body, schema);
 
+  req.dto = dto;
+  next();
+};
+
+export const updateProfileDTO = (req, res, next) => {
+  const schema = Joi.object().keys({
+    name: Joi.string()
+      .min(2)
+      .max(100),
+    password: Joi.string()
+      .min(5)
+      .max(50)
+      .allow(null),
+    email: Joi.string().email(),
+    phone: Joi.string().regex(/^[0-9]{9,10}$/),
+  });
+
+  const { dto } = validationHandler(req.body, schema);
+
+  req.params.id = req.user.id;
   req.dto = dto;
   next();
 };

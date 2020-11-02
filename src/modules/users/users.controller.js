@@ -73,17 +73,19 @@ export const remove = async (req, res) => {
 export const update = async (req, res) => {
   const { dto } = req;
 
+  console.log(dto);
   let user = {
     name: dto.name,
     email: dto.email,
     phone: dto.phone,
-    isAdmin: dto.isAdmin,
-    active: dto.active,
   };
+  if (dto.isAdmin) {
+    user.isAdmin = dto.isAdmin;
+  }
   if (dto.avatarId) {
     user.avatarId = dto.avatarId;
   }
-  if (dto.password !== null) {
+  if (dto.password && dto.password !== null) {
     const hash = await bcrypt.hash(dto.password);
     user.password = hash;
   }
