@@ -155,7 +155,7 @@ export default class PetsRepository extends Repository {
       LEFT JOIN m_prefix on m_prefix.id = t_member.prefix_id
       LEFT JOIN c_user on c_user.id = t_visit.doctor_id
       WHERE t_visit.visit_status_id not in (7, 8)  ${createSearchCondition(wheres)}
-      order by t_visit.visit_at desc
+      order by t_visit.visit_at
       offset $<offset> limit ${limit}`,
         {
           date,

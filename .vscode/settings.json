@@ -11,5 +11,9 @@
   "eslint.alwaysShowStatus": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
-  }
+  },
+  "prettier.disableLanguages": [
+    "javascript",
+    "typescript"
+  ],
 }

@@ -58,7 +58,7 @@ async function dischargeFinanceTx(t, { id, userId }) {
 
   if (!visit) throw new NotFoundExceptions('The visit with the given ID was not found.');
 
-  const pet = await t.pets.findById(visit.pet_id);
+  const pet = await t.pets.findById(visit.petId);
 
   const orders = await t.orders.find({ visitId: visit.id });
 
