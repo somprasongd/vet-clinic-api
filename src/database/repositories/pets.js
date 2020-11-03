@@ -67,7 +67,7 @@ export default class PetsRepository extends Repository {
       LEFT JOIN m_pet_gender on m_pet_gender.id = t_pet.gender_id
       LEFT JOIN m_pet_type on m_pet_type.id = t_pet.type_id
       WHERE t_pet.active = true ${createSearchCondition(wheres)}
-      order by m_pet_type.label, t_pet.name
+      order by t_pet.death, t_pet.birth_date, t_pet.name
       offset $<offset> limit ${limit}`,
         {
           code,
