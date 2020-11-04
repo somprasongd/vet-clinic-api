@@ -21,8 +21,12 @@ export default class UsersRepository extends Repository {
   findByUsername(username) {
     return this.db.oneOrNone(
       `SELECT c_user.*
+        , array_agg(json_build_object( 'id', m_user_role.id, 'label', m_user_role.label ) order by m_user_role.id) as roles
       FROM c_user
-      WHERE c_user.username = $1`,
+        LEFT JOIN c_user_roles on c_user_roles.user_id = c_user.id 
+        LEFT JOIN m_user_role on m_user_role.id = c_user_roles.role_id
+      WHERE c_user.username = $1
+      GROUP BY c_user.id`,
       username
     );
   }

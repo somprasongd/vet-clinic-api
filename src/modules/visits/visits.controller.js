@@ -65,6 +65,7 @@ export const setStatusTreatment = async (req, res) => {
   const obj = {
     visitStatusId: 2,
     updateBy: req.user.id,
+    doctorId: req.user.id,
   };
   const visit = await service.updateVisit(req.params.id, obj);
 

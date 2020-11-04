@@ -3,6 +3,7 @@ import * as controller from './visits.controller';
 import { validId, validPagination, validParamId } from '../../middlewares/validation.middleware';
 import { createDaycareDTO, createVisitDTO, searchVisitDTO, takeHomeDTO, updateVisitDTO } from './visits.dto';
 import { validJWT } from '../../middlewares/auth-validation.middleware';
+import { onlyDoctor } from '../../middlewares/auth-policy.middleware';
 import { router as vsRouter } from './vitalsigns/vitalsign.route';
 import { router as resultRouter } from './results/results.route';
 import { router as imageRouter } from './images/images.route';
@@ -29,7 +30,7 @@ router
   .put([validJWT, validId, updateVisitDTO], controller.updateVisit);
 
 router.route('/:id/status/cancel').patch([validJWT, validId], controller.setStatusCancel);
-router.route('/:id/status/treatment').patch([validJWT, validId], controller.setStatusTreatment);
+router.route('/:id/status/treatment').patch([validJWT, validId, onlyDoctor], controller.setStatusTreatment);
 router.route('/:id/status/waiting-result').patch([validJWT, validId], controller.setStatusWaitResult);
 router.route('/:id/status/reported').patch([validJWT, validId], controller.setStatusReported);
 router.route('/:id/status/doctor-discharge').patch([validJWT, validId], controller.dischargeDoctor);
