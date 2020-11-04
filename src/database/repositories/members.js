@@ -121,7 +121,7 @@ export default class MembersRepository extends Repository {
           end as pets
         FROM t_member
         LEFT JOIN m_prefix on m_prefix.id = t_member.prefix_id
-        LEFT JOIN t_pet on t_pet.owner_id = t_member.id and t_pet.active = true
+        LEFT JOIN t_pet on t_pet.owner_id = t_member.id and t_pet.active = true and t_pet.death = false
         LEFT JOIN m_pet_gender on m_pet_gender.id = t_pet.gender_id
         LEFT JOIN m_pet_type on m_pet_type.id = t_pet.type_id
         WHERE t_member.active = true ${conditions}
