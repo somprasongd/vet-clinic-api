@@ -174,7 +174,7 @@ function createSearchCondition(wheres) {
     conditions += ` AND last_name ilike '%$<lastName:value>%'`;
   }
   if (houseNo) {
-    conditions += ` AND house_no ilike '%$<houseNo:value>%'`;
+    conditions += ` AND house_no ilike '$<houseNo:value>%'`;
   }
   if (tel) {
     conditions += ` AND $<tel> = ANY(t_member.tels)`;
