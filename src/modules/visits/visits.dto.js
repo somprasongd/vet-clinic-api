@@ -20,8 +20,12 @@ export const createVisitDTO = (req, res, next) => {
     doctorId: Joi.number()
       .min(1)
       .allow(null),
-    weight: Joi.number().allow(null),
-    temp: Joi.number().allow(null),
+    weight: Joi.number()
+      .precision(2)
+      .allow(null),
+    temp: Joi.number()
+      .precision(2)
+      .allow(null),
     appointId: Joi.number()
       .min(1)
       .allow(null),

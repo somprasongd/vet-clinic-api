@@ -3,36 +3,44 @@ import validationHandler from '../../../common/helpers/validation-handler';
 
 export const createVitalsignDTO = (req, res, next) => {
   const schema = Joi.object().keys({
-    vitalSignAt: Joi.date().iso(),
+    vitalSignAt: Joi.date()
+      .iso()
+      .allow(null),
     weight: Joi.number()
-      .regex(/^[0-9]*\.?[0-9]{1,2}$/)
+      .precision(2)
       .allow(null),
     temp: Joi.number()
-      .regex(/^[0-9]*\.?[0-9]{1,2}$/)
+      .precision(2)
       .allow(null),
     rr: Joi.number()
       .integer()
-      .regex(/^[0-9]{1,3}$/)
+      .min(0)
+      .max(999)
       .allow(null),
     sys: Joi.number()
       .integer()
-      .regex(/^[0-9]{1,3}$/)
+      .min(0)
+      .max(999)
       .allow(null),
     dia: Joi.number()
       .integer()
-      .regex(/^[0-9]{1,3}$/)
+      .min(0)
+      .max(999)
       .allow(null),
     pulse: Joi.number()
       .integer()
-      .regex(/^[0-9]{1,3}$/)
+      .min(0)
+      .max(999)
       .allow(null),
     painScore: Joi.number()
       .integer()
-      .regex(/^(?:[1-9]|0[1-9]|10)$/)
+      .min(1)
+      .max(10)
       .allow(null),
     bcs: Joi.number()
       .integer()
-      .regex(/^[1-9]$/)
+      .min(1)
+      .max(9)
       .allow(null),
   });
 
@@ -46,34 +54,40 @@ export const updateVitalsignDTO = (req, res, next) => {
   const schema = Joi.object().keys({
     vitalSignAt: Joi.date().iso(),
     weight: Joi.number()
-      .regex(/^[0-9]*\.?[0-9]{1,2}$/)
+      .precision(2)
       .allow(null),
     temp: Joi.number()
-      .regex(/^[0-9]*\.?[0-9]{1,2}$/)
+      .precision(2)
       .allow(null),
     rr: Joi.number()
       .integer()
-      .regex(/^[0-9]{1,3}$/)
+      .min(0)
+      .max(999)
       .allow(null),
     sys: Joi.number()
       .integer()
-      .regex(/^[0-9]{1,3}$/)
+      .min(0)
+      .max(999)
       .allow(null),
     dia: Joi.number()
       .integer()
-      .regex(/^[0-9]{1,3}$/)
+      .min(0)
+      .max(999)
       .allow(null),
     pulse: Joi.number()
       .integer()
-      .regex(/^[0-9]{1,3}$/)
+      .min(0)
+      .max(999)
       .allow(null),
     painScore: Joi.number()
       .integer()
-      .regex(/^(?:[1-9]|0[1-9]|10)$/)
+      .min(1)
+      .max(10)
       .allow(null),
     bcs: Joi.number()
       .integer()
-      .regex(/^[1-9]$/)
+      .min(1)
+      .max(9)
       .allow(null),
   });
 
