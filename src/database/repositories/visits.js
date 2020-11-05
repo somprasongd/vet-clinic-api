@@ -79,8 +79,8 @@ export default class PetsRepository extends Repository {
   dischargeDoctor(id) {
     return this.db.oneOrNone(
       `UPDATE t_visit set 
-      doctor_discharge_at=current_timestamp 
-      and visit_status_id = 6
+      doctor_discharge_at=current_timestamp
+      , visit_status_id = 6
       WHERE id = $1 RETURNING *`,
       [+id]
     );
