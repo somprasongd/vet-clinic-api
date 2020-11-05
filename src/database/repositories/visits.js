@@ -154,7 +154,7 @@ export default class PetsRepository extends Repository {
       INNER JOIN t_member on t_member.id = t_pet.owner_id
       LEFT JOIN m_prefix on m_prefix.id = t_member.prefix_id
       LEFT JOIN c_user on c_user.id = t_visit.doctor_id
-      WHERE t_visit.visit_status_id not in (7, 8)  ${createSearchCondition(wheres)}
+      WHERE 1=1 ${createSearchCondition(wheres)}
       order by ${getSearchOrderBy(wheres)}
       offset $<offset> limit ${limit}`,
         {
@@ -175,7 +175,7 @@ export default class PetsRepository extends Repository {
         FROM t_visit
         INNER JOIN t_pet on t_pet.id = t_visit.pet_id
         INNER JOIN t_member on t_member.id = t_pet.owner_id
-        WHERE t_visit.visit_status_id not in (7, 8) ${createSearchCondition(wheres)}`,
+        WHERE 1=1 ${createSearchCondition(wheres)}`,
         {
           date,
           dateRange0,
@@ -198,30 +198,33 @@ export default class PetsRepository extends Repository {
 function createSearchCondition(wheres) {
   const { date, dateRange0, dateRange1, vn, petId, visitPriorityId, visitStatusId, visitTypeId, doctorId } = wheres;
   let conditions = '';
-  if (date) {
-    conditions += ` AND t_visit.visit_at = $<date>`;
-  }
-  if (dateRange0 || dateRange1) {
-    if (dateRange0 && !dateRange1) {
-      conditions += ` AND t_visit.visit_at >= $<dateRange0>`;
-    } else if (dateRange1 && !dateRange0) {
-      conditions += ` AND t_visit.visit_at <= $<dateRange1>`;
-    } else {
-      conditions += ` AND t_visit.visit_at >= $<dateRange0> AND t_visit.visit_at <= $<dateRange1>`;
-    }
-  }
   if (vn) {
     conditions += ` AND t_visit.vn = $<vn>`;
   }
   if (petId) {
     conditions += ` AND t_visit.pet_id = $<petId>`;
   }
+  if (visitStatusId) {
+    conditions += ` AND t_visit.visit_status_id = $<visitStatusId>`;
+  } else {
+    conditions += ` AND t_visit.visit_status_id not in (7, 8)`;
+  }
+  if (date) {
+    conditions += ` AND t_visit.visit_at::date = $<date>::date`;
+  }
+  if (dateRange0 || dateRange1) {
+    if (dateRange0 && !dateRange1) {
+      conditions += ` AND t_visit.visit_at::date >= $<dateRange0>::date`;
+    } else if (dateRange1 && !dateRange0) {
+      conditions += ` AND t_visit.visit_at::date <= $<dateRange1>::date`;
+    } else {
+      conditions += ` AND t_visit.visit_at::date >= $<dateRange0>::date AND t_visit.visit_at::date <= $<dateRange1>::date`;
+    }
+  }
   if (visitPriorityId) {
     conditions += ` AND t_visit.visit_priority_id = $<visitPriorityId>`;
   }
-  if (visitStatusId) {
-    conditions += ` AND t_visit.visit_status_id = $<visitStatusId>`;
-  }
+
   if (visitTypeId) {
     conditions += ` AND t_visit.visit_type_id = $<visitTypeId>`;
   }
