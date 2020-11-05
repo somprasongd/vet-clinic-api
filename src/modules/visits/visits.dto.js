@@ -59,6 +59,10 @@ export const searchVisitDTO = (req, res, next) => {
     visitStatusId: Joi.number().min(1),
     visitTypeId: Joi.number().min(1),
     doctorId: Joi.number().min(1),
+    orderBy: Joi.string()
+      .regex(/(-|\+)?[^,]+/)
+      .allow('')
+      .allow(null),
   });
 
   const { dto } = validationHandler(req.query, schema);

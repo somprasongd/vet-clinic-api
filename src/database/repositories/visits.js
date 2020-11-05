@@ -155,7 +155,7 @@ export default class PetsRepository extends Repository {
       LEFT JOIN m_prefix on m_prefix.id = t_member.prefix_id
       LEFT JOIN c_user on c_user.id = t_visit.doctor_id
       WHERE t_visit.visit_status_id not in (7, 8)  ${createSearchCondition(wheres)}
-      order by t_visit.visit_at
+      order by ${getSearchOrderBy(wheres)}
       offset $<offset> limit ${limit}`,
         {
           date,
@@ -229,4 +229,20 @@ function createSearchCondition(wheres) {
     conditions += ` AND t_visit.doctor_id = $<doctorId>`;
   }
   return conditions || '';
+}
+
+function getSearchOrderBy(wheres) {
+  const { orderBy = 'date' } = wheres;
+  const orderBys = orderBy.split(',').map(odb => {
+    let temp = odb.trim();
+    temp = temp.startsWith('+') || temp.startsWith('-') ? temp : `+${temp}`;
+
+    if (temp.slice(1) === 'date') {
+      return `t_visit.visit_at${temp.slice(0, 1) === '-' ? ' desc' : ''}`;
+    }
+
+    return '';
+  });
+
+  return orderBys.filter(odb => odb !== '').join(', ');
 }
