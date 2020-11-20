@@ -94,11 +94,14 @@ export const createOrderTx = async (t, newOrder) => {
     await createResultXray(t, order);
   }
   // lab result
+  console.log(itemGroup.id, item.isSet);
   if (itemGroup.id === 3) {
     if (!item.isSet) {
+      console.log('lab');
       await createResultLab(t, order, item);
     } else {
       const items = await t.itemSets.findSubsetByItemId(item.id);
+      console.log('lab set', items);
       if (!items) {
         throw new NotFoundExceptions('The item sub set with the given Item ID was not found.');
       }
@@ -140,8 +143,9 @@ async function createResultXray(db, order) {
 }
 
 async function createResultLab(db, order, item, itemParentId = null) {
-  const itemLabs = await db.base.find('c_item_lab', { itemId: order.itemId });
-  if (!itemLabs) {
+  const itemLabs = await db.base.find('c_item_lab', { itemId: item.id });
+  console.log(itemLabs);
+  if (!itemLabs || itemLabs.length === 0) {
     throw new NotFoundExceptions('The item lab with the given Item ID was not found.');
   }
 
