@@ -24,11 +24,17 @@ export const listPet = async (req, res) => {
 
 export const getPet = async (req, res) => {
   const { id } = req.params;
-  const pet = await service.findPetById(id);
+  const pet = await getPetById(id);
 
   if (!pet) throw new NotFoundExceptions('The pet with the given ID was not found.');
 
   res.json(respondPetDTO(pet));
+};
+
+export const getPetById = async id => {
+  const pet = await service.findPetById(id);
+
+  return pet;
 };
 
 export const removePet = async (req, res) => {

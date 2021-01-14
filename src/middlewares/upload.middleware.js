@@ -75,9 +75,17 @@ export const resizeImage = (req, res, next) => {
 
   const uuid = uuidv1();
   const { group = 'img', typeId = 1 } = req.body;
-  const { visit } = req;
+  const { visit = null, pet = null } = req;
 
-  const fileName = `${visit === null ? group : visit.vn}-${typeId}-${uuid}`;
+  let no = group;
+
+  if (visit !== null) {
+    no = visit.vn;
+  } else if (pet !== null) {
+    no = pet.code;
+  }
+
+  const fileName = `${no}-${typeId}-${uuid}`;
 
   req.file.filename = `media/image/${fileName}.jpeg`;
   req.file.filenameThumbnail = `media/image/${fileName}_thumbnail.jpeg`;
@@ -111,9 +119,17 @@ const multerFileStorage = multer.diskStorage({
   filename: (req, file, cb) => {
     const uuid = uuidv1();
 
-    const { visit } = req;
+    const { visit = null, pet = null } = req;
 
-    const fileName = `${visit === null ? '' : visit.vn}-${uuid}`;
+    let no = '';
+
+    if (visit !== null) {
+      no = visit.vn;
+    } else if (pet !== null) {
+      no = pet.code;
+    }
+
+    const fileName = `${no}-${uuid}`;
     cb(null, `${fileName}-${file.originalname.split(' ').join('-')}`);
   },
 });

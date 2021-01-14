@@ -6,6 +6,8 @@ import { validJWT } from '../../middlewares/auth-validation.middleware';
 import { resizeAvatar, uploadAvatar } from '../../middlewares/upload.middleware';
 import { createUploadImageDTO } from '../upload/upload.dto';
 import * as uploadMiddleware from '../upload/upload.middleware';
+import { router as imageRouter } from './images/images.route';
+import { router as fileRouter } from './files/files.route';
 
 export const router = express.Router();
 router
@@ -31,3 +33,17 @@ router
 
 router.route('/:id/owner').get([validId], controller.getPetOwner);
 router.route('/:id/owner/:newOwnerId').patch([validId, validParamId('newOwnerId')], controller.changeOwner);
+
+router.use('/:id/images', validId, setPet, imageRouter);
+router.use('/:id/files', validId, setPet, fileRouter);
+
+async function setPet(req, res, next) {
+  const { id } = req.params;
+  try {
+    const pet = await controller.getPetById(id);
+    req.pet = pet;
+    next();
+  } catch (error) {
+    next(error);
+  }
+}

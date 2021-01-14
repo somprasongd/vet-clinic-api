@@ -4,6 +4,7 @@ import AppointsRepository from './appoints';
 import CountersRepository from './counters';
 import MembersRepository from './members';
 import PetsRepository from './pets';
+import PetMediaRepository from './pet-medias';
 import VisitsRepository from './visits';
 import VisitVitalsignsRepository from './visit-vitalsigns';
 import OrdersRepository from './orders';
@@ -32,6 +33,7 @@ export default {
   CountersRepository,
   MembersRepository,
   PetsRepository,
+  PetMediaRepository,
   VisitsRepository,
   VisitVitalsignsRepository,
   VisitMediaRepository,

@@ -55,6 +55,7 @@ const createConnection = async () => {
       obj.counters = new repos.CountersRepository(obj, pgp);
       obj.members = new repos.MembersRepository(obj, pgp);
       obj.pets = new repos.PetsRepository(obj, pgp);
+      obj.petMedias = new repos.PetMediaRepository(obj, pgp);
       obj.visits = new repos.VisitsRepository(obj, pgp);
       obj.vitalsigns = new repos.VisitVitalsignsRepository(obj, pgp);
       obj.visitMedias = new repos.VisitMediaRepository(obj, pgp);
